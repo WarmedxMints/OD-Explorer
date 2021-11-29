@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--Brush Colours-->
+    <SolidColorBrush x:Key="Font Colour"
+                     Color="#FFEAB80E" />
+    
+    <SolidColorBrush x:Key="Known Font Colour"
+                     Color="#FF8A999F" />
+    
+    <SolidColorBrush x:Key="UnKnown Font Colour"
+                     Color="#FFEAB80E" />
+    
+    <SolidColorBrush x:Key="Groupbox Border"
+                     Color="#FFEA900E" />
+    
+    <SolidColorBrush x:Key="EDSM Known"
+                     Color="#FF333333" />
+    <SolidColorBrush x:Key="EDSM Unknown"
+                     Color="#370C03" />
+
+    <SolidColorBrush x:Key="Scoopable Star"
+                     Color="#FF37BD37" />
+    <SolidColorBrush x:Key="Non-Scoopable Star"
+                     Color="#FFE42323" />
+
+    <SolidColorBrush x:Key="User Mapped Body"
+                     Color="#FF0077D7" />
+
+    <SolidColorBrush x:Key="High Value Body"
+                     Color="#FFF5A804" />
+
+    <SolidColorBrush x:Key="System Column Header"
+                     Color="Transparent" />
+    
+    <SolidColorBrush x:Key="Body Column Header"
+                     Color="DimGray" />
+
+    <SolidColorBrush x:Key="Low Gravity"
+                     Color="#FF37BD37" />
+    <SolidColorBrush x:Key="Med Gravity"
+                     Color="#FFEAB80E" />
+    <SolidColorBrush x:Key="High Gravity"
+                     Color="#FFE42323" />
+
+    <SolidColorBrush x:Key="MainWindowBackground"
+                     Color="#1E1E1E" />    
+    
+</ResourceDictionary>

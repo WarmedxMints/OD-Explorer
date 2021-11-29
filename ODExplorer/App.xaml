@@ -1,0 +1,21 @@
+﻿<Application x:Class="ODExplorer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:ODExplorer"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ODExplorer;component/Themes/TitleBar.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/Themes/DefaultColours.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/Themes/CenterGroupBox.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/Themes/DataGridStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/Themes/ControlStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <System:String x:Key="AppVersion">v0.9</System:String>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

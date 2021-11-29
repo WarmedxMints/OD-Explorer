@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>ODExplorer</RootNamespace>
+    <AssemblyName>ODExplorer</AssemblyName>
+    <ApplicationIcon>astronaut.ico</ApplicationIcon>
+    <Version>0.9</Version>
+    <Authors>WarmedxMints</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\arrow-down-sign-to-navigate.png" />
+    <None Remove="Images\asteroid.png" />
+    <None Remove="Images\astronaut.ico" />
+    <None Remove="Images\astronaut.png" />
+    <None Remove="Images\copy.png" />
+    <None Remove="Images\DNA.png" />
+    <None Remove="Images\moon-landing.png" />
+    <None Remove="Images\planet.png" />
+    <None Remove="Images\StarIcon.png" />
+    <None Remove="Images\volcano.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj" />
+    <ProjectReference Include="..\LoadSaveSystem\Utils.csproj" />
+    <ProjectReference Include="..\ParserLibrary\ParserLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\arrow-down-sign-to-navigate.png" />
+    <Resource Include="Images\asteroid.png" />
+    <Resource Include="Images\astronaut.ico" />
+    <Resource Include="Images\astronaut.png" />
+    <Resource Include="Images\copy.png" />
+    <Resource Include="Images\DNA.png" />
+    <Resource Include="Images\moon-landing.png" />
+    <Resource Include="Images\planet.png" />
+    <Resource Include="Images\StarIcon.png" />
+    <Resource Include="Images\volcano.png" />
+  </ItemGroup>
+
+</Project>
