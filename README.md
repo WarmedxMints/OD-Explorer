@@ -4,7 +4,7 @@ OD Explorer is a companion app for Elite Dangerous which aids Commaders in explo
 
 [Click here for the latest release](https://github.com/WarmedxMints/OD-Explorer/releases)
 
-##GUI Guide
+## GUI Guide
 
 ![](https://github.com/WarmedxMints/OD-Explorer/blob/main/OD%20EXPLORER%20UI.png)
 
