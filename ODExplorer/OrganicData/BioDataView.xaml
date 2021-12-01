@@ -13,8 +13,10 @@
         Title="OD EXPLORER - BIOLOGICAL DATA"
         Height="600"
         Width="980"
+        ShowInTaskbar="False"
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded">
+    
     <!--Add the WindowChrome object-->
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
@@ -197,68 +199,6 @@
                 </StackPanel>
             </Grid>
             <!--#endregion-->
-            
-            <!--#region ListBox-->
-            <!--<Grid Grid.Row="3"
-                  Grid.Column="1"
-                  MinWidth="320"
-                  Margin="0,0,10,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-     
-                <TextBlock Text="SYSTEM"
-                           Foreground="White"
-                           FontSize="20"
-                           Margin="30,0,0,8"
-                           Grid.Row="0" />
-                <TextBlock Text="BODY"
-                           Foreground="White"
-                           HorizontalAlignment="Right"
-                           FontSize="20"
-                           Margin="5,0,0,8"
-                           Grid.Row="0" />
-
-                <ListBox  Background="Transparent"
-                          x:Name="BioDataListBox"
-                          Foreground="{DynamicResource Default Font Colour}"
-                          BorderBrush="Transparent"
-                          Grid.Row="1"
-                         HorizontalContentAlignment="Stretch"
-                          ItemsSource="{Binding ScannedBioData.ScannedData, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                          Loaded="ListBox_Loaded"
-                          SelectionChanged="BioDataListBox_SelectionChanged">
-                    <ListBox.ItemTemplate>                        
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0"
-                                            Orientation="Horizontal">
-                                <Button x:Name="DeleteBodyData"
-                                        Width="20"
-                                        Margin="0,0,5,0"
-                                        Content="&#xE106;"
-                                        Style="{StaticResource CaptionButtonStyleAutoWidth}"
-                                        Click="DeleteBodyData_Click" />
-                                <TextBlock Text="{Binding SystemName}"
-                                           Margin="0,0,20,0" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" 
-                                            Grid.Column="1">
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding BodyName}"
-                                           Foreground="{DynamicResource Font Colour}"/>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Grid>-->
-            <!--#endregion-->
 
             <DataGrid Grid.Row="2"
                       Grid.Column="1"
@@ -378,6 +318,7 @@
                     x:Name="ClearAllData"
                     Content="CLEAR ALL DATA"
                     HorizontalAlignment="Right"
+                    Click="ClearAllData_Click"
                     Margin="0,0,25,0"/>
         </Grid>
     </Border>

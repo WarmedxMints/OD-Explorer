@@ -13,7 +13,7 @@
         FontSize="18"
         Background="{DynamicResource MainWindowBackground}"
         Title="ED EXPLORER - Settings"
-        Height="480"
+        Height="510"
         Width="500"
         WindowStyle="None"
         ShowInTaskbar="False"
@@ -30,6 +30,14 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
+        <ObjectDataProvider x:Key="TemperatureUnit"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Temperature"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        
         <ObjectDataProvider x:Key="CSMSortDirection"
                             MethodName="GetValues"
                             ObjectType="{x:Type System:Enum}">
@@ -225,20 +233,47 @@
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />  
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                     </Grid.RowDefinitions>
 
-                    <CheckBox Grid.Row="0"
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="0"
+                                Grid.Column="0">
+                    <ComboBox ItemsSource="{Binding Source={StaticResource TemperatureUnit}}"
+                              SelectedItem="{Binding AppSettings.Value.TemperatureUnit}"
+                              Width="90"
+                              HorizontalAlignment="Left"
+                              FontSize="14"
+                              Background="{DynamicResource MainWindowBackground}"
+                              BorderBrush="{DynamicResource Groupbox Border}" />
+                        <TextBlock  Foreground="{DynamicResource Font Colour}"
+                                    FontSize="14"
+                                    Margin="5,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Surface Temp Unit"
+                                    TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                    <TextBlock  Grid.Row="0"
+                                Grid.Column="1"
+                                Foreground="{DynamicResource Font Colour}"
+                                FontSize="10"
+                                VerticalAlignment="Center"
+                                Text="Sets the temperature unit used for the surface temperature for bodies"
+                                TextWrapping="WrapWithOverflow" />
+                    
+                    <CheckBox Grid.Row="2"
                               Grid.Column="0"
                               Content="Ignore Non-Bodies"
                               Foreground="{DynamicResource Font Colour}"
                               FontSize="14"
                               VerticalAlignment="Center"
                               IsChecked="{Binding AppSettings.Value.IgnoreNonBodies}" />
-                    <TextBlock  Grid.Row="0"
+                    <TextBlock  Grid.Row="2"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -246,14 +281,14 @@
                                 Text="When enabled Non-Bodies, such as Asteroid Belts, will be ignored and not displayed"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <CheckBox Grid.Row="2"
+                    <CheckBox Grid.Row="4"
                               Grid.Column="0"
                               Content="Auto Copy CSV System To Clipboard"
                               Foreground="{DynamicResource Font Colour}"
                               FontSize="14"
                               VerticalAlignment="Center"
                               IsChecked="{Binding AppSettings.Value.AutoCopyCsvSystemToClipboard}" />
-                    <TextBlock  Grid.Row="2"
+                    <TextBlock  Grid.Row="4"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -261,7 +296,7 @@
                                 Text="When enabled the system name for the current system in the CSV parser will be automatically copied to the clipboard"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="4"
+                    <Button Grid.Row="6"
                             Grid.Column="0"
                             Content="Set to Default"
                             Width="140"
@@ -269,7 +304,7 @@
                             FontSize="14"
                             x:Name="ResetSettingsButton"
                             Click="ResetSettingsButton_Click" />
-                    <TextBlock  Grid.Row="4"
+                    <TextBlock  Grid.Row="6"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -277,7 +312,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="6"
+                    <Button Grid.Row="8"
                             Grid.Column="0"
                             Content="Reset Scan Value"
                             Width="140"
@@ -285,7 +320,7 @@
                             FontSize="14"
                             x:Name="ResetExplorationValueButton"
                             Click="ResetExplorationValueButton_Click" />
-                    <TextBlock  Grid.Row="6"
+                    <TextBlock  Grid.Row="8"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -293,7 +328,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="8"
+                    <Button Grid.Row="10"
                             Grid.Column="0"
                             Content="Reset Biological Data"
                             Width="140"
@@ -301,7 +336,7 @@
                             FontSize="14"
                             x:Name="ClearBioLogicalData"
                             Click="ClearBioLogicalData_Click" />
-                    <TextBlock  Grid.Row="8"
+                    <TextBlock  Grid.Row="10"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"

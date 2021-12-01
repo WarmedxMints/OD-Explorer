@@ -110,9 +110,9 @@ namespace ODExplorer.Utils
             Parameters direction = (Parameters)Enum.Parse(typeof(Parameters), (string)parameter);
 
             if (direction == Parameters.Inverted)
-                return !boolValue ? Visibility.Visible : Visibility.Collapsed;
+                return !boolValue ? Visibility.Visible : Visibility.Hidden;
 
-            return boolValue ? Visibility.Visible : Visibility.Collapsed;
+            return boolValue ? Visibility.Visible : Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType,

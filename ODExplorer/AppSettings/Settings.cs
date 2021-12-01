@@ -2,6 +2,7 @@
 using ODExplorer.Utils;
 using System.ComponentModel;
 using System.IO;
+using System.Windows;
 
 namespace ODExplorer.AppSettings
 {
@@ -29,6 +30,13 @@ namespace ODExplorer.AppSettings
         WorthMappingDistance,
         [Description("No Sorting")]
         None
+    }
+
+    public enum Temperature
+    {
+        Kelvin,
+        Celsius,
+        Fahrenheit
     }
 
     public class Settings
@@ -70,6 +78,8 @@ namespace ODExplorer.AppSettings
         private bool ignoreNonBodies = true;
         private bool autoCopyCsvSystemToClipboard = true;
         private bool showParser;
+        private Temperature temperatureUnit;
+
         public SortCategory SortCategory { get => sortCategory; set { sortCategory = value; OnPropertyChanged(); } }
         public ListSortDirection SortDirection { get => sortDirection; set { sortDirection = value; OnPropertyChanged(); } }
         public int WorthMappingValue { get => worthMappingValue; set { worthMappingValue = value; OnPropertyChanged(); } }
@@ -77,16 +87,18 @@ namespace ODExplorer.AppSettings
         public bool IgnoreNonBodies { get => ignoreNonBodies; set { ignoreNonBodies = value; OnPropertyChanged(); } }
         public bool ShowParser { get => showParser; set { showParser = value; OnPropertyChanged(); } }
         public bool AutoCopyCsvSystemToClipboard { get => autoCopyCsvSystemToClipboard; set { autoCopyCsvSystemToClipboard = value; OnPropertyChanged(); } }
+        public Temperature TemperatureUnit { get => temperatureUnit; set { temperatureUnit = value; OnPropertyChanged(); } }
 
         public void Copy(SettingsValues values)
         {
-            sortCategory = values.sortCategory;
-            sortDirection = values.sortDirection;
-            worthMappingValue = values.worthMappingValue;
-            worthMappingDistance = values.worthMappingDistance;
-            IgnoreNonBodies = values.IgnoreNonBodies;
-            ShowParser = values.showParser;
-            AutoCopyCsvSystemToClipboard = values.autoCopyCsvSystemToClipboard;
+            sortCategory = values.SortCategory;
+            sortDirection = values.SortDirection;
+            worthMappingValue = values.WorthMappingValue;
+            worthMappingDistance = values.WorthMappingDistance;
+            ignoreNonBodies = values.IgnoreNonBodies;
+            showParser = values.ShowParser;
+            autoCopyCsvSystemToClipboard = values.AutoCopyCsvSystemToClipboard;
+            temperatureUnit = values.TemperatureUnit;
         }
 
         public void Reset()
@@ -98,6 +110,7 @@ namespace ODExplorer.AppSettings
             IgnoreNonBodies = true;
             AutoCopyCsvSystemToClipboard = true;
             ShowParser = false;
+            TemperatureUnit = Temperature.Kelvin;
         }
     }
 }

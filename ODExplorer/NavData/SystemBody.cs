@@ -33,6 +33,9 @@ namespace ODExplorer.NavData
             MassEM = e.MassEM ?? 0;
             TerraformState = e.TerraformState;
             SurfaceGravity = e.SurfaceGravity ?? 0;
+            SurfacePressure = e.SurfacePressure ?? 0;
+            SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
+            AtmosphereType = e.AtmosphereType;
             Landable = e.Landable ?? false;
             WasDiscovered = e.WasDiscovered ?? false;
             //Whan a body is mapped by the user a scan event is fired
@@ -101,6 +104,56 @@ namespace ODExplorer.NavData
             set { _gravity = value; OnPropertyChanged(); }
         }
 
+        private double _surfacePressure;
+
+        public double SurfacePressure
+        {
+            get { return _surfacePressure; }
+            set { _surfacePressure = value; OnPropertyChanged(); }
+        }
+
+        public string SurfacePressureString
+        {
+            get
+            {
+                if (AtmosphereType == AtmosphereClass.None || Landable == false)
+                {
+                    return "";
+                }
+
+                //Convert Pa to Standard Atmosphere
+                return $"{_surfacePressure / 101325:N2} atm";
+            }
+        }
+
+        public AtmosphereClass AtmosphereType { get; set; } = AtmosphereClass.None;
+
+        private int _surfaceTemp;
+
+        public int SurfaceTemp
+        {
+            get { return _surfaceTemp; }
+            set { _surfaceTemp = value; OnPropertyChanged(); OnPropertyChanged("SurfaceTempString"); }
+        }
+
+        public string SurfaceTempString
+        {
+            get
+            {
+                if(Landable == false)
+                {
+                    return "";
+                }
+
+                return Settings.SettingsInstance.Value.TemperatureUnit switch
+                {
+                    Temperature.Kelvin => $"{_surfaceTemp:N0} K",
+                    Temperature.Celsius => $"{_surfaceTemp - 273.15:N0} °C",
+                    Temperature.Fahrenheit => $"{(_surfaceTemp - 273.15) * 9 / 5 + 32:N0} °F",                    
+                    _ => "",
+                };
+            }
+        }
         private int _mappedValue;
         public int MappedValue
         {
@@ -115,7 +168,7 @@ namespace ODExplorer.NavData
             set { _fssValue = value; OnPropertyChanged(); OnPropertyChanged("ScanValue"); }
         }
 
-        public int BonusValue;
+        public int BonusValue { get; set; }
 
         public int ScanValue
         {
@@ -225,6 +278,9 @@ namespace ODExplorer.NavData
                 MassEM = e.MassEM;
                 TerraformState = e.TerraformState;
                 SurfaceGravity = e.SurfaceGravity;
+                SurfacePressure = e.SurfacePressure;
+                SurfaceTemp = e.SurfaceTemp;
+                AtmosphereType = e.AtmosphereType;
                 Landable = e.Landable;
                 WasDiscovered = e.WasDiscovered;
                 //Whan a body is mapped by the user a scan event is fired
@@ -266,6 +322,9 @@ namespace ODExplorer.NavData
             MassEM = e.MassEM ?? 0;
             TerraformState = e.TerraformState;
             SurfaceGravity = e.SurfaceGravity ?? 0;
+            SurfacePressure = e.SurfacePressure ?? 0;
+             AtmosphereType = e.AtmosphereType;
+            SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
             Landable = e.Landable ?? false;
             WasDiscovered = e.WasDiscovered ?? false;
             //Whan a body is mapped by the user a scan event is fired
@@ -291,6 +350,13 @@ namespace ODExplorer.NavData
             MappedValue = e.MappedValue;
 
             SetBodyName();
+            UpdateStatus();
+        }
+
+        //Called when App settings are updated
+        public void UpdateUI()
+        {
+            OnPropertyChanged("SurfaceTempString");
             UpdateStatus();
         }
 

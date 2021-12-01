@@ -269,7 +269,7 @@
                     
                     <TextBlock VerticalAlignment="Center"
                                Margin="20,0,0,5">
-                        <Hyperlink NavigateUri="http://www.github.com/warmedxmints"
+                        <Hyperlink NavigateUri="https://github.com/WarmedxMints/OD-Explorer"
                                    RequestNavigate="Hyperlink_RequestNavigate"
                                    Foreground="{DynamicResource Font Colour}">
                             GitHub Project
@@ -285,6 +285,15 @@
                         </Hyperlink>
                     </TextBlock>
 
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="20,0,0,5">
+                        <Hyperlink NavigateUri="https://github.com/WarmedxMints/EliteJournalReader"
+                                   RequestNavigate="Hyperlink_RequestNavigate"
+                                   Foreground="{DynamicResource Font Colour}">
+                            OD Explorer Elite Journal Reader Fork
+                        </Hyperlink>
+                    </TextBlock>
+                    
                     <TextBlock VerticalAlignment="Center"
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/joncage/ed-scout"

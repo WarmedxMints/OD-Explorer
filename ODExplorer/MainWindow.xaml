@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ODExplorer"
         mc:Ignorable="d"       
         Title="OD Explorer"
+        x:Name="ODExplorer"
         Height="850"
         Width="850"
         FontFamily="Eurostile"
@@ -37,6 +39,8 @@
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
         </ResourceDictionary>
+        
+        
     </Window.Resources>
 
     <!--Title bar button commands-->
@@ -303,20 +307,57 @@
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
-                                                    
+
                                                     <DataGridTemplateColumn Width="*">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <Grid>
-                                                                    <TextBlock Text="{Binding BodyDescription}"
+                                                                <TextBlock Text="{Binding BodyDescription}"
                                                                                VerticalAlignment="Center"
                                                                                HorizontalAlignment="Left"
                                                                                Margin="5,0,0,0"
                                                                                Loaded="CurrentSystemBodies_TextBlock_Loaded" />
-
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    
+                                                    <DataGridTemplateColumn Width="SizeToCells">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Grid>
                                                                     <StackPanel Orientation="Horizontal"
                                                                                 HorizontalAlignment="Right"
                                                                                 Margin="2,0,2,0">
+
+                                                                        <TextBlock Text="{Binding SurfaceTempString}"
+                                                                                   VerticalAlignment="Center"
+                                                                                   TextAlignment="Center"
+                                                                                   Margin="2,0,2,0"
+                                                                                   FontSize="14">
+                                                                            <TextBlock.Style>
+                                                                                <Style TargetType="{x:Type TextBlock}">
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding Landable}"
+                                                                                                     Value="True">
+                                                                                            <Setter Property="Visibility"
+                                                                                                    Value="Visible" />
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding Landable}"
+                                                                                                     Value="False">
+                                                                                            <Setter Property="Visibility"
+                                                                                                    Value="Hidden" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </TextBlock.Style>
+                                                                        </TextBlock>
+
+                                                                        <TextBlock Text="{Binding SurfacePressureString}"
+                                                                                   VerticalAlignment="Center"
+                                                                                   TextAlignment="Right"
+                                                                                   Margin="5,0,5,0"
+                                                                                   MinWidth="64"
+                                                                                   FontSize="14" />
+
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Visibility="{Binding Wasmapped, Converter={StaticResource InvBoolToVis} , ConverterParameter=Inverted}"
                                                                                    Height="18"

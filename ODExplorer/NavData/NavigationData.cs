@@ -763,7 +763,7 @@ namespace ODExplorer.NavData
 
             foreach (SystemBody body in boides)
             {
-                body.UpdateStatus();
+                body.UpdateUI();
             }
         }
     }
