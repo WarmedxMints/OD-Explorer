@@ -14,6 +14,7 @@ using ODExplorer.AppSettings;
 using ODExplorer.Utils;
 using ODExplorer.ScanValueView;
 using ODExplorer.OrganicData;
+using System.Threading.Tasks;
 
 namespace ODExplorer
 {
@@ -170,9 +171,8 @@ namespace ODExplorer
                 col.Width = DataGridLength.SizeToCells;
                 col.Width = width;
             }
-
         }
-
+        //TODO Switch to collection view source with live sorting
         //Method to apply sorting to the datagrids contents
         private void SortCurrentSystemBodiesGrid()
         {
@@ -239,7 +239,8 @@ namespace ODExplorer
             if ((bool)sw.ShowDialog())
             {
                 NavData.RefreshBodiesStatus();
-                SortCurrentSystemBodiesGrid();
+                //Give the UI time to scale before sorting and resizing the datagrid
+                _ = Task.Delay(500).ContinueWith(t => Dispatcher.Invoke(() => SortCurrentSystemBodiesGrid()));
             }
         }
 

@@ -3,16 +3,16 @@
     <!--Brush Colours-->
     <SolidColorBrush x:Key="Font Colour"
                      Color="#FFEAB80E" />
-    
+
     <SolidColorBrush x:Key="Known Font Colour"
                      Color="#FF8A999F" />
-    
+
     <SolidColorBrush x:Key="UnKnown Font Colour"
                      Color="#FFEAB80E" />
-    
+
     <SolidColorBrush x:Key="Groupbox Border"
                      Color="#FFEA900E" />
-    
+
     <SolidColorBrush x:Key="EDSM Known"
                      Color="#FF333333" />
     <SolidColorBrush x:Key="EDSM Unknown"
@@ -31,7 +31,7 @@
 
     <SolidColorBrush x:Key="System Column Header"
                      Color="Transparent" />
-    
+
     <SolidColorBrush x:Key="Body Column Header"
                      Color="DimGray" />
 
@@ -43,6 +43,6 @@
                      Color="#FFE42323" />
 
     <SolidColorBrush x:Key="MainWindowBackground"
-                     Color="#1E1E1E" />    
-    
+                     Color="#1E1E1E" />
+
 </ResourceDictionary>

@@ -93,20 +93,10 @@
             BorderBrush="{DynamicResource MainWindowBackground}"
             BorderThickness="0">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto"
-                                  MinWidth="250" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
             </Grid.RowDefinitions>
-
             <!--#region Custom Title Bar-->
             <Grid Height="30"
                   Background="#FF3C4043"
@@ -133,10 +123,6 @@
                 <!--Caption buttons-->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MinimizeButtonStyle}"
-                            WindowChrome.IsHitTestVisibleInChrome="True"
-                            ToolTip="Minimize"
-                            Command="{x:Static SystemCommands.MinimizeWindowCommand}" />
                     <Button x:Name="RestoreButton"
                             Visibility="Collapsed"
                             Style="{StaticResource RestoreButtonStyle}"
@@ -156,152 +142,170 @@
                 </StackPanel>
             </Grid>
             <!--#endregion-->
-
-            <Grid Grid.Row="2"
-                  Grid.Column="1"
-                  Margin="0,0,10,0">
+            <Grid Grid.Row="1">
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
+                                    ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
+                </Grid.LayoutTransform>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="250" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="SCANNED SYSTEMS"
-                           Foreground="White"
-                           FontSize="20"
-                           Margin="0,0,0,8"
-                           Grid.Row="0" />
 
-                <ListBox  Background="Transparent"
-                          x:Name="SystemListBox"
-                          Foreground="{DynamicResource Default Font Colour}"
-                          BorderBrush="Transparent"
+                <Grid Grid.Row="1"
+                      Grid.Column="1"
+                      Margin="0,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="SCANNED SYSTEMS"
+                               Foreground="White"
+                               FontSize="20"
+                               Margin="0,0,0,8"
+                               Grid.Row="0" />
+
+                    <ListBox  Background="Transparent"
+                              x:Name="SystemListBox"
+                              Foreground="{DynamicResource Default Font Colour}"
+                              BorderBrush="Transparent"
+                              Grid.Row="1"
+                              ItemsSource="{Binding ScanValue.ScannedSystems, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
+                              SelectionChanged="ListBox_SelectionChanged"
+                              Loaded="ListBox_Loaded" />
+                </Grid>
+
+                <DataGrid Grid.Column="2"
                           Grid.Row="1"
-                          ItemsSource="{Binding ScanValue.ScannedSystems, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                          SelectionChanged="ListBox_SelectionChanged"
-                          Loaded="ListBox_Loaded"/>
-            </Grid>
-            
-            <DataGrid Grid.Column="2"
-                      Grid.Row="2"
-                      x:Name="SystemDetails"
-                      ItemsSource="{Binding Source={StaticResource ListCsv}}"
-                      IsSynchronizedWithCurrentItem="False"
-                      HeadersVisibility="Column"
-                      Style="{DynamicResource DataGrid Settings}"
-                      Background="Transparent"
-                      HorizontalGridLinesBrush="{DynamicResource Groupbox Border}"
-                      RowStyle="{DynamicResource DataGridRowStyle}"
-                      ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
-                      GridLinesVisibility="Horizontal"
-                      AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="BODY"
-                                            Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Rectangle Height="18"
-                                                   Width="18"
-                                                   Fill="White"
-                                                   Margin="0,2,4,2"
-                                                   VerticalAlignment="Center">
-                                            <Rectangle.Style>
-                                                <Style TargetType="{x:Type Rectangle}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsStar}"
-                                                                     Value="True">
-                                                            <Setter Property="OpacityMask">
-                                                                <Setter.Value>
-                                                                    <ImageBrush ImageSource="../../Images/StarIcon.png" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsPlanet}"
-                                                                     Value="True">
-                                                            <Setter Property="OpacityMask">
-                                                                <Setter.Value>
-                                                                    <ImageBrush ImageSource="../../Images/planet.png" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsNonBody}"
-                                                                     Value="True">
-                                                            <Setter Property="OpacityMask">
-                                                                <Setter.Value>
-                                                                    <ImageBrush ImageSource="../../Images/asteroid.png" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Rectangle.Style>
-                                        </Rectangle>
-                                        <TextBlock Text="{Binding Path=BodyNameLocal}"
-                                                   VerticalAlignment="Center"/>
+                          x:Name="SystemDetails"
+                          ItemsSource="{Binding Source={StaticResource ListCsv}}"
+                          IsSynchronizedWithCurrentItem="False"
+                          HeadersVisibility="Column"
+                          Style="{DynamicResource DataGrid Settings}"
+                          Background="Transparent"
+                          HorizontalGridLinesBrush="{DynamicResource Groupbox Border}"
+                          RowStyle="{DynamicResource DataGridRowStyle}"
+                          ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
+                          GridLinesVisibility="Horizontal"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="BODY"
+                                                Width="200">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Rectangle Height="18"
+                                                       Width="18"
+                                                       Fill="White"
+                                                       Margin="0,2,4,2"
+                                                       VerticalAlignment="Center">
+                                                <Rectangle.Style>
+                                                    <Style TargetType="{x:Type Rectangle}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsStar}"
+                                                                         Value="True">
+                                                                <Setter Property="OpacityMask">
+                                                                    <Setter.Value>
+                                                                        <ImageBrush ImageSource="../../Images/StarIcon.png" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsPlanet}"
+                                                                         Value="True">
+                                                                <Setter Property="OpacityMask">
+                                                                    <Setter.Value>
+                                                                        <ImageBrush ImageSource="../../Images/planet.png" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsNonBody}"
+                                                                         Value="True">
+                                                                <Setter Property="OpacityMask">
+                                                                    <Setter.Value>
+                                                                        <ImageBrush ImageSource="../../Images/asteroid.png" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Rectangle.Style>
+                                            </Rectangle>
+                                            <TextBlock Text="{Binding Path=BodyNameLocal}"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <TextBlock Text="- DETAILED SURFACE SCAN"
+                                                   FontSize="14"
+                                                   Margin="15,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Visibility="{Binding MappedByUser, Converter={StaticResource BoolToVis}}" />
                                     </StackPanel>
-                                    <TextBlock Text="- DETAILED SURFACE SCAN"
-                                               FontSize="14"
-                                               Margin="15,0,0,0"
-                                               VerticalAlignment="Center"
-                                               Visibility="{Binding MappedByUser, Converter={StaticResource BoolToVis}}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="CLASSIFICATION"
-                                        Binding="{Binding Path=BodyDescription}"
-                                        Width="*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">      
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=MappedByUser}"
-                                                 Value="True">
-                                        <Setter Property="Margin"
-                                                Value="0,0,0,16" />
-                                    </DataTrigger>
-                                </Style.Triggers>        
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="VALUE"
-                                        Width="150"
-                                        Binding="{Binding Path=ScanValue, StringFormat={}{0:N0} CR}">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="{x:Type DataGridColumnHeader}">
-                                <Setter Property="Background"
-                                        Value="Transparent" />
-                                <Setter Property="Foreground"
-                                        Value="White" />
-                                <Setter Property="FontSize"
-                                        Value="20" />
-                                <Setter Property="Margin"
-                                        Value="0,0,0,10" />
-                                <Setter Property="HorizontalContentAlignment"
-                                        Value="Right" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Foreground"
-                                        Value="White" />                
-                                <Setter Property="HorizontalAlignment"
-                                        Value="Right" />
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=MappedByUser}"
-                                                 Value="True">
-                                        <Setter Property="Margin"
-                                                Value="0,0,0,16" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="CLASSIFICATION"
+                                            Binding="{Binding Path=BodyDescription}"
+                                            Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=MappedByUser}"
+                                                     Value="True">
+                                            <Setter Property="Margin"
+                                                    Value="0,0,0,16" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="VALUE"
+                                            Width="150"
+                                            Binding="{Binding Path=ScanValue, StringFormat={}{0:N0} CR}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="Background"
+                                            Value="Transparent" />
+                                    <Setter Property="Foreground"
+                                            Value="White" />
+                                    <Setter Property="FontSize"
+                                            Value="20" />
+                                    <Setter Property="Margin"
+                                            Value="0,0,0,10" />
+                                    <Setter Property="HorizontalContentAlignment"
+                                            Value="Right" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground"
+                                            Value="White" />
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Right" />
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=MappedByUser}"
+                                                     Value="True">
+                                            <Setter Property="Margin"
+                                                    Value="0,0,0,16" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </Grid>
     </Border>
 </Window>

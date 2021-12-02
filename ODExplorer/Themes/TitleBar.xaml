@@ -76,7 +76,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!--Minimize-->
     <Style x:Key="MinimizeButtonStyle"
            TargetType="Button"

@@ -111,14 +111,14 @@ namespace ParserLibrary
                 return false;
             }
 
-            ListToObservableCollection(Targets,prevSession.Systems);
+            ListToObservableCollection(Targets, prevSession.Systems);
             CurrentIndex = prevSession.CurrentIndex;
             return true;
         }
 
         public void ImportCsv(string fileName)
         {
-            ListToObservableCollection(Targets,CsvParser.ParseCsv(fileName));
+            ListToObservableCollection(Targets, CsvParser.ParseCsv(fileName));
 
             if (Targets == null && Targets.Count <= 0)
             {

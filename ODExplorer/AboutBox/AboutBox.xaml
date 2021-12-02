@@ -12,8 +12,9 @@
         Foreground="{DynamicResource Font Colour}"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Height="380"
-        Width="580"
+        Width="Auto"
+        Height="Auto"
+        SizeToContent="WidthAndHeight"
         ResizeMode="NoResize">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
@@ -65,9 +66,14 @@
             </Grid>
             <!--#endregion-->
             <Grid Grid.Row="1">
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
+                                    ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
+                </Grid.LayoutTransform>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="250" />
                     <ColumnDefinition Width="20" />
                 </Grid.ColumnDefinitions>
@@ -253,7 +259,7 @@
                 </StackPanel>
 
                 <TextBlock Grid.Row="1"
-                           Grid.Column="2"
+                           Grid.Column="3"
                            FontSize="10"
                            TextWrapping="WrapWithOverflow">
                     A big thanks to MagicMau for creating Elite Journal Reader which saved me a bunch of time.<LineBreak />
@@ -262,7 +268,7 @@
                 </TextBlock>
 
                 <StackPanel Grid.Row="2"
-                            Grid.Column="2">
+                            Grid.Column="3">
                     <TextBlock Text="Links"
                                VerticalAlignment="Center"
                                Margin="0,10,0,5" />
@@ -324,7 +330,7 @@
                 </StackPanel>
 
                 <Button Content="OK"
-                        Grid.Column="2"
+                        Grid.Column="3"
                         Grid.Row="2"
                         Width="80"
                         Height="20"

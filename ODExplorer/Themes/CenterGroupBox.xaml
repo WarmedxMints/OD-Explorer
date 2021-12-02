@@ -38,7 +38,8 @@
                                 Grid.Column="2">
                             <ContentPresenter ContentSource="Header"
                                               RecognizesAccessKey="True"
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center" />
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              VerticalAlignment="Center" />
                         </Border>
                         <ContentPresenter Grid.Row="2"
                                           Grid.Column="1"

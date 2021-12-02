@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:ODExplorer"
+             xmlns:settings="clr-namespace:ODExplorer.AppSettings"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -14,8 +15,9 @@
                 <ResourceDictionary Source="/ODExplorer;component/Themes/ControlStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <System:String x:Key="AppVersion">v0.9.1</System:String>
-            
+            <System:String x:Key="AppVersion">v0.9.2</System:String>
+
+            <settings:Settings x:Key="AppSettings" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

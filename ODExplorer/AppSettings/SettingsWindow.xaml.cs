@@ -11,7 +11,7 @@ namespace ODExplorer.AppSettings
     {
         public Settings AppSettings { get; set; }
 
-        private readonly SettingsValues values;
+        public SettingsValues Values { get; set; }
 
         private readonly EstimatedScanValue scanValue;
 
@@ -21,11 +21,12 @@ namespace ODExplorer.AppSettings
             AppSettings = main.AppSettings;
             scanValue = main.NavData.ScanValue;
             scannedBioData = main.NavData.ScannedBio;
-            InitializeComponent();
 
             //Make a copy of the current settings
-            values = new();
-            values.Copy(AppSettings.Value);
+            Values = new();
+            Values.Copy(AppSettings.Value);
+
+            InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -35,7 +36,7 @@ namespace ODExplorer.AppSettings
 
         private void ResetSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            AppSettings.Value.Reset();
+            Values.Reset();
         }
 
         private void ResetExplorationValueButton_Click(object sender, RoutedEventArgs e)
@@ -53,6 +54,8 @@ namespace ODExplorer.AppSettings
 
         private void Save_Btn_Click(object sender, RoutedEventArgs e)
         {
+            //Save Values
+            AppSettings.Value.Copy(Values);
             _ = AppSettings.SaveSettings();
             DialogResult = true;
             SystemCommands.CloseWindow(this);
@@ -60,8 +63,6 @@ namespace ODExplorer.AppSettings
 
         private void Cancel_Btn_Click(object sender, RoutedEventArgs e)
         {
-            //Restore original settings
-            AppSettings.Value.Copy(values);
             DialogResult = false;
             SystemCommands.CloseWindow(this);
         }

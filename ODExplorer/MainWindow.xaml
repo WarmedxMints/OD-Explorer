@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ODExplorer"
-        mc:Ignorable="d"       
+        mc:Ignorable="d"
         Title="OD Explorer"
         x:Name="ODExplorer"
         Height="850"
@@ -39,8 +39,8 @@
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
         </ResourceDictionary>
-        
-        
+
+
     </Window.Resources>
 
     <!--Title bar button commands-->
@@ -148,6 +148,10 @@
             </Menu>
 
             <Grid Grid.Row="2">
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding AppSettings.Value.UiScale}"
+                                    ScaleY="{Binding AppSettings.Value.UiScale}" />
+                </Grid.LayoutTransform>
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                               x:Name="MainScrollBar"
                               VerticalScrollBarVisibility="Auto"
@@ -216,9 +220,7 @@
                                                                 HeaderStyle="{DynamicResource Name Header}">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderBrush="{DynamicResource MainWindowBackground}"
-                                                            BorderThickness="0"
-                                                            Margin="-2,-1,-1,-1">
+                                                    <Border>
                                                         <Grid>
                                                             <ProgressBar Value="{Binding PercentageScanned}"
                                                                          Minimum="0"
@@ -282,11 +284,11 @@
                                                       Style="{DynamicResource DataGrid Settings}"
                                                       CellStyle="{DynamicResource BodyGrid Cell}"
                                                       RowStyle="{DynamicResource RowStyle Bodies}"
-                                                      GridLinesVisibility="All"                                                     
+                                                      GridLinesVisibility="All"
                                                       Loaded="CurrentSystemBodies_Loaded"
                                                       Unloaded="CurrentSystemBodies_Unloaded">
                                                 <DataGrid.Columns>
-                                                
+
 
                                                     <DataGridTemplateColumn Width="SizeToCells"
                                                                             MinWidth="60">
@@ -312,14 +314,14 @@
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding BodyDescription}"
-                                                                               VerticalAlignment="Center"
-                                                                               HorizontalAlignment="Left"
-                                                                               Margin="5,0,0,0"
-                                                                               Loaded="CurrentSystemBodies_TextBlock_Loaded" />
+                                                                           VerticalAlignment="Center"
+                                                                           HorizontalAlignment="Left"
+                                                                           Margin="5,0,0,0"
+                                                                           Loaded="CurrentSystemBodies_TextBlock_Loaded" />
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
-                                                    
+
                                                     <DataGridTemplateColumn Width="SizeToCells">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
@@ -405,7 +407,7 @@
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
-    
+
                                                     <DataGridTextColumn Width="SizeToCells"
                                                                         MinWidth="90"
                                                                         Binding="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls}"
@@ -436,7 +438,7 @@
                                       Style="{DynamicResource DataGrid Settings}"
                                       RowStyle="{DynamicResource Systems In Route RowStyle}"
                                       CellStyle="{DynamicResource RouteCells}"
-                                      GridLinesVisibility="Vertical"  
+                                      GridLinesVisibility="Vertical"
                                       VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
                                       PreviewMouseWheel="DataGrid_PreviewMouseWheel"
                                       x:Name="SystemsInRouteGrid">
@@ -473,8 +475,6 @@
                                                   HeadersVisibility="None"
                                                   HorizontalScrollBarVisibility="Hidden"
                                                   IsHitTestVisible="False"
-                                                  BorderBrush="Black"
-                                                  BorderThickness="0,0,0,0"
                                                   Margin="70,3,0,0"
                                                   GridLinesVisibility="All"
                                                   VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
@@ -517,6 +517,10 @@
 
             <Grid Grid.Row="3"
                   x:Name="CSV_Parser_Grid">
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding AppSettings.Value.UiScale}"
+                                    ScaleY="{Binding AppSettings.Value.UiScale}" />
+                </Grid.LayoutTransform>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="*" />
@@ -616,12 +620,12 @@
                                       CanUserAddRows="false"
                                       AutoGenerateColumns="False"
                                       HeadersVisibility="Column"
-                                      GridLinesVisibility="All"
-                                      IsHitTestVisible="True"
+                                      GridLinesVisibility="None"
+                                      IsHitTestVisible="False"
+                                      RowStyle="{DynamicResource CSV Row Style}"
                                       Style="{DynamicResource DataGrid Settings}"
                                       CellStyle="{DynamicResource CSV Parser Cell}"
-                                      ItemsSource="{Binding Targets.CurrentTarget.BodiesInfo}"
-                                      Margin="0,0,0,10">
+                                      ItemsSource="{Binding Targets.CurrentTarget.BodiesInfo}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="BODY"
                                                         HeaderStyle="{DynamicResource DataGrid Header Left}"
@@ -648,13 +652,17 @@
             </Grid>
             <Grid Grid.Row="5"
                   Background="{DynamicResource EDSM Known}">
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding AppSettings.Value.UiScale}"
+                                    ScaleY="{Binding AppSettings.Value.UiScale}" />
+                </Grid.LayoutTransform>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="0">
                     <Label FontSize="16"
@@ -682,7 +690,7 @@
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
@@ -694,9 +702,9 @@
                     <TextBlock Text="{Binding NavData.SystemsInRoute.Count}"
                                VerticalAlignment="Center"
                                Foreground="{DynamicResource Font Colour}"
-                               FontSize="16"/>
+                               FontSize="16" />
                 </StackPanel>
-                
+
                 <Label Content="Estimated Scan Value : "
                        Grid.Column="2"
                        FontSize="16"

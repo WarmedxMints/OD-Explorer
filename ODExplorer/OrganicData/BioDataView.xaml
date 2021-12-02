@@ -16,7 +16,7 @@
         ShowInTaskbar="False"
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded">
-    
+
     <!--Add the WindowChrome object-->
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
@@ -69,15 +69,15 @@
                TargetType="{x:Type DataGridRow}">
             <Setter Property="Background"
                     Value="Transparent" />
-                <Style.Triggers>
-                    <Trigger Property="IsSelected"
-                             Value="True">
+            <Style.Triggers>
+                <Trigger Property="IsSelected"
+                         Value="True">
                     <Setter Property="BorderThickness"
                             Value="1" />
                     <Setter Property="BorderBrush"
                             Value="WhiteSmoke" />
-                    </Trigger>                    
-                </Style.Triggers>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="{x:Type DataGridCell}"
@@ -96,7 +96,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <Style x:Key="DataGridHeaderStyle"
                TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="Background"
@@ -135,27 +135,15 @@
             BorderBrush="{DynamicResource MainWindowBackground}"
             BorderThickness="0">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto"
-                                  MinWidth="250" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
             </Grid.RowDefinitions>
 
             <!--#region Custom Title Bar-->
             <Grid Height="30"
                   Background="#FF3C4043"
-                  Grid.Row="0"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="5">
+                  Grid.Row="0">
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -176,10 +164,6 @@
                 <!--Caption buttons-->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MinimizeButtonStyle}"
-                            WindowChrome.IsHitTestVisibleInChrome="True"
-                            ToolTip="Minimize"
-                            Command="{x:Static SystemCommands.MinimizeWindowCommand}" />
                     <Button x:Name="RestoreButton"
                             Visibility="Collapsed"
                             Style="{StaticResource RestoreButtonStyle}"
@@ -199,127 +183,147 @@
                 </StackPanel>
             </Grid>
             <!--#endregion-->
+            <Grid Grid.Row="1">
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
+                                    ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
+                </Grid.LayoutTransform>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="250" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="20" />
+                </Grid.RowDefinitions>
 
-            <DataGrid Grid.Row="2"
-                      Grid.Column="1"
-                      x:Name="BioDataGrid"
-                      Style="{DynamicResource DataGrid Settings}"
-                      RowStyle="{DynamicResource DataGridRowStyleHitTest}"
-                      ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
-                      CellStyle="{DynamicResource Cell Style}"
-                      Foreground="{DynamicResource Window Font Colour}"
-                      GridLinesVisibility="None"
-                      SelectionUnit="FullRow"
-                      Loaded="BioDataGrid_Loaded"
-                      SelectionChanged="BioDataGrid_SelectionChanged"
-                      ItemsSource="{Binding ScannedBioData.ScannedData}">                      
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="30">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button x:Name="DeleteBodyData"
-                                        Width="18"
-                                        Height="18"
-                                        Content="&#xE106;"
-                                        Style="{StaticResource CaptionButtonStyleAutoWidth}"
-                                        Click="DeleteBodyData_Click" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                <DataGrid Grid.Row="1"
+                          Grid.Column="1"
+                          x:Name="BioDataGrid"
+                          Style="{DynamicResource DataGrid Settings}"
+                          RowStyle="{DynamicResource DataGridRowStyleHitTest}"
+                          ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
+                          CellStyle="{DynamicResource Cell Style}"
+                          Foreground="{DynamicResource Window Font Colour}"
+                          GridLinesVisibility="None"
+                          SelectionUnit="FullRow"
+                          Loaded="BioDataGrid_Loaded"
+                          SelectionChanged="BioDataGrid_SelectionChanged"
+                          ItemsSource="{Binding ScannedBioData.ScannedData}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="30">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="DeleteBodyData"
+                                            Width="18"
+                                            Height="18"
+                                            Content="&#xE106;"
+                                            Style="{StaticResource CaptionButtonStyleAutoWidth}"
+                                            Click="DeleteBodyData_Click" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="SYSTEM"
-                                        Binding="{Binding SystemName}"
-                                        Width="SizeToCells"
-                                        MinWidth="150"
-                                        Foreground="#FFF56A00">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                        <DataGridTextColumn Header="SYSTEM"
+                                            Binding="{Binding SystemName}"
+                                            Width="SizeToCells"
+                                            MinWidth="150"
+                                            Foreground="#FFF56A00">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="BODY"
-                                        MinWidth="60"
-                                        Binding="{Binding BodyName}"
-                                        Width="SizeToCells"
-                                        Foreground="{DynamicResource Font Colour}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        <DataGridTextColumn Header="BODY"
+                                            MinWidth="60"
+                                            Binding="{Binding BodyName}"
+                                            Width="SizeToCells"
+                                            Foreground="{DynamicResource Font Colour}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
 
-            <DataGrid Grid.Column="2"
-                      Grid.Row="2"
-                      x:Name="SystemDetails"
-                      ItemsSource="{Binding Source={StaticResource ListCVS}}"
-                      IsSynchronizedWithCurrentItem="False"
-                      HeadersVisibility="Column"
-                      Style="{DynamicResource DataGrid Settings}"
-                      Background="Transparent"
-                      HorizontalGridLinesBrush="{DynamicResource Groupbox Border}"
-                      RowStyle="{DynamicResource DataGridRowStyle}"
-                      ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
-                      GridLinesVisibility="Horizontal"
-                      AutoGenerateColumns="False"
-                      Margin="20,0,0,0"
-                      LoadingRow="SystemDetails_LoadingRow">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
-                                        Width="30" />
-                    <DataGridTextColumn Header="GENUS &amp; SPECIES"
-                                        Binding="{Binding Path=Species, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                                        SortDirection="Ascending"
-                                        Width="*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="SCAN STATUS"
-                                        Width="150"
-                                        Binding="{Binding Path=Status}">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="{x:Type DataGridColumnHeader}">
-                                <Setter Property="Background"
-                                        Value="Transparent" />
-                                <Setter Property="Foreground"
-                                        Value="White" />
-                                <Setter Property="FontSize"
-                                        Value="20" />
-                                <Setter Property="Margin"
-                                        Value="0,0,0,10" />
-                                <Setter Property="HorizontalContentAlignment"
-                                        Value="Right" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment"
-                                        Value="Right" />
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <Button Grid.Row="3"                    
-                    Grid.Column="2"
-                    Width="100"
-                    x:Name="ClearAllData"
-                    Content="CLEAR ALL DATA"
-                    HorizontalAlignment="Right"
-                    Click="ClearAllData_Click"
-                    Margin="0,0,25,0"/>
+                <DataGrid Grid.Column="2"
+                          Grid.Row="1"
+                          x:Name="SystemDetails"
+                          ItemsSource="{Binding Source={StaticResource ListCVS}}"
+                          IsSynchronizedWithCurrentItem="False"
+                          HeadersVisibility="Column"
+                          Style="{DynamicResource DataGrid Settings}"
+                          Background="Transparent"
+                          HorizontalGridLinesBrush="{DynamicResource Groupbox Border}"
+                          RowStyle="{DynamicResource DataGridRowStyle}"
+                          ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
+                          GridLinesVisibility="Horizontal"
+                          AutoGenerateColumns="False"
+                          Margin="20,0,0,0"
+                          LoadingRow="SystemDetails_LoadingRow">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
+                                            Width="30" />
+                        <DataGridTextColumn Header="GENUS &amp; SPECIES"
+                                            Binding="{Binding Path=Species, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
+                                            SortDirection="Ascending"
+                                            Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="SCAN STATUS"
+                                            Width="150"
+                                            Binding="{Binding Path=Status}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="Background"
+                                            Value="Transparent" />
+                                    <Setter Property="Foreground"
+                                            Value="White" />
+                                    <Setter Property="FontSize"
+                                            Value="20" />
+                                    <Setter Property="Margin"
+                                            Value="0,0,0,10" />
+                                    <Setter Property="HorizontalContentAlignment"
+                                            Value="Right" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Right" />
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="2"
+                        Grid.Column="2"
+                        Width="100"
+                        x:Name="ClearAllData"
+                        Content="CLEAR ALL DATA"
+                        HorizontalAlignment="Right"
+                        Click="ClearAllData_Click"
+                        Margin="0,0,25,0" />
+            </Grid>
         </Grid>
     </Border>
 </Window>

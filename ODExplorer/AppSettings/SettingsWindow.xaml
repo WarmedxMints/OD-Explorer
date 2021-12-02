@@ -13,8 +13,8 @@
         FontSize="18"
         Background="{DynamicResource MainWindowBackground}"
         Title="ED EXPLORER - Settings"
-        Height="510"
         Width="500"
+        SizeToContent="Height"
         WindowStyle="None"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
@@ -60,6 +60,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />                
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
 
@@ -93,7 +94,7 @@
                     <ComboBox Grid.Row="1"
                               Grid.Column="0"
                               ItemsSource="{Binding Source={StaticResource CSBSortingCat}}"
-                              SelectedItem="{Binding AppSettings.Value.SortCategory}"
+                              SelectedItem="{Binding Values.SortCategory}"
                               Width="200"
                               HorizontalAlignment="Center"
                               VerticalContentAlignment="Center"
@@ -117,7 +118,7 @@
                               Grid.Column="1"
                               HorizontalAlignment="Center"
                               ItemsSource="{Binding Source={StaticResource CSMSortDirection}}"
-                              SelectedItem="{Binding AppSettings.Value.SortDirection}"
+                              SelectedItem="{Binding Values.SortDirection}"
                               Width="200"
                               FontSize="14"
                               VerticalContentAlignment="Center"
@@ -160,9 +161,10 @@
                            Foreground="{DynamicResource Font Colour}" />
                     <Slider Grid.Row="1"
                             Grid.Column="0"
-                            Value="{Binding AppSettings.Value.WorthMappingValue}"
+                            Value="{Binding Values.WorthMappingValue}"
                             Maximum="2000000"
                             SmallChange="10000"
+                            IsSnapToTickEnabled="True"
                             TickFrequency="10000"
                             LargeChange="10000" />
                     <TextBlock Grid.Row="1"
@@ -170,7 +172,7 @@
                                FontSize="16"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
-                               Text="{Binding AppSettings.Value.WorthMappingValue, StringFormat={}{0:N0} cr}"
+                               Text="{Binding Values.WorthMappingValue, StringFormat={}{0:N0} cr}"
                                Foreground="{DynamicResource Font Colour}" />
 
                     <Label Content="Maximum Distance From Arrival"
@@ -181,9 +183,10 @@
                            Foreground="{DynamicResource Font Colour}" />
                     <Slider Grid.Row="3"
                             Grid.Column="0"
-                            Value="{Binding AppSettings.Value.WorthMappingDistance}"
+                            Value="{Binding Values.WorthMappingDistance}"
                             Maximum="1000000"
                             SmallChange="10000"
+                            IsSnapToTickEnabled="True"
                             TickFrequency="10000"
                             LargeChange="10000" />
                     <TextBlock Grid.Row="3"
@@ -193,13 +196,13 @@
                         <TextBlock.Style>
                             <Style>
                                 <Setter Property="TextBlock.Text"
-                                        Value="{Binding AppSettings.Value.WorthMappingDistance, StringFormat={}{0:N0} ls}" />
+                                        Value="{Binding Values.WorthMappingDistance, StringFormat={}{0:N0} ls}" />
                                 <Setter Property="TextBlock.HorizontalAlignment"
                                         Value="Right" />
                                 <Setter Property="TextBlock.VerticalAlignment"
                                         Value="Center" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding AppSettings.Value.WorthMappingDistance}"
+                                    <DataTrigger Binding="{Binding Values.WorthMappingDistance}"
                                                  Value="0">
                                         <Setter Property="TextBlock.Text"
                                                 Value="∞" />
@@ -214,6 +217,36 @@
             </GroupBox>
 
             <GroupBox Grid.Row="3"
+                      Grid.Column="1"
+                      Header="UI Scale"
+                      BorderThickness="0.7"
+                      Style="{DynamicResource SystemBorder}"
+                      Foreground="{DynamicResource Font Colour}"
+                      Background="{DynamicResource MainWindowBackground}"
+                      Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+
+                    <Slider Grid.Column="0"
+                            Value="{Binding Values.UiScale}"
+                            Maximum="4"
+                            Minimum="0.25"
+                            TickFrequency="0.25"
+                            LargeChange="0.25"
+                            IsSnapToTickEnabled="True"/>
+                    <TextBlock   Grid.Column="1"
+                               FontSize="16"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="{Binding Values.UiScale, StringFormat={}{0:N2} x}"
+                               Foreground="{DynamicResource Font Colour}" />
+                </Grid>
+            </GroupBox>
+            
+            <GroupBox Grid.Row="4"
                       Grid.Column="1"
                       Header="Misc"
                       BorderThickness="0.7"
@@ -245,7 +278,7 @@
                                 Grid.Row="0"
                                 Grid.Column="0">
                     <ComboBox ItemsSource="{Binding Source={StaticResource TemperatureUnit}}"
-                              SelectedItem="{Binding AppSettings.Value.TemperatureUnit}"
+                              SelectedItem="{Binding Values.TemperatureUnit}"
                               Width="90"
                               HorizontalAlignment="Left"
                               FontSize="14"
@@ -272,7 +305,7 @@
                               Foreground="{DynamicResource Font Colour}"
                               FontSize="14"
                               VerticalAlignment="Center"
-                              IsChecked="{Binding AppSettings.Value.IgnoreNonBodies}" />
+                              IsChecked="{Binding Values.IgnoreNonBodies}" />
                     <TextBlock  Grid.Row="2"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
@@ -287,7 +320,7 @@
                               Foreground="{DynamicResource Font Colour}"
                               FontSize="14"
                               VerticalAlignment="Center"
-                              IsChecked="{Binding AppSettings.Value.AutoCopyCsvSystemToClipboard}" />
+                              IsChecked="{Binding Values.AutoCopyCsvSystemToClipboard}" />
                     <TextBlock  Grid.Row="4"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
@@ -346,7 +379,7 @@
                 </Grid>
             </GroupBox>
 
-            <StackPanel Grid.Row="4"
+            <StackPanel Grid.Row="5"
                         Grid.Column="1"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">

@@ -140,7 +140,7 @@ namespace ODExplorer.NavData
         {
             get
             {
-                if(Landable == false)
+                if (Landable == false)
                 {
                     return "";
                 }
@@ -149,7 +149,7 @@ namespace ODExplorer.NavData
                 {
                     Temperature.Kelvin => $"{_surfaceTemp:N0} K",
                     Temperature.Celsius => $"{_surfaceTemp - 273.15:N0} °C",
-                    Temperature.Fahrenheit => $"{(_surfaceTemp - 273.15) * 9 / 5 + 32:N0} °F",                    
+                    Temperature.Fahrenheit => $"{(_surfaceTemp - 273.15) * 9 / 5 + 32:N0} °F",
                     _ => "",
                 };
             }
@@ -323,7 +323,7 @@ namespace ODExplorer.NavData
             TerraformState = e.TerraformState;
             SurfaceGravity = e.SurfaceGravity ?? 0;
             SurfacePressure = e.SurfacePressure ?? 0;
-             AtmosphereType = e.AtmosphereType;
+            AtmosphereType = e.AtmosphereType;
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
             Landable = e.Landable ?? false;
             WasDiscovered = e.WasDiscovered ?? false;
@@ -369,7 +369,7 @@ namespace ODExplorer.NavData
             }
 
             //Only planets can be mapped so stars and non-bodies are not marked as so
-            if (WorthMapping && IsPlanet)
+            if (WorthMapping && IsPlanet && PlanetClass != PlanetClass.EdsmValuableBody)
             {
                 Status = DiscoveryStatus.WorthMapping;
                 return;

@@ -10,12 +10,12 @@
                          Value="True">
                 <Setter Property="Foreground"
                         Value="{DynamicResource Known Font Colour}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsKnownToEDSM}"
-                             Value="False">
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="False">
                 <Setter Property="Foreground"
-                            Value="{DynamicResource UnKnown Font Colour}" />
-                </DataTrigger>
+                        Value="{DynamicResource UnKnown Font Colour}" />
+            </DataTrigger>
         </Style.Triggers>
     </Style>
 
@@ -43,7 +43,7 @@
         <Setter Property="BorderBrush"
                 Value="{DynamicResource Groupbox Border}" />
     </Style>
-    
+
     <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="Background"
                 Value="{DynamicResource MainWindowBackground}" />
@@ -64,13 +64,14 @@
                     Background="{DynamicResource MainWindowBackground}" />
     </ItemsPanelTemplate>
 
-    <Style TargetType="{x:Type MenuItem}" x:Key="ContextMenuItem">
+    <Style TargetType="{x:Type MenuItem}"
+           x:Key="ContextMenuItem">
         <Setter Property="ItemsPanel"
                 Value="{StaticResource MenuItemPanelTemplate}" />
         <Setter Property="FontSize"
                 Value="16" />
     </Style>
-    
+
     <Style x:Key="DataGridFontBody"
            TargetType="{x:Type TextBlock}">
         <Style.Triggers>
@@ -119,7 +120,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="BodyRectangle" 
+    <Style x:Key="BodyRectangle"
            TargetType="{x:Type Rectangle}"
            BasedOn="{StaticResource Rectangle Style}">
         <Style.Triggers>
@@ -149,7 +150,7 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-    
+
     <!--#region ScrollBar-->
     <SolidColorBrush x:Key="StandardBorderBrush"
                      Color="#888" />
@@ -258,7 +259,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style x:Key="ScrollBarPageButton"
            TargetType="{x:Type RepeatButton}">
         <Setter Property="Visibility"
@@ -505,7 +506,7 @@
                             <Setter TargetName="border"
                                     Property="Opacity"
                                     Value="0.7" />
-                            <Setter TargetName="border" 
+                            <Setter TargetName="border"
                                     Property="BorderBrush"
                                     Value="{DynamicResource Known Font Colour}" />
                             <Setter Property="Foreground"
@@ -517,7 +518,7 @@
         </Setter>
     </Style>
     <!--#endregion-->
-    
+
     <!--#region Menu Bar Style-->
     <SolidColorBrush x:Key="HighlightedBackgroundBrush"
                      Color="#FF797878" />
@@ -763,7 +764,7 @@
     <!--#endregion-->
 
     <utils:GravityToColourConvertor x:Key="gravToColour" />
-    
+
     <Style TargetType="{x:Type TextBlock}"
            x:Key="GravityTextBox">
         <Setter Property="Foreground"

@@ -115,7 +115,7 @@
         <Setter Property="Foreground"
                 Value="{DynamicResource Font Colour}" />
     </Style>
-    
+
     <Style x:Key="DataGrid Header Center"
            TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Background"
@@ -157,7 +157,7 @@
         <Setter Property="Background"
                 Value="{x:Null}" />
     </Style>
-    
+
     <Style x:Key="Systems In Route RowStyle"
            TargetType="{x:Type DataGridRow}">
         <Setter Property="BorderThickness"
@@ -182,7 +182,7 @@
                 <Setter Property="Background"
                         Value="{x:Null}" />
                 <Setter Property="BorderBrush"
-                        Value="{x:Null}"/>
+                        Value="{x:Null}" />
                 <Setter Property="BorderThickness"
                         Value="0" />
             </Trigger>
@@ -241,6 +241,31 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="CSV Row Style"
+           TargetType="{x:Type DataGridRow}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="IsHitTestVisible"
+                Value="False" />
+        <Setter Property="Background"
+                Value="{x:Null}" />
+        <Setter Property="BorderBrush"
+                Value="{x:Null}" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{x:Null}" />
+                <Setter Property="BorderBrush"
+                        Value="{x:Null}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <!--#endregion-->
 
     <!--#region Element Styles-->
@@ -265,7 +290,7 @@
         <Setter Property="ToolTip"
                 Value="The Number of Bodies reported to EDSM" />
     </Style>
-    
+
     <Style x:Key="DataGrid Element Right Margin"
            TargetType="{x:Type TextBlock}">
         <Setter Property="HorizontalAlignment"
@@ -389,12 +414,14 @@
         <Setter Property="IsHitTestVisible"
                 Value="False" />
         <Setter Property="BorderThickness"
-                Value="0" />
+                Value="1" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
         <Setter Property="Background"
                 Value="{DynamicResource EDSM Known}" />
         <Setter Property="Foreground"
                 Value="{DynamicResource Font Colour}" />
-    </Style>   
+    </Style>
 
     <!--#endregion-->
 
@@ -437,7 +464,7 @@
                                     ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
             </DataGrid.Columns>
         </DataGrid>
-    </DataTemplate>  
-  
+    </DataTemplate>
+
     <!--#endregion-->
 </ResourceDictionary>

@@ -2,7 +2,6 @@
 using ODExplorer.Utils;
 using System.ComponentModel;
 using System.IO;
-using System.Windows;
 
 namespace ODExplorer.AppSettings
 {
@@ -79,6 +78,7 @@ namespace ODExplorer.AppSettings
         private bool autoCopyCsvSystemToClipboard = true;
         private bool showParser;
         private Temperature temperatureUnit;
+        private double uiScale = 1;
 
         public SortCategory SortCategory { get => sortCategory; set { sortCategory = value; OnPropertyChanged(); } }
         public ListSortDirection SortDirection { get => sortDirection; set { sortDirection = value; OnPropertyChanged(); } }
@@ -88,17 +88,19 @@ namespace ODExplorer.AppSettings
         public bool ShowParser { get => showParser; set { showParser = value; OnPropertyChanged(); } }
         public bool AutoCopyCsvSystemToClipboard { get => autoCopyCsvSystemToClipboard; set { autoCopyCsvSystemToClipboard = value; OnPropertyChanged(); } }
         public Temperature TemperatureUnit { get => temperatureUnit; set { temperatureUnit = value; OnPropertyChanged(); } }
+        public double UiScale { get => uiScale; set { uiScale = value; OnPropertyChanged(); } }
 
         public void Copy(SettingsValues values)
         {
-            sortCategory = values.SortCategory;
-            sortDirection = values.SortDirection;
-            worthMappingValue = values.WorthMappingValue;
-            worthMappingDistance = values.WorthMappingDistance;
-            ignoreNonBodies = values.IgnoreNonBodies;
-            showParser = values.ShowParser;
-            autoCopyCsvSystemToClipboard = values.AutoCopyCsvSystemToClipboard;
-            temperatureUnit = values.TemperatureUnit;
+            SortCategory = values.SortCategory;
+            SortDirection = values.SortDirection;
+            WorthMappingValue = values.WorthMappingValue;
+            WorthMappingDistance = values.WorthMappingDistance;
+            IgnoreNonBodies = values.IgnoreNonBodies;
+            ShowParser = values.ShowParser;
+            AutoCopyCsvSystemToClipboard = values.AutoCopyCsvSystemToClipboard;
+            TemperatureUnit = values.TemperatureUnit;
+            UiScale = values.UiScale;
         }
 
         public void Reset()
@@ -111,6 +113,7 @@ namespace ODExplorer.AppSettings
             AutoCopyCsvSystemToClipboard = true;
             ShowParser = false;
             TemperatureUnit = Temperature.Kelvin;
+            UiScale = 1;
         }
     }
 }
