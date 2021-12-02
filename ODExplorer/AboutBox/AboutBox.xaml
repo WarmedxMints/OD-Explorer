@@ -12,9 +12,8 @@
         Foreground="{DynamicResource Font Colour}"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Width="Auto"
-        Height="Auto"
-        SizeToContent="WidthAndHeight"
+        Width="580"
+        Height="380"     
         ResizeMode="NoResize">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
@@ -66,10 +65,7 @@
             </Grid>
             <!--#endregion-->
             <Grid Grid.Row="1">
-                <Grid.LayoutTransform>
-                    <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
-                                    ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
-                </Grid.LayoutTransform>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="*" />
