@@ -22,6 +22,8 @@
                      Color="#FF37BD37" />
     <SolidColorBrush x:Key="Non-Scoopable Star"
                      Color="#FFE42323" />
+    <SolidColorBrush x:Key="Neutron Star"
+                     Color="#FF60B7FD" />
 
     <SolidColorBrush x:Key="User Mapped Body"
                      Color="#FF0077D7" />

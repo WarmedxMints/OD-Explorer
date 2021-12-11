@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +22,7 @@ namespace ODExplorer.NavData
             StarClass = route.StarClass.ToUpperInvariant();
             SystemName = route.StarSystem.ToUpperInvariant();
             SystemAddress = route.SystemAddress;
+            SystemPos = new Vector3(route.StarPos[0], route.StarPos[1], route.StarPos[2]);
         }
 
         public SystemInfo(SystemInfo sys)
@@ -29,7 +31,7 @@ namespace ODExplorer.NavData
             systemName = sys.SystemName;
             IsScoopable = sys.IsScoopable;
             isKnownToEDSM = sys.IsKnownToEDSM;
-            systemValue = sys.SystemValue;
+            sysValue = sys.SysValue;
             SystemAddress = sys.SystemAddress;
         }
 
@@ -41,6 +43,33 @@ namespace ODExplorer.NavData
         #endregion
 
         #region Properties
+        public Vector3 SystemPos { get; set; }
+
+        private double jumpDistanceToSystem;
+
+        public double JumpDistanceToSystem
+        {
+            get => jumpDistanceToSystem;
+            set
+            {
+                jumpDistanceToSystem = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private int jumpDistanceRemaining;
+
+        public int JumpDistanceRemaining
+        {
+            get => jumpDistanceRemaining;
+            set
+            {
+                jumpDistanceRemaining = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string starClass;
 
         public string StarClass
@@ -67,16 +96,18 @@ namespace ODExplorer.NavData
 
         public long SystemAddress { get; set; }
 
-        private string systemValue = "?";
+        private long sysValue = -1;
+
+        public long SysValue
+        {
+            get => sysValue;
+            set { sysValue = value; OnPropertyChanged("SystemValue"); }
+        }
 
         public string SystemValue
         {
-            get => systemValue;
-            set
-            {
-                systemValue = value;
-                OnPropertyChanged();
-            }
+            get => SysValue < 0 ? "?" : $"{SysValue:N0}";
+            set => OnPropertyChanged();
         }
 
         [IgnoreDataMember]
@@ -101,6 +132,8 @@ namespace ODExplorer.NavData
                 OnPropertyChanged();
             }
         }
+        [IgnoreDataMember]
+        public bool PolledEDSMValue { get; set; }
 
         private int _discoveredBodiesCount;
 

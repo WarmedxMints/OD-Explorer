@@ -30,13 +30,13 @@ namespace ODExplorer.NavData
             StarType = e.StarType;
             StellarMass = e.StellarMass ?? 0;
             PlanetClass = e.PlanetClass;
-            MassEM = e.MassEM ?? 0;
+            MassEM = e.MassEM ?? 1;
             TerraformState = e.TerraformState;
+            AtmosphereType = e.AtmosphereType;
+            Landable = e.Landable ?? false;
             SurfaceGravity = e.SurfaceGravity ?? 0;
             SurfacePressure = e.SurfacePressure ?? 0;
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
-            AtmosphereType = e.AtmosphereType;
-            Landable = e.Landable ?? false;
             WasDiscovered = e.WasDiscovered ?? false;
             //Whan a body is mapped by the user a scan event is fired
             //For some reason that scan event can report the body as not mapped when it has been previously
@@ -90,7 +90,15 @@ namespace ODExplorer.NavData
                 OnPropertyChanged("IsStar");
                 OnPropertyChanged("IsPlanet");
                 OnPropertyChanged("IsNonBody");
+                OnPropertyChanged("IsEDSMvb");
             }
+        }
+
+        [IgnoreDataMember]
+        public bool IsEDSMvb
+        {
+            get => PlanetClass == PlanetClass.EdsmValuableBody;
+            set => OnPropertyChanged();
         }
 
         public double StellarMass { get; set; }
@@ -108,8 +116,8 @@ namespace ODExplorer.NavData
 
         public double SurfacePressure
         {
-            get { return _surfacePressure; }
-            set { _surfacePressure = value; OnPropertyChanged(); }
+            get => _surfacePressure;
+            set { _surfacePressure = value; OnPropertyChanged(); OnPropertyChanged("SurfacePressureString"); }
         }
 
         public string SurfacePressureString
@@ -124,6 +132,7 @@ namespace ODExplorer.NavData
                 //Convert Pa to Standard Atmosphere
                 return $"{_surfacePressure / 101325:N2} atm";
             }
+            set => OnPropertyChanged();
         }
 
         public AtmosphereClass AtmosphereType { get; set; } = AtmosphereClass.None;
@@ -132,7 +141,7 @@ namespace ODExplorer.NavData
 
         public int SurfaceTemp
         {
-            get { return _surfaceTemp; }
+            get => _surfaceTemp;
             set { _surfaceTemp = value; OnPropertyChanged(); OnPropertyChanged("SurfaceTempString"); }
         }
 
@@ -153,6 +162,7 @@ namespace ODExplorer.NavData
                     _ => "",
                 };
             }
+            set => OnPropertyChanged();
         }
         private int _mappedValue;
         public int MappedValue
@@ -277,11 +287,11 @@ namespace ODExplorer.NavData
                 PlanetClass = e.PlanetClass;
                 MassEM = e.MassEM;
                 TerraformState = e.TerraformState;
+                AtmosphereType = e.AtmosphereType;
+                Landable = e.Landable;
                 SurfaceGravity = e.SurfaceGravity;
                 SurfacePressure = e.SurfacePressure;
                 SurfaceTemp = e.SurfaceTemp;
-                AtmosphereType = e.AtmosphereType;
-                Landable = e.Landable;
                 WasDiscovered = e.WasDiscovered;
                 //Whan a body is mapped by the user a scan event is fired
                 //For some reason that scan event can report the body as not mapped when it has been previously
@@ -319,13 +329,14 @@ namespace ODExplorer.NavData
             StarType = e.StarType;
             StellarMass = e.StellarMass ?? 0;
             PlanetClass = e.PlanetClass;
-            MassEM = e.MassEM ?? 0;
+            MassEM = e.MassEM ?? 1;
+            AtmosphereType = e.AtmosphereType;
+            Landable = e.Landable ?? false;
             TerraformState = e.TerraformState;
             SurfaceGravity = e.SurfaceGravity ?? 0;
             SurfacePressure = e.SurfacePressure ?? 0;
-            AtmosphereType = e.AtmosphereType;
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
-            Landable = e.Landable ?? false;
+
             WasDiscovered = e.WasDiscovered ?? false;
             //Whan a body is mapped by the user a scan event is fired
             //For some reason that scan event can report the body as not mapped when it has been previously

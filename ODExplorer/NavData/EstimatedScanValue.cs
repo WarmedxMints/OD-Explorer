@@ -99,7 +99,6 @@ namespace ODExplorer.NavData
                 {
                     if (body.MappedByUser)
                     {
-                        //body.MappedValue = MathFunctions.GetBodyValue(body, true, body.MappedByUser, body.EffeicentMapped);
                         val += (ulong)(body.MappedValue + body.BonusValue);
                         continue;
                     }

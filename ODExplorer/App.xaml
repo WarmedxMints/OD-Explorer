@@ -15,7 +15,7 @@
                 <ResourceDictionary Source="/ODExplorer;component/Themes/ControlStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <System:String x:Key="AppVersion">v0.9.2</System:String>
+            <System:String x:Key="AppVersion">v0.9.3</System:String>
 
             <settings:Settings x:Key="AppSettings" />
         </ResourceDictionary>

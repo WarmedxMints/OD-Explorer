@@ -9,10 +9,10 @@ using ODExplorer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Numerics;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -21,8 +21,7 @@ namespace ODExplorer.NavData
     public class NavigationData : PropertyChangeNotify
     {
         #region Properties
-        private Settings _appSettings;
-        public Settings AppSettings { get => _appSettings; set => _appSettings = value; }
+        public Settings AppSettings { get; set; }
         //Estimated Scan Values
         private EstimatedScanValue _scanValue = new();
         public EstimatedScanValue ScanValue
@@ -88,6 +87,15 @@ namespace ODExplorer.NavData
         //and we would want to ignore it in that case.
         private bool _populatingRoute;
 
+        public bool PopulatingRoute
+        {
+            get => _populatingRoute;
+            set
+            {
+                _populatingRoute = value;
+                OnPropertyChanged();
+            }
+        }
         //Does the use wish to ignore non bodies
         public bool IgnoreNonBodies { get; set; } = true;
         #endregion
@@ -158,8 +166,23 @@ namespace ODExplorer.NavData
             {
                 return;
             }
+
+            int i = 0;
+        TryAgain:
+
+            if (i > 20)
+            {
+                return;
+            }
+
             //Find the body we have just mapped
             SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyName.ToLowerInvariant() == e.BodyName.ToLowerInvariant());
+
+            if (body == default)
+            {
+                i++;
+                goto TryAgain;
+            }
 
             if (body is not null)
             {
@@ -437,7 +460,7 @@ namespace ODExplorer.NavData
                 return;
             }
             //We have data and are populating a route
-            _populatingRoute = true;
+            PopulatingRoute = true;
 
             //Clear our collections
             SystemsInRoute.ClearCollection();
@@ -445,20 +468,29 @@ namespace ODExplorer.NavData
 
             List<Route> systems = route.Route;
 
-            SystemInfo sys = new(systems[0]);
+            SystemInfo currentSys = new(systems[0]);
+            Vector3 lastPos = currentSys.SystemPos;
+
             //populate the current system
-            SetCurrentSystem(sys);
+            SetCurrentSystem(currentSys);
+            double totaldistance = 0;
 
             //populate the systems in route and create the backup
             for (int i = 1; i < count; i++)
             {
-                sys = new SystemInfo(systems[i]);
+                SystemInfo sys = new(systems[i]);
+                sys.JumpDistanceToSystem = Vector3.Distance(lastPos, sys.SystemPos);
+                totaldistance += sys.JumpDistanceToSystem;
+                sys.JumpDistanceRemaining = (int)Math.Round(totaldistance);
                 GetSystemValue(sys);
                 SystemsInRoute.AddToCollection(sys);
                 _backupRoute.Add(sys);
+                lastPos = sys.SystemPos;
             }
 
-            _populatingRoute = false;
+            //UpdateRemainingJumpDistace();
+
+            PopulatingRoute = false;
         }
         //Method to set the current system
         public void SetCurrentSystem(SystemInfo sys)
@@ -468,6 +500,7 @@ namespace ODExplorer.NavData
             //If we are in the system, return
             if (currentSystem is not null)
             {
+                UpdateRemainingJumpDistace();
                 return;
             }
             //Check we don't have unsold Navigation History
@@ -475,9 +508,14 @@ namespace ODExplorer.NavData
             //If we do
             if (knownSystem is not null)
             {
+                //Update EDSM Data
+                knownSystem.PolledEDSMValue = false;
+                GetEDSMBodyCount(knownSystem);
+                GetSystemValue(knownSystem);
                 //Make it the current system
                 CurrentSystem.ClearCollection();
                 CurrentSystem.AddToCollection(knownSystem);
+                UpdateRemainingJumpDistace();
                 //Add edsm bodies although they are likely already in there.
                 //We will add them just for the rare case something has been discovered since.
                 foreach (SystemBody body in sys.Bodies)
@@ -496,6 +534,7 @@ namespace ODExplorer.NavData
             //We aren't aware of the current system so clear the collection and add it
             CurrentSystem.ClearCollection();
             CurrentSystem.AddToCollection(sys);
+            UpdateRemainingJumpDistace();
             GetEDSMBodyCount(sys);
             //If our system information is missing the main star details, get it from EDSM
             if (string.IsNullOrEmpty(sys.StarClass))
@@ -503,15 +542,31 @@ namespace ODExplorer.NavData
                 sys.StarClass = GetSystemStarClass(sys.SystemName);
             }
             //If we don't have a scan value for the system, get it from EDSM
-            if (sys.SystemValue.Length < 3)
+            if (!sys.PolledEDSMValue)
             {
                 GetSystemValue(sys);
+            }
+        }
+        //Update remaining jump distance
+        private void UpdateRemainingJumpDistace()
+        {
+            if (!SystemsInRoute.Any())
+            {
+                return;
+            }
+
+            double totaldistance = 0;
+
+            foreach (SystemInfo sys in SystemsInRoute)
+            {
+                totaldistance += sys.JumpDistanceToSystem;
+                sys.JumpDistanceRemaining = (int)Math.Round(totaldistance);
             }
         }
         //Adds a body to the current system
         public SystemBody AddBodyToCurrentSystem(bool fromDetailedScan, bool fromEDSM, SystemBody bodyToAdd)
         {
-            if (bodyToAdd.IsNonBody == true && _appSettings.Value.IgnoreNonBodies)
+            if (bodyToAdd.IsNonBody && AppSettings.Value.IgnoreNonBodies)
             {
                 //Do nothing as we are currently ignoring non bodies
                 return null;
@@ -662,7 +717,7 @@ namespace ODExplorer.NavData
         {
             //var ret = new SystemInfo(system);
             //We already have a value
-            if (ret.SystemValue.Length > 3)
+            if (ret.PolledEDSMValue)
             {
                 return;
             }
@@ -693,11 +748,18 @@ namespace ODExplorer.NavData
                 {
                     return;
                 }
-                ret.SystemValue = $"{sys.EstimatedValueMapped:N0}";
+                ret.SysValue = sys.EstimatedValueMapped;
                 ret.EDSMUrl = sys.Url;
-
+                ret.PolledEDSMValue = true;
                 foreach (ValuableBody body in sys.ValuableBodies)
                 {
+                    bool systemKnown = ret.Bodies.FirstOrDefault(x => x.BodyID == body.BodyId) != default;
+
+                    if (systemKnown)
+                    {
+                        continue;
+                    }
+
                     SystemBody planet = new();
 
                     planet.BodyID = body.BodyId;

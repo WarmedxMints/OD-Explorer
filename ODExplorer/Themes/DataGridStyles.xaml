@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ndata="clr-namespace:ODExplorer.NavData"
                     xmlns:utils="clr-namespace:ODExplorer.Utils"
+                    xmlns:CsvParser="clr-namespace:ParserLibrary;assembly=ParserLibrary"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:local="clr-namespace:ODExplorer.Themes"
@@ -12,6 +13,15 @@
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
     <utils:IntToVisibilityConverter x:Key="intToVis" />
     <utils:InvertableBooleanToVisibilityConverter x:Key="InvBoolToVis" />
+    <utils:BoolToHeaderVisibilty x:Key="BoolToHeaderVis" />
+    <utils:InvertBool x:Key="InvertBool" />
+    <utils:TwoBooleanToVisibilityConverter x:Key="TwoBoolToVis" />
+    <utils:BoolToDatagridColoumnWidth x:Key="BoolToDGColumnWidth" />
+    <utils:BoolToRowVisibilty x:Key="BoolToRowVis" />
+    <utils:BoolToDouble x:Key="BoolToDouble" />
+    <utils:BoolToMargin x:Key="BoolToMargin" />
+    <utils:CsvTypeEnumToVis x:Key="CsvTypeToVis" />
+    <utils:EnumDescriptionConverter x:Key="EnumDesc" />
     <!--#endregion-->
 
     <!--#region DataGrid settings-->
@@ -76,6 +86,25 @@
                          Value="True">
                 <Setter Property="Visibility"
                         Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type DataGrid}"
+           x:Key="CsvDataGridStyle"
+           BasedOn="{StaticResource DataGrid Settings}">
+        <Setter Property="Visibility"
+                Value="Collapsed" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding CsvController.CurrentCsvType}"
+                         Value="{x:Static CsvParser:CsvType.RoadToRiches}">
+                <Setter Property="Visibility"
+                        Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CsvController.CurrentCsvType}"
+                         Value="{x:Static CsvParser:CsvType.WorldTypeRoute}">
+                <Setter Property="Visibility"
+                        Value="Visible" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -351,7 +380,7 @@
         <Setter Property="IsHitTestVisible"
                 Value="False" />
         <Setter Property="BorderThickness"
-                Value="0,0.5,0,0.5" />
+                Value="0" />
         <Setter Property="BorderBrush"
                 Value="Black" />
         <Setter Property="Margin"

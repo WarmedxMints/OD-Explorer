@@ -7,10 +7,12 @@
         mc:Ignorable="d"
         FontFamily="Eurostile"
         FontSize="16"
+        StateChanged="MainWindowStateChangeRaised"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OD EXPLORER - EXPLORATION DATA"
         Height="600"
         Width="980"
+        ShowInTaskbar="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.ShowAdditionalWindowsInTaskBar}"
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded">
     <!--Add the WindowChrome object-->

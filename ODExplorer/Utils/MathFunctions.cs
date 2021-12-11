@@ -62,7 +62,7 @@ namespace ODExplorer.Utils
             return (int)(k + (stellarMass * k / 66.25));
         }
 
-        public static int GetPlanetValue(PlanetClass planetClass, double mass, bool isFirstDiscoverer, bool isFirstMapped, bool terraformable, bool isOdyssey, bool isMapped, bool withEfficeinctBonus)
+        public static int GetPlanetValue(PlanetClass planetClass, double mass, bool isFirstDiscoverer, bool isFirstMapped, bool terraformable, bool isOdyssey, bool isMapped, bool withEfficientBonus)
         {
             //If a body has been mapped before but is reported to have not been discovered,
             //assume we are mapping a bubble planet and mark it as discovered.
@@ -134,27 +134,27 @@ namespace ODExplorer.Utils
                 //MattG's forum post suggests multipling the value with the bonus
                 //However, in my personal testing I have found that applying it to the mapping multipler
                 //has been correct
-                if (withEfficeinctBonus)
+                if (withEfficientBonus)
                 {
                     mappingMultiplier *= 1.25;
                 }
             }
 
-            double value = (k + (k * q * Math.Pow(mass, 0.2))) * mappingMultiplier;
+            double value = Math.Max(k + (k * Math.Pow(mass, 0.2) * q), 500) * mappingMultiplier;
 
             if (isMapped)
             {
                 if (isOdyssey)
                 {
-                    value += ((value * 0.3) > 555) ? value * 0.3 : 555;
+                    value += Math.Max(value * 0.3, 555);
                 }
 
-                //if(withEfficeinctBonus)
+                //if (withEfficientBonus)
                 //{
                 //    value *= 1.25;
                 //}
             }
-            value = Math.Max(500, value);
+
             value *= isFirstDiscoverer ? 2.6 : 1;
 
             return (int)Math.Round(value);

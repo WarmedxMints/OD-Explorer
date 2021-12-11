@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ParserLibrary;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -110,7 +111,9 @@ namespace ODExplorer.Utils
             Parameters direction = (Parameters)Enum.Parse(typeof(Parameters), (string)parameter);
 
             if (direction == Parameters.Inverted)
+            {
                 return !boolValue ? Visibility.Visible : Visibility.Hidden;
+            }
 
             return boolValue ? Visibility.Visible : Visibility.Hidden;
         }
@@ -241,6 +244,139 @@ namespace ODExplorer.Utils
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToHeaderVisibilty : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool boolValue = (bool)value;
+            DataGridHeadersVisibility visibilty = (DataGridHeadersVisibility)Enum.Parse(typeof(DataGridHeadersVisibility), (string)parameter);
+
+            return boolValue ? visibilty : DataGridHeadersVisibility.None;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToRowVisibilty : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool boolValue = (bool)value;
+
+            return boolValue ? DataGridRowDetailsVisibilityMode.Visible : DataGridRowDetailsVisibilityMode.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class InvertBool : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool boolValue = (bool)value;
+
+            return !boolValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class TwoBooleanToVisibilityConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool bool1 = (bool)values[0];
+            bool bool2 = (bool)values[1];
+
+            Visibility visibleType = bool2 ? Visibility.Hidden : Visibility.Collapsed;
+
+            return bool1 && bool2 ? Visibility.Visible : visibleType;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToDatagridColoumnWidth : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            bool boolValue = (bool)value;
+
+            DataGridLengthUnitType width = boolValue ? DataGridLengthUnitType.SizeToCells : DataGridLengthUnitType.Star;
+
+            return new DataGridLength(1, width);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToDouble : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool boolValue = (bool)value;
+
+            double ret = boolValue ? double.Parse((string)parameter) : 0;
+
+            return ret;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BoolToMargin : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool boolValue = (bool)value;
+
+            string parameterString = parameter as string;
+            string[] parameters = parameterString.Split(new char[] { '|' });
+
+            return boolValue ? new Thickness(double.Parse(parameters[0]), double.Parse(parameters[1]), double.Parse(parameters[2]), double.Parse(parameters[3])) : new Thickness(0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class CsvTypeEnumToVis : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            CsvType val = (CsvType)value;
+            CsvType target = (CsvType)Enum.Parse(typeof(CsvType), (string)parameter);
+
+            return val == target ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
         }
     }
 }

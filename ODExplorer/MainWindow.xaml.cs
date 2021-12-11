@@ -15,6 +15,10 @@ using ODExplorer.Utils;
 using ODExplorer.ScanValueView;
 using ODExplorer.OrganicData;
 using System.Threading.Tasks;
+using System.Linq;
+using ODExplorer.CsvControl;
+using System.Media;
+using System.Windows.Threading;
 
 namespace ODExplorer
 {
@@ -95,7 +99,9 @@ namespace ODExplorer
 
         private readonly JournalData _journalData = new();
         public Settings AppSettings { get; private set; } = new();
-        public ExplorationTargets Targets { get; private set; } = new();
+        //public ExplorationTargets Targets { get; private set; } = new();
+
+        public CsvController CsvController { get; set; } = new();
         public NavigationData NavData { get; private set; } = new();
 
         #region Window Methods
@@ -110,17 +116,13 @@ namespace ODExplorer
 
             _journalData.StartWatcher(NavData);
 
-            Targets.OnCurrentTargetUpdated += Targets_OnCurrentTargetUpdated;
+            CsvController.OnCurrentTargetUpdated += Targets_OnCurrentTargetUpdated;
 
-            if (Targets.LoadPreviousSession() == false)
-            {
-                Targets.CurrentTarget = new()
-                {
-                    SystemName = "NO DATA"
-                };
-            }
+            _ = CsvController.LoadPreviousSession();
 
             UpdateLabel();
+
+            TimerDisplay.Text = "00 : 00";
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -131,7 +133,7 @@ namespace ODExplorer
             }
 
             _ = NavData.ScannedBio.SaveState();
-            Targets.SaveState();
+            CsvController.SaveState();
             _ = AppSettings.SaveSettings();
         }
         #endregion
@@ -143,22 +145,52 @@ namespace ODExplorer
         }
 
         #region Current System Bodies DataGrid Methods
-        private DataGrid _currentSystemBodiesDataGrid;
         //Save a reference to the DataGrid when it is loaded
+        private DataGrid _currentSystemBodiesDataGrid;
+
         private void CurrentSystemBodies_Loaded(object sender, RoutedEventArgs e)
         {
             _currentSystemBodiesDataGrid = (DataGrid)sender;
+            _currentSystemBodiesDataGrid.Items.IsLiveSorting = true;
+
+            foreach (DatagridLayout layout in AppSettings.Value.DisplaySettings.CSBColumnOrder)
+            {
+                int count = _currentSystemBodiesDataGrid.Columns.Count == 0 ? 0 : _currentSystemBodiesDataGrid.Columns.Count - 1;
+
+                DataGridColumn column = _currentSystemBodiesDataGrid.Columns.FirstOrDefault(x => (string)x.Header == layout.Header);
+
+                if (column == default)
+                {
+                    continue;
+                }
+
+                column.DisplayIndex = (layout.DisplayIndex <= count) ? layout.DisplayIndex : count;
+            }
+
+            _currentSystemBodiesDataGrid.ColumnReordered += CurrentSystemBodiesDataGrid_ColumnReordered;
             SortCurrentSystemBodiesGrid();
         }
+
+        private void CurrentSystemBodiesDataGrid_ColumnReordered(object sender, DataGridColumnEventArgs e)
+        {
+            AppSettings.Value.DisplaySettings.CSBColumnOrder.Clear();
+
+            foreach (DataGridColumn gridColumn in _currentSystemBodiesDataGrid.Columns)
+            {
+                AppSettings.Value.DisplaySettings.CSBColumnOrder.Add(new DatagridLayout() { Header = (string)gridColumn.Header, DisplayIndex = gridColumn.DisplayIndex });
+            }
+        }
+
         //Clear reference to Datagrid when it is unloaded
         private void CurrentSystemBodies_Unloaded(object sender, RoutedEventArgs e)
         {
+            _currentSystemBodiesDataGrid.ColumnReordered -= CurrentSystemBodiesDataGrid_ColumnReordered;
             _currentSystemBodiesDataGrid = null;
         }
         //Not entirely happy with this, it seems a bit clumsy to me
         //However, it is the only way I can find so far of getting the Body Name and Distance columns to auto size
         //when there is a column with a * size.
-        private void CurrentSystemBodies_TextBlock_Loaded(object sender, RoutedEventArgs e)
+        private void CurrentSystemBodies_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             if (_currentSystemBodiesDataGrid is null)
             {
@@ -168,11 +200,10 @@ namespace ODExplorer
             foreach (DataGridColumn col in _currentSystemBodiesDataGrid.Columns)
             {
                 DataGridLength width = col.Width;
-                col.Width = DataGridLength.SizeToCells;
+                col.Width = 0;
                 col.Width = width;
             }
         }
-        //TODO Switch to collection view source with live sorting
         //Method to apply sorting to the datagrids contents
         private void SortCurrentSystemBodiesGrid()
         {
@@ -184,6 +215,8 @@ namespace ODExplorer
             List<SortDescription> sortDescriptions = new();
             //Always put stars at the bottom of the list
             sortDescriptions.Add(new SortDescription("IsStar", ListSortDirection.Ascending));
+            //Always put EDSM VB's at the top
+            sortDescriptions.Add(new SortDescription("IsEDSMvb", ListSortDirection.Descending));
 
             switch (AppSettings.Value.SortCategory)
             {
@@ -230,6 +263,16 @@ namespace ODExplorer
         }
         #endregion
 
+        private void SystemsInRouteGrid_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            foreach (DataGridColumn col in SystemsInRouteGrid.Columns)
+            {
+                DataGridLength width = col.Width;
+                col.Width = 0;
+                col.Width = width;
+            }
+        }
+
         #region Top Menu Methods
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
         {
@@ -241,6 +284,17 @@ namespace ODExplorer
                 NavData.RefreshBodiesStatus();
                 //Give the UI time to scale before sorting and resizing the datagrid
                 _ = Task.Delay(500).ContinueWith(t => Dispatcher.Invoke(() => SortCurrentSystemBodiesGrid()));
+            }
+        }
+
+        private void DisplaySettings_Click(object sender, RoutedEventArgs e)
+        {
+            DisplaySettingsView displaySettings = new(AppSettings);
+            displaySettings.Owner = this;
+
+            if ((bool)displaySettings.ShowDialog())
+            {
+                CurrentSystemGrid.Items.Refresh();
             }
         }
 
@@ -264,7 +318,19 @@ namespace ODExplorer
 
             if (openFileDialog.ShowDialog() == true)
             {
-                Targets.ImportCsv(openFileDialog.FileName);
+                CsvParserReturn csv = CsvParser.ParseCsv(openFileDialog.FileName);
+
+                if (csv is null)
+                {
+                    _ = MessageBox.Show("Unable to parse CSV");
+                    return;
+                }
+
+                CsvController.ProcessCsv(csv);
+
+                AppSettings.Value.ShowParser = !AppSettings.Value.ShowParser;
+
+                UpdateLabel();
             }
         }
 
@@ -371,22 +437,22 @@ namespace ODExplorer
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            Targets.CurrentIndex++;
+            CsvController.CurrentIndex++;
         }
 
         private void PrevButton_Click(object sender, RoutedEventArgs e)
         {
-            Targets.CurrentIndex--;
+            CsvController.CurrentIndex--;
         }
 
-        private void Targets_OnCurrentTargetUpdated(object sender, ExplorationTarget e)
+        private void Targets_OnCurrentTargetUpdated(object sender, CsvEventArgs e)
         {
             if (AppSettings.Value.AutoCopyCsvSystemToClipboard == false)
             {
                 return;
             }
 
-            CopySystemToClipboard(e);
+            CopySystemToClipboard(e.Target);
         }
 
         private void CopySystemToClipboard(ExplorationTarget e)
@@ -399,7 +465,85 @@ namespace ODExplorer
 
         private void Rectangle_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            CopySystemToClipboard(Targets.CurrentTarget);
+            CopySystemToClipboard(CsvController.CurrentTarget);
+        }
+
+        private DispatcherTimer _fleetCarrierJumpTimer;
+        private const int _timerCount = 1200;
+
+        private void StartTimer_Click(object sender, RoutedEventArgs e)
+        {
+            if (_fleetCarrierJumpTimer is null)
+            {
+                _fleetCarrierJumpTimer = new()
+                {
+                    Interval = TimeSpan.FromSeconds(1)
+                };
+
+                int count = _timerCount;
+
+                _fleetCarrierJumpTimer.Tick += (_, a) =>
+                {
+                    if (count-- <= 0)
+                    {
+                        EndTimer();
+                    }
+                    else
+                    {
+                        UpdateTime(count);
+                    }
+                };
+
+                UpdateTime(count);
+                TimerStartBtn.Content = "Cancel Timer";
+                _fleetCarrierJumpTimer.Start();
+                return;
+            }
+
+            EndTimer();
+        }
+
+        private void UpdateTime(int count)
+        {
+            TimerDisplay.Text = secondsToString(count);
+        }
+
+        private void EndTimer()
+        {
+            _fleetCarrierJumpTimer.Stop();
+            SystemSounds.Beep.Play();
+            _fleetCarrierJumpTimer = null;
+            TimerStartBtn.Content = "Start Jump Timer";
+            TimerDisplay.Text = "00 : 00";
+        }
+
+        private void Countdown(int count, TimeSpan interval, Action<int> ts)
+        {
+            System.Windows.Threading.DispatcherTimer dt = new()
+            {
+                Interval = interval
+            };
+
+            dt.Tick += (_, a) =>
+            {
+                if (count-- <= 0)
+                {
+                    dt.Stop();
+                    SystemSounds.Beep.Play();
+                }
+                else
+                {
+                    ts(count);
+                }
+            };
+
+            ts(count);
+            dt.Start();
+        }
+
+        private string secondsToString(int pTime)
+        {
+            return $"{pTime / 60:00} : {pTime % 60:00}";
         }
         #endregion
     }

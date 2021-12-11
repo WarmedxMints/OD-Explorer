@@ -13,7 +13,8 @@
         Title="OD EXPLORER - BIOLOGICAL DATA"
         Height="600"
         Width="980"
-        ShowInTaskbar="False"
+        StateChanged="MainWindowStateChangeRaised"
+        ShowInTaskbar="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.ShowAdditionalWindowsInTaskBar}"
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded">
 
@@ -238,6 +239,8 @@
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="VerticalAlignment"
                                             Value="Center" />
+                                    <Setter Property="Margin"
+                                            Value="0,0,10,0" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>

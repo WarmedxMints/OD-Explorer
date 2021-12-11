@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ODExplorer"
+        xmlns:CsvParser="clr-namespace:ParserLibrary;assembly=ParserLibrary"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="OD Explorer"
         x:Name="ODExplorer"
@@ -21,26 +23,30 @@
 
     <!--Add the WindowChrome object-->
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="34" />
+        <WindowChrome CaptionHeight="30" />
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <ResourceDictionary>
-            <Storyboard x:Key="FadeOut">
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
-                    <EasingDoubleKeyFrame KeyTime="0"
-                                          Value="0" />
-                    <EasingDoubleKeyFrame KeyTime="0:0:0.5"
-                                          Value="1" />
-                    <EasingDoubleKeyFrame KeyTime="0:0:5"
-                                          Value="1" />
-                    <EasingDoubleKeyFrame KeyTime="0:0:6"
-                                          Value="0" />
-                </DoubleAnimationUsingKeyFrames>
-            </Storyboard>
-        </ResourceDictionary>
+        <Storyboard x:Key="FadeOut">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                <EasingDoubleKeyFrame KeyTime="0"
+                                      Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5"
+                                      Value="1" />
+                <EasingDoubleKeyFrame KeyTime="0:0:5"
+                                      Value="1" />
+                <EasingDoubleKeyFrame KeyTime="0:0:6"
+                                      Value="0" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
 
-
+        <ObjectDataProvider x:Key="CsvType"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="CsvParser:CsvType"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Window.Resources>
 
     <!--Title bar button commands-->
@@ -128,6 +134,7 @@
                 <MenuItem Header="File">
                     <MenuItem Header="Import CSV"
                               Click="ImportCSV_Click" />
+                    <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem Header="Exit"
                               Click="ExitApp" />
                 </MenuItem>
@@ -135,12 +142,23 @@
                     <MenuItem x:Name="OpenSettings"
                               Header="Settings"
                               Click="OpenSettings_Click" />
+                    <MenuItem x:Name="DisplaySettings"
+                              Header="Display Options"
+                              Click="DisplaySettings_Click" />
+                    <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem x:Name="OpenScanData"
                               Header="Body Scan Data"
                               Click="OpenScanData_Click" />
                     <MenuItem x:Name="OpenBioData"
                               Header="Biological Scan Data"
                               Click="OpenBioData_Click" />
+                    <Separator Style="{DynamicResource Seperator Style}" />
+                    <MenuItem x:Name="ShowCSBHeaders"
+                              Header="Show CSB Headers"
+                              ToolTip="Show Headers in the Current System Bodies Grid"
+                              IsCheckable="True"
+                              IsChecked="{Binding AppSettings.Value.DisplaySettings.ShowCSBHeaders}" />
+                    <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem x:Name="OpenAboutbox"
                               Header="About"
                               Click="OpenAboutbox_Click" />
@@ -177,7 +195,7 @@
                                   Grid.Column="1"
                                   Header="CURRENT SYSTEM"
                                   MinHeight="77"
-                                  BorderThickness="0.7"
+                                  BorderThickness="0.5"
                                   Foreground="{DynamicResource Font Colour}"
                                   Background="{DynamicResource MainWindowBackground}"
                                   Margin="0,0,0,5"
@@ -279,18 +297,22 @@
                                     <DataGrid.RowDetailsTemplate>
                                         <DataTemplate>
                                             <DataGrid ItemsSource="{Binding Bodies}"
+                                                      x:Name="CurrentSystemBodies"
                                                       Margin="30,5,0,0"
-                                                      HeadersVisibility="None"
+                                                      HeadersVisibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowCSBHeaders, Converter={StaticResource BoolToHeaderVis}, ConverterParameter=Column}"
                                                       Style="{DynamicResource DataGrid Settings}"
                                                       CellStyle="{DynamicResource BodyGrid Cell}"
                                                       RowStyle="{DynamicResource RowStyle Bodies}"
+                                                      ColumnHeaderStyle="{DynamicResource DataGrid Header Left}"
                                                       GridLinesVisibility="All"
+                                                      CanUserReorderColumns="True"
+                                                      TargetUpdated="CurrentSystemBodies_TargetUpdated"
+                                                      Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
                                                       Loaded="CurrentSystemBodies_Loaded"
                                                       Unloaded="CurrentSystemBodies_Unloaded">
                                                 <DataGrid.Columns>
-
-
-                                                    <DataGridTemplateColumn Width="SizeToCells"
+                                                    <DataGridTemplateColumn Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToDGColumnWidth}}"
+                                                                            Header="NAME"
                                                                             MinWidth="60">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
@@ -300,7 +322,7 @@
                                                                                    Height="18"
                                                                                    Width="18"
                                                                                    Margin="2,0,5,0" />
-                                                                        <TextBlock Text="{Binding BodyNameLocal}"
+                                                                        <TextBlock Text="{Binding BodyNameLocal, NotifyOnTargetUpdated=True}"
                                                                                    VerticalAlignment="Center"
                                                                                    HorizontalAlignment="Left"
                                                                                    Margin="0,0,5,0" />
@@ -310,61 +332,73 @@
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
 
-                                                    <DataGridTemplateColumn Width="*">
+                                                    <DataGridTemplateColumn Width="*"
+                                                                            Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToVis}}"
+                                                                            Header="TYPE">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <TextBlock Text="{Binding BodyDescription}"
+                                                                <TextBlock Text="{Binding BodyDescription, NotifyOnTargetUpdated=True}"
                                                                            VerticalAlignment="Center"
                                                                            HorizontalAlignment="Left"
-                                                                           Margin="5,0,0,0"
-                                                                           Loaded="CurrentSystemBodies_TextBlock_Loaded" />
+                                                                           Margin="5,0,0,0" />
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
 
-                                                    <DataGridTemplateColumn Width="SizeToCells">
+                                                    <DataGridTemplateColumn Width="SizeToCells"
+                                                                            MinWidth="50"
+                                                                            Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowInfoColumn, Converter={StaticResource BoolToVis}}"
+                                                                            Header="INFO">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <Grid>
                                                                     <StackPanel Orientation="Horizontal"
                                                                                 HorizontalAlignment="Right"
-                                                                                Margin="2,0,2,0">
+                                                                                Margin="2,0,2,0"
+                                                                                VerticalAlignment="Center">
 
                                                                         <TextBlock Text="{Binding SurfaceTempString}"
                                                                                    VerticalAlignment="Center"
                                                                                    TextAlignment="Center"
-                                                                                   Margin="2,0,2,0"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp, Converter={StaticResource BoolToDouble}, ConverterParameter=60}"
+                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
                                                                                    FontSize="14">
-                                                                            <TextBlock.Style>
-                                                                                <Style TargetType="{x:Type TextBlock}">
-                                                                                    <Style.Triggers>
-                                                                                        <DataTrigger Binding="{Binding Landable}"
-                                                                                                     Value="True">
-                                                                                            <Setter Property="Visibility"
-                                                                                                    Value="Visible" />
-                                                                                        </DataTrigger>
-                                                                                        <DataTrigger Binding="{Binding Landable}"
-                                                                                                     Value="False">
-                                                                                            <Setter Property="Visibility"
-                                                                                                    Value="Hidden" />
-                                                                                        </DataTrigger>
-                                                                                    </Style.Triggers>
-                                                                                </Style>
-                                                                            </TextBlock.Style>
+                                                                            <TextBlock.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="Landable" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Visibility>
                                                                         </TextBlock>
 
                                                                         <TextBlock Text="{Binding SurfacePressureString}"
                                                                                    VerticalAlignment="Center"
                                                                                    TextAlignment="Right"
-                                                                                   Margin="5,0,5,0"
-                                                                                   MinWidth="64"
-                                                                                   FontSize="14" />
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfacePressure, Converter={StaticResource BoolToDouble}, ConverterParameter=65}"
+                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfacePressure, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                   FontSize="14">
+                                                                            <TextBlock.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="Landable" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowSurfacePressure" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Visibility>
+                                                                        </TextBlock>
 
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Visibility="{Binding Wasmapped, Converter={StaticResource InvBoolToVis} , ConverterParameter=Inverted}"
-                                                                                   Height="18"
-                                                                                   Width="18"
+                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                                    Margin="0,0,3,0">
+                                                                            <Rectangle.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="Wasmapped"
+                                                                                             Converter="{StaticResource InvertBool}" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowUnmapped" />
+                                                                                </MultiBinding>
+                                                                            </Rectangle.Visibility>
                                                                             <Rectangle.OpacityMask>
                                                                                 <ImageBrush ImageSource="/Images/moon-landing.png" />
                                                                             </Rectangle.OpacityMask>
@@ -372,36 +406,60 @@
 
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Visibility="{Binding GeologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
-                                                                                   Height="18"
-                                                                                   Width="18">
+                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
                                                                             <Rectangle.OpacityMask>
                                                                                 <ImageBrush ImageSource="/Images/volcano.png" />
                                                                             </Rectangle.OpacityMask>
                                                                         </Rectangle>
-                                                                        <TextBlock Text="{Binding GeologicalSignals, NotifyOnTargetUpdated=True}"
-                                                                                   Margin="0,0,0,0"
-                                                                                   VerticalAlignment="Center"
-                                                                                   Visibility="{Binding GeologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}" />
+                                                                        <TextBlock Text="{Binding GeologicalSignals}"
+                                                                                   VerticalAlignment="Center">
+                                                                            <TextBlock.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="GeologicalSignals"
+                                                                                             Converter="{StaticResource IntToBool}" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowGeoSignals" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Visibility>
+                                                                        </TextBlock>
 
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Visibility="{Binding BiologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
-                                                                                   Height="18"
-                                                                                   Width="18">
+                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowBioSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowBioSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
                                                                             <Rectangle.OpacityMask>
                                                                                 <ImageBrush ImageSource="/Images/DNA.png" />
                                                                             </Rectangle.OpacityMask>
                                                                         </Rectangle>
-                                                                        <TextBlock Text="{Binding BiologicalSignals, NotifyOnTargetUpdated=True}"
-                                                                                   Margin="0,0,0,0"
-                                                                                   VerticalAlignment="Center"
-                                                                                   Visibility="{Binding BiologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}" />
+                                                                        <TextBlock Text="{Binding BiologicalSignals}"
+                                                                                   VerticalAlignment="Center">
+                                                                            <TextBlock.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="BiologicalSignals"
+                                                                                             Converter="{StaticResource IntToBool}" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowBioSignals" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Visibility>
+                                                                        </TextBlock>
+
                                                                         <TextBlock Text="{Binding SurfaceGravity, StringFormat=N2}"
                                                                                    VerticalAlignment="Center"
                                                                                    HorizontalAlignment="Right"
                                                                                    TextAlignment="Center"
-                                                                                   Margin="2,0,2,0"
-                                                                                   Width="50"
-                                                                                   Style="{DynamicResource GravityTextBox}" />
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity, Converter={StaticResource BoolToDouble}, ConverterParameter=50}"
+                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                   Style="{DynamicResource GravityTextBox}">
+                                                                            <TextBlock.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="Landable" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Visibility>
+                                                                        </TextBlock>
+
                                                                     </StackPanel>
                                                                 </Grid>
                                                             </DataTemplate>
@@ -410,11 +468,16 @@
 
                                                     <DataGridTextColumn Width="SizeToCells"
                                                                         MinWidth="90"
-                                                                        Binding="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls}"
+                                                                        Header="DISTANCE"
+                                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowDistanceColumn, Converter={StaticResource BoolToVis}}"
+                                                                        HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                                                        Binding="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls, NotifyOnTargetUpdated=True}"
                                                                         ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
-                                                    <DataGridTextColumn Header="Value"
+                                                    <DataGridTextColumn Header="VALUE"
                                                                         Width="110"
-                                                                        Binding="{Binding MappedValue, StringFormat=N0}"
+                                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowValueColumn, Converter={StaticResource BoolToVis}}"
+                                                                        HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                                                        Binding="{Binding MappedValue, StringFormat=N0, NotifyOnTargetUpdated=True}"
                                                                         ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
                                                 </DataGrid.Columns>
                                             </DataGrid>
@@ -439,8 +502,10 @@
                                       RowStyle="{DynamicResource Systems In Route RowStyle}"
                                       CellStyle="{DynamicResource RouteCells}"
                                       GridLinesVisibility="Vertical"
+                                      TargetUpdated="SystemsInRouteGrid_TargetUpdated"
                                       VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
                                       PreviewMouseWheel="DataGrid_PreviewMouseWheel"
+                                      RowDetailsVisibilityMode="{Binding AppSettings.Value.DisplaySettings.ShowVaulableBodies, Converter={StaticResource BoolToRowVis}}"
                                       x:Name="SystemsInRouteGrid">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn Width="70">
@@ -456,11 +521,40 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+
                                     <DataGridTextColumn Header="NAME"
                                                         Width="*"
                                                         Binding="{Binding Path=SystemName}"
                                                         HeaderStyle="{DynamicResource Name Header}"
                                                         ElementStyle="{DynamicResource DataGrid Element Left Margin Body}" />
+
+                                    <DataGridTextColumn FontSize="15"
+                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistRemaining, Converter={StaticResource BoolToVis}}"
+                                                        Binding="{Binding Path=JumpDistanceRemaining, NotifyOnTargetUpdated=True, StringFormat={}{0:N0} ly}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="TextAlignment"
+                                                        Value="Right" />
+                                                <Setter Property="Margin"
+                                                        Value="5,0,5,0" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Width="SizeToCells"
+                                                        FontSize="15"
+                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistToSystem, Converter={StaticResource BoolToVis}}"
+                                                        Binding="{Binding Path=JumpDistanceToSystem, NotifyOnTargetUpdated=True, StringFormat={}{0:N2} ly}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="TextAlignment"
+                                                        Value="Right" />
+                                                <Setter Property="Margin"
+                                                        Value="5,0,5,0" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
                                     <DataGridTextColumn Header="VALUE"
                                                         Width="110"
                                                         Binding="{Binding Path=SystemValue}"
@@ -479,7 +573,7 @@
                                                   GridLinesVisibility="All"
                                                   VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
                                                   RowStyle="{DynamicResource RowStyle Bodies}"
-                                                  Visibility="{Binding Bodies.Count, Converter={StaticResource IntToBool}}">
+                                                  Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}">
                                             <DataGrid.Columns>
                                                 <DataGridTemplateColumn Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
@@ -529,14 +623,15 @@
                 <GroupBox Style="{DynamicResource SystemBorder}"
                           Grid.Column="1"
                           Header="SPANSH CSV PARSER"
+                          Width="Auto"
                           BorderThickness="0.5"
                           Foreground="{DynamicResource Font Colour}"
                           Padding="5,0,5,5">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto"
-                                              MinWidth="400" />
+                            <ColumnDefinition MinWidth="440"
+                                              Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
@@ -553,21 +648,39 @@
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Column="0"
                                         Grid.ColumnSpan="3"
-                                        Grid.Row="0">
+                                        Grid.Row="0"
+                                        Margin="0,5,0,0">
                                 <StackPanel Orientation="Horizontal"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="3"
-                                            Grid.Row="0">
+                                            Margin="0,0,0,10">
+                                    <TextBlock Text="CSV Mode"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource CsvType}}"
+                                              SelectedItem="{Binding CsvController.CurrentCsvType}"
+                                              Width="140"
+                                              FontSize="14"
+                                              VerticalContentAlignment="Center"
+                                              Background="{DynamicResource MainWindowBackground}"
+                                              BorderBrush="{DynamicResource Groupbox Border}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource EnumDesc}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,5">
                                     <TextBlock Text="Target System"
                                                HorizontalAlignment="Left"
                                                Width="180" />
                                     <TextBlock x:Name="SystemLabel"
-                                               Text="{Binding Targets.CurrentTarget.SystemName}" />
+                                               Text="{Binding CsvController.CurrentTarget.SystemName}" />
                                     <Rectangle Fill="{DynamicResource Font Colour}"
                                                Height="18"
                                                Width="18"
                                                Margin="5,0,0,0"
-                                               Visibility="{Binding Targets.Targets.Count, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
+                                               Visibility="{Binding CsvController.CurrentTargetHasData , Converter={StaticResource BoolToVis}}"
                                                PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown">
                                         <Rectangle.OpacityMask>
                                             <ImageBrush ImageSource="/Images/copy.png" />
@@ -576,18 +689,15 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="3"
-                                            Grid.Row="1"
                                             Margin="0,5,0,0">
                                     <TextBlock Text="Remaining Systems"
                                                HorizontalAlignment="Left"
                                                Width="180" />
-                                    <TextBlock Text="{Binding Targets.RemainingCount, StringFormat=N0}" />
+                                    <TextBlock Text="{Binding CsvController.RemainingCount, StringFormat=N0}" />
                                 </StackPanel>
                                 <TextBlock x:Name="CSVParserStatus"
                                            HorizontalAlignment="Left"
-                                           Margin="0,20,0,0"
+                                           Margin="0,10,0,0"
                                            FontSize="14" />
                             </StackPanel>
 
@@ -600,7 +710,7 @@
                                         Width="80"
                                         Margin="20,0,20,0"
                                         Content="Prev System"
-                                        IsEnabled="{Binding Targets.PreviousSystems}"
+                                        IsEnabled="{Binding CsvController.PreviousSystems}"
                                         HorizontalAlignment="Left"
                                         Click="PrevButton_Click" />
 
@@ -609,13 +719,15 @@
                                         Width="80"
                                         Margin="20,0,20,0"
                                         Content="Next System"
-                                        IsEnabled="{Binding Targets.NextSystems}"
+                                        IsEnabled="{Binding CsvController.NextSystems}"
                                         HorizontalAlignment="Right"
                                         Click="NextButton_Click" />
                             </StackPanel>
                         </Grid>
                         <Grid  Grid.Column="3"
-                               Grid.Row="0">
+                               Grid.Row="0"
+                               HorizontalAlignment="Center">
+                            <!--#region  R2R Datagrid-->
                             <DataGrid x:Name="SystemData"
                                       CanUserAddRows="false"
                                       AutoGenerateColumns="False"
@@ -623,9 +735,9 @@
                                       GridLinesVisibility="None"
                                       IsHitTestVisible="False"
                                       RowStyle="{DynamicResource CSV Row Style}"
-                                      Style="{DynamicResource DataGrid Settings}"
+                                      Style="{DynamicResource CsvDataGridStyle}"
                                       CellStyle="{DynamicResource CSV Parser Cell}"
-                                      ItemsSource="{Binding Targets.CurrentTarget.BodiesInfo}">
+                                      ItemsSource="{Binding CsvController.CurrentTarget.BodiesInfo}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="BODY"
                                                         HeaderStyle="{DynamicResource DataGrid Header Left}"
@@ -638,14 +750,150 @@
                                                         MinWidth="120"
                                                         Binding="{Binding Path=Distance, StringFormat={}{0} ls}"
                                                         ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
-                                    <DataGridTextColumn Header="VALUE"
-                                                        HeaderStyle="{DynamicResource DataGrid Header Right}"
+                                    <DataGridTextColumn HeaderStyle="{DynamicResource DataGrid Header Right}"
                                                         Width="SizeToCells"
                                                         MinWidth="130"
-                                                        Binding="{Binding Path=EstimatedMappingValue}"
-                                                        ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
+                                                        Binding="{Binding Path=Property1}"
+                                                        ElementStyle="{DynamicResource DataGrid Element Right Margin}">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="{Binding CsvController.CsvHeader, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
+                            <!--#endregion-->
+
+                            <!--#region Fleet Carrier Route Info-->
+                            <StackPanel Visibility="{Binding CsvController.CurrentCsvType, Converter={StaticResource CsvTypeToVis}, ConverterParameter=FleetCarrier}"
+                                        Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,10">
+                                    <TextBlock Text="Jump Distance"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property1, StringFormat={}{0} ly}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,5">
+                                    <TextBlock Text="Remaing Distance"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property2, StringFormat={}{0} ly}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,5">
+                                    <TextBlock Text="Icy Ring"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property3}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,0">
+                                    <Button Content="Start Jump Timer"
+                                            x:Name="TimerStartBtn"
+                                            Click="StartTimer_Click"
+                                            Height="25"
+                                            FontSize="16"
+                                            Width="130"
+                                            Margin="0,0,50,0" />
+                                    <TextBlock x:Name="TimerDisplay"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               FontSize="20" />
+                                </StackPanel>
+                            </StackPanel>
+                            <!--#endregion-->
+
+                            <!--#region Neutron Route Info-->
+                            <StackPanel Visibility="{Binding CsvController.CurrentCsvType, Converter={StaticResource CsvTypeToVis}, ConverterParameter=NeutronRoute}"
+                                        Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,10">
+                                    <TextBlock Text="Jump Distance"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property1, StringFormat={}{0} ly}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,5">
+                                    <TextBlock Text="Remaing Distance"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property2, StringFormat={}{0} ly}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,5">
+                                    <TextBlock Text="Jumps To System"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property3}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,5">
+                                    <TextBlock Text="Neutron Star"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property4}" />
+                                </StackPanel>
+
+                            </StackPanel>
+                            <!--#endregion-->
+
+                            <!--#region Galaxy Plotter Info-->
+                            <StackPanel Visibility="{Binding CsvController.CurrentCsvType, Converter={StaticResource CsvTypeToVis}, ConverterParameter=GalaxyPlotter}"
+                                        Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,10">
+                                    <TextBlock Text="Jump Distance"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property1, StringFormat={}{0} ly}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,0,0,5">
+                                    <TextBlock Text="Remaing Distance"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property2, StringFormat={}{0} ly}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,5">
+                                    <TextBlock Text="Refuel"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property3}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,5">
+                                    <TextBlock Text="Neutron Star"
+                                               HorizontalAlignment="Left"
+                                               Width="180" />
+                                    <TextBlock Text="{Binding CsvController.CurrentTarget.Property4}" />
+                                </StackPanel>
+
+                            </StackPanel>
+                            <!--#endregion-->
+
+
+                            <!--#region Tourist Route Info-->
+                            <StackPanel  Visibility="{Binding CsvController.CurrentCsvType, Converter={StaticResource CsvTypeToVis}, ConverterParameter=TouristRoute}"
+                                         Orientation="Horizontal"
+                                         Margin="0,10,0,10">
+                                <TextBlock Text="Jump To System"
+                                           HorizontalAlignment="Left"
+                                           Width="180" />
+                                <TextBlock Text="{Binding CsvController.CurrentTarget.Property1}" />
+                            </StackPanel>
+                            <!--#endregion-->
                         </Grid>
                     </Grid>
                 </GroupBox>
@@ -694,16 +942,28 @@
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
+                            Visibility="{Binding NavData.PopulatingRoute, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}"
                             Margin="20,0,20,0">
                     <Label Content="Jumps Remaining : "
                            FontSize="16"
                            Foreground="{DynamicResource Font Colour}"
-                           VerticalAlignment="Center" />
+                           VerticalAlignment="Center"
+                           Visibility="{Binding NavData.PopulatingRoute, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}" />
                     <TextBlock Text="{Binding NavData.SystemsInRoute.Count}"
                                VerticalAlignment="Center"
                                Foreground="{DynamicResource Font Colour}"
-                               FontSize="16" />
+                               FontSize="16"
+                               Visibility="{Binding NavData.PopulatingRoute, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}" />
                 </StackPanel>
+
+                <TextBlock Text="Reading Nav Data"
+                           Grid.Column="1"
+                           HorizontalAlignment="Center"
+                           Margin="20,0,20,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource Font Colour}"
+                           FontSize="16"
+                           Visibility="{Binding NavData.PopulatingRoute, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}" />
 
                 <Label Content="Estimated Scan Value : "
                        Grid.Column="2"

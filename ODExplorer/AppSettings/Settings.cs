@@ -38,7 +38,7 @@ namespace ODExplorer.AppSettings
         Fahrenheit
     }
 
-    public class Settings
+    public class Settings : PropertyChangeNotify
     {
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Settings.json");
 
@@ -60,7 +60,28 @@ namespace ODExplorer.AppSettings
             }
         }
 
-        public SettingsValues Value { get; set; }
+        private SettingsValues _value;
+        public SettingsValues Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+
+        public SettingsValues ClonedValues { get; private set; }
+
+        public void CloneValues()
+        {
+            ClonedValues = Value.Clone();
+        }
+
+        public void SetClonedValues()
+        {
+            SettingsValues clonedValues = ClonedValues.Clone();
+
+            Value = clonedValues;
+            //To prompt the onpropertyupdated for ui update
+            Value.DisplaySettings = clonedValues.DisplaySettings;
+
+            ClonedValues = null;
+
+            _ = SaveSettings();
+        }
 
         public bool SaveSettings()
         {
@@ -70,6 +91,9 @@ namespace ODExplorer.AppSettings
 
     public class SettingsValues : PropertyChangeNotify
     {
+        private DisplaySettings displaySettings = new();
+        public DisplaySettings DisplaySettings { get => displaySettings; set { displaySettings = value; OnPropertyChanged(); } }
+
         private SortCategory sortCategory = SortCategory.Value;
         private ListSortDirection sortDirection = ListSortDirection.Descending;
         private int worthMappingValue = 300000;
@@ -79,6 +103,7 @@ namespace ODExplorer.AppSettings
         private bool showParser;
         private Temperature temperatureUnit;
         private double uiScale = 1;
+        private bool showAdditionWindowsInTaskBar;
 
         public SortCategory SortCategory { get => sortCategory; set { sortCategory = value; OnPropertyChanged(); } }
         public ListSortDirection SortDirection { get => sortDirection; set { sortDirection = value; OnPropertyChanged(); } }
@@ -89,7 +114,7 @@ namespace ODExplorer.AppSettings
         public bool AutoCopyCsvSystemToClipboard { get => autoCopyCsvSystemToClipboard; set { autoCopyCsvSystemToClipboard = value; OnPropertyChanged(); } }
         public Temperature TemperatureUnit { get => temperatureUnit; set { temperatureUnit = value; OnPropertyChanged(); } }
         public double UiScale { get => uiScale; set { uiScale = value; OnPropertyChanged(); } }
-
+        public bool ShowAdditionalWindowsInTaskBar { get => showAdditionWindowsInTaskBar; set { showAdditionWindowsInTaskBar = value; OnPropertyChanged(); } }
         public void Copy(SettingsValues values)
         {
             SortCategory = values.SortCategory;

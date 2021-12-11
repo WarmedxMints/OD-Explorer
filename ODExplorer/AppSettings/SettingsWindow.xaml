@@ -20,8 +20,6 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
-        <Utils:EnumDescriptionConverter x:Key="EnumDesc" />
-
         <ObjectDataProvider x:Key="CSBSortingCat"
                             MethodName="GetValues"
                             ObjectType="{x:Type System:Enum}">
@@ -37,7 +35,7 @@
                 <x:Type TypeName="local:Temperature"></x:Type>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        
+
         <ObjectDataProvider x:Key="CSMSortDirection"
                             MethodName="GetValues"
                             ObjectType="{x:Type System:Enum}">
@@ -60,7 +58,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />                
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
 
@@ -94,7 +92,7 @@
                     <ComboBox Grid.Row="1"
                               Grid.Column="0"
                               ItemsSource="{Binding Source={StaticResource CSBSortingCat}}"
-                              SelectedItem="{Binding Values.SortCategory}"
+                              SelectedItem="{Binding AppSettings.ClonedValues.SortCategory}"
                               Width="200"
                               HorizontalAlignment="Center"
                               VerticalContentAlignment="Center"
@@ -118,7 +116,7 @@
                               Grid.Column="1"
                               HorizontalAlignment="Center"
                               ItemsSource="{Binding Source={StaticResource CSMSortDirection}}"
-                              SelectedItem="{Binding Values.SortDirection}"
+                              SelectedItem="{Binding AppSettings.ClonedValues.SortDirection}"
                               Width="200"
                               FontSize="14"
                               VerticalContentAlignment="Center"
@@ -161,7 +159,7 @@
                            Foreground="{DynamicResource Font Colour}" />
                     <Slider Grid.Row="1"
                             Grid.Column="0"
-                            Value="{Binding Values.WorthMappingValue}"
+                            Value="{Binding AppSettings.ClonedValues.WorthMappingValue}"
                             Maximum="2000000"
                             SmallChange="10000"
                             IsSnapToTickEnabled="True"
@@ -172,7 +170,7 @@
                                FontSize="16"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
-                               Text="{Binding Values.WorthMappingValue, StringFormat={}{0:N0} cr}"
+                               Text="{Binding AppSettings.ClonedValues.WorthMappingValue, StringFormat={}{0:N0} cr}"
                                Foreground="{DynamicResource Font Colour}" />
 
                     <Label Content="Maximum Distance From Arrival"
@@ -183,7 +181,7 @@
                            Foreground="{DynamicResource Font Colour}" />
                     <Slider Grid.Row="3"
                             Grid.Column="0"
-                            Value="{Binding Values.WorthMappingDistance}"
+                            Value="{Binding AppSettings.ClonedValues.WorthMappingDistance}"
                             Maximum="1000000"
                             SmallChange="10000"
                             IsSnapToTickEnabled="True"
@@ -196,13 +194,13 @@
                         <TextBlock.Style>
                             <Style>
                                 <Setter Property="TextBlock.Text"
-                                        Value="{Binding Values.WorthMappingDistance, StringFormat={}{0:N0} ls}" />
+                                        Value="{Binding AppSettings.ClonedValues.WorthMappingDistance, StringFormat={}{0:N0} ls}" />
                                 <Setter Property="TextBlock.HorizontalAlignment"
                                         Value="Right" />
                                 <Setter Property="TextBlock.VerticalAlignment"
                                         Value="Center" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Values.WorthMappingDistance}"
+                                    <DataTrigger Binding="{Binding AppSettings.ClonedValues.WorthMappingDistance}"
                                                  Value="0">
                                         <Setter Property="TextBlock.Text"
                                                 Value="∞" />
@@ -231,21 +229,21 @@
                     </Grid.ColumnDefinitions>
 
                     <Slider Grid.Column="0"
-                            Value="{Binding Values.UiScale}"
+                            Value="{Binding AppSettings.ClonedValues.UiScale}"
                             Maximum="4"
                             Minimum="0.25"
                             TickFrequency="0.25"
                             LargeChange="0.25"
-                            IsSnapToTickEnabled="True"/>
+                            IsSnapToTickEnabled="True" />
                     <TextBlock   Grid.Column="1"
-                               FontSize="16"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Text="{Binding Values.UiScale, StringFormat={}{0:N2} x}"
-                               Foreground="{DynamicResource Font Colour}" />
+                                 FontSize="16"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding AppSettings.ClonedValues.UiScale, StringFormat={}{0:N2} x}"
+                                 Foreground="{DynamicResource Font Colour}" />
                 </Grid>
             </GroupBox>
-            
+
             <GroupBox Grid.Row="4"
                       Grid.Column="1"
                       Header="Misc"
@@ -268,7 +266,9 @@
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />  
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
@@ -277,13 +277,13 @@
                     <StackPanel Orientation="Horizontal"
                                 Grid.Row="0"
                                 Grid.Column="0">
-                    <ComboBox ItemsSource="{Binding Source={StaticResource TemperatureUnit}}"
-                              SelectedItem="{Binding Values.TemperatureUnit}"
-                              Width="90"
-                              HorizontalAlignment="Left"
-                              FontSize="14"
-                              Background="{DynamicResource MainWindowBackground}"
-                              BorderBrush="{DynamicResource Groupbox Border}" />
+                        <ComboBox ItemsSource="{Binding Source={StaticResource TemperatureUnit}}"
+                                  SelectedItem="{Binding AppSettings.ClonedValues.TemperatureUnit}"
+                                  Width="90"
+                                  HorizontalAlignment="Left"
+                                  FontSize="14"
+                                  Background="{DynamicResource MainWindowBackground}"
+                                  BorderBrush="{DynamicResource Groupbox Border}" />
                         <TextBlock  Foreground="{DynamicResource Font Colour}"
                                     FontSize="14"
                                     Margin="5,0,0,0"
@@ -298,14 +298,14 @@
                                 VerticalAlignment="Center"
                                 Text="Sets the temperature unit used for the surface temperature for bodies"
                                 TextWrapping="WrapWithOverflow" />
-                    
+
                     <CheckBox Grid.Row="2"
                               Grid.Column="0"
                               Content="Ignore Non-Bodies"
                               Foreground="{DynamicResource Font Colour}"
                               FontSize="14"
                               VerticalAlignment="Center"
-                              IsChecked="{Binding Values.IgnoreNonBodies}" />
+                              IsChecked="{Binding AppSettings.ClonedValues.IgnoreNonBodies}" />
                     <TextBlock  Grid.Row="2"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
@@ -320,7 +320,7 @@
                               Foreground="{DynamicResource Font Colour}"
                               FontSize="14"
                               VerticalAlignment="Center"
-                              IsChecked="{Binding Values.AutoCopyCsvSystemToClipboard}" />
+                              IsChecked="{Binding AppSettings.ClonedValues.AutoCopyCsvSystemToClipboard}" />
                     <TextBlock  Grid.Row="4"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
@@ -329,7 +329,22 @@
                                 Text="When enabled the system name for the current system in the CSV parser will be automatically copied to the clipboard"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="6"
+                    <CheckBox Grid.Row="6"
+                              Grid.Column="0"
+                              Content="Show Addditional Windows in Taskbar"
+                              Foreground="{DynamicResource Font Colour}"
+                              FontSize="14"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding AppSettings.ClonedValues.ShowAdditionalWindowsInTaskBar}" />
+                    <TextBlock  Grid.Row="6"
+                                Grid.Column="1"
+                                Foreground="{DynamicResource Font Colour}"
+                                FontSize="10"
+                                VerticalAlignment="Center"
+                                Text="When enabled the Biological and Scan Data windows will show in the taskbar"
+                                TextWrapping="WrapWithOverflow" />
+
+                    <Button Grid.Row="8"
                             Grid.Column="0"
                             Content="Set to Default"
                             Width="140"
@@ -337,7 +352,7 @@
                             FontSize="14"
                             x:Name="ResetSettingsButton"
                             Click="ResetSettingsButton_Click" />
-                    <TextBlock  Grid.Row="6"
+                    <TextBlock  Grid.Row="8"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -345,7 +360,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="8"
+                    <Button Grid.Row="10"
                             Grid.Column="0"
                             Content="Reset Scan Value"
                             Width="140"
@@ -353,7 +368,7 @@
                             FontSize="14"
                             x:Name="ResetExplorationValueButton"
                             Click="ResetExplorationValueButton_Click" />
-                    <TextBlock  Grid.Row="8"
+                    <TextBlock  Grid.Row="10"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -361,7 +376,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="10"
+                    <Button Grid.Row="12"
                             Grid.Column="0"
                             Content="Reset Biological Data"
                             Width="140"
@@ -369,7 +384,7 @@
                             FontSize="14"
                             x:Name="ClearBioLogicalData"
                             Click="ClearBioLogicalData_Click" />
-                    <TextBlock  Grid.Row="10"
+                    <TextBlock  Grid.Row="12"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
@@ -383,18 +398,14 @@
                         Grid.Column="1"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <Button Grid.Row="4"
-                        Grid.Column="0"
-                        Content="Save"
+                <Button Content="Save"
                         Width="100"
                         HorizontalAlignment="Left"
                         FontSize="14"
                         Margin="0,0,10,0"
                         x:Name="Save_Btn"
                         Click="Save_Btn_Click" />
-                <Button Grid.Row="4"
-                        Grid.Column="0"
-                        Content="Cancel"
+                <Button Content="Cancel"
                         Width="100"
                         HorizontalAlignment="Left"
                         FontSize="14"

@@ -30,7 +30,7 @@ namespace ODExplorer.NavData
         public long SystemAddress { get; set; }
 
         [JsonProperty("StarPos", NullValueHandling = NullValueHandling.Ignore)]
-        public List<double> StarPos { get; set; }
+        public float[] StarPos { get; set; }
 
         [JsonProperty("StarClass", NullValueHandling = NullValueHandling.Ignore)]
         public string StarClass { get; set; }
