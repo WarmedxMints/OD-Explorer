@@ -18,12 +18,11 @@ namespace ODExplorer.AppSettings
 
         public DisplaySettingsView(Settings settings)
         {
+            CreateSystems();
             Settings = settings;
             settings.CloneValues();
-            CreateSystems();
             InitializeComponent();
         }
-
         private void CreateSystems()
         {
             CurrentSystem.Clear();
@@ -53,7 +52,8 @@ namespace ODExplorer.AppSettings
                 SurfaceTemp = 310,
                 DistanceFromArrivalLs = 180,
                 MappedValue = 6180,
-                Status = DiscoveryStatus.UnDiscovered
+                Status = DiscoveryStatus.UnDiscovered,
+                TerraformState = EliteJournalReader.TerraformState.None
             };
 
             system.Bodies.Add(body2);
@@ -65,6 +65,8 @@ namespace ODExplorer.AppSettings
                 DistanceFromArrivalLs = 552,
                 Status = DiscoveryStatus.WorthMapping,
                 MappedValue = 4250180,
+                Wasmapped = false,
+                TerraformState = EliteJournalReader.TerraformState.Terraformed
             };
 
             system.Bodies.Add(body3);
@@ -72,19 +74,21 @@ namespace ODExplorer.AppSettings
             SystemBody body4 = new()
             {
                 BodyNameLocal = "USER MAPPED",
-                PlanetClass = EliteJournalReader.PlanetClass.HighMetalContentBody,
+                PlanetClass = EliteJournalReader.PlanetClass.WaterWorld,
                 DistanceFromArrivalLs = 704,
                 Status = DiscoveryStatus.MappedByUser,
-                MappedValue = 2140560
+                MappedValue = 2140560,
+                Wasmapped = false,
+                TerraformState = EliteJournalReader.TerraformState.Terraformable
             };
 
             system.Bodies.Add(body4);
-
+            
             SystemBody body5 = new()
             {
                 BodyNameLocal = "MEDIUM GRAVITY",
                 PlanetClass = EliteJournalReader.PlanetClass.IcyBody,
-                Wasmapped = false,
+                Wasmapped = true,
                 Landable = true,
                 BiologicalSignals = 1,
                 GeologicalSignals = 0,
@@ -94,16 +98,16 @@ namespace ODExplorer.AppSettings
                 SurfaceTemp = 110,
                 DistanceFromArrivalLs = 1200,
                 MappedValue = 500,
-                Status = DiscoveryStatus.Discovered
+                Status = DiscoveryStatus.Discovered,
             };
 
             system.Bodies.Add(body5);
-
+            
             SystemBody body6 = new()
             {
                 BodyNameLocal = "HIGH GRAVITY",
                 PlanetClass = EliteJournalReader.PlanetClass.IcyBody,
-                Wasmapped = false,
+                Wasmapped = true,
                 Landable = true,
                 BiologicalSignals = 0,
                 GeologicalSignals = 2,
@@ -117,6 +121,21 @@ namespace ODExplorer.AppSettings
             };
 
             system.Bodies.Add(body6);
+            
+            SystemBody body7 = new()
+            {
+                BodyNameLocal = "BODY WITH RINGS",
+                PlanetClass = EliteJournalReader.PlanetClass.SudarskyClassIGasGiant,
+                Wasmapped = false,
+                Landable = false,
+                HasRings = true,
+                RingReserves = EliteJournalReader.ReserveLevel.Pristine,
+                DistanceFromArrivalLs = 42452,
+                MappedValue = 38680,
+                Status = DiscoveryStatus.Discovered
+            };
+
+            system.Bodies.Add(body7);
 
             SystemBody body1 = new()
             {
@@ -155,7 +174,7 @@ namespace ODExplorer.AppSettings
                 SysValue = 1704070
             };
 
-            SystemBody body7 = new()
+            SystemBody body8 = new()
             {
                 BodyNameLocal = "VALUABLE BODY",
                 PlanetClass = EliteJournalReader.PlanetClass.EdsmValuableBody,
@@ -164,7 +183,7 @@ namespace ODExplorer.AppSettings
                 MappedValue = 1580270
             };
 
-            system3.Bodies.Add(body7);
+            system3.Bodies.Add(body8);
             SystemsInRoute.Add(system3);
 
             SystemInfo system4 = new()
@@ -188,7 +207,7 @@ namespace ODExplorer.AppSettings
 
         private void CurrentSystemBodies_Loaded(object sender, RoutedEventArgs e)
         {
-            var SystemBodiesGrid = (DataGrid)sender;
+            DataGrid SystemBodiesGrid = (DataGrid)sender;
 
             foreach (DatagridLayout layout in Settings.ClonedValues.DisplaySettings.CSBColumnOrder)
             {

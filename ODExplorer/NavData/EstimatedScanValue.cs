@@ -25,7 +25,19 @@ namespace ODExplorer.NavData
                     UpdateMainStarValue(system);
                 }
             }
+            AppSettings.Settings.SettingsInstance.SaveEvent += SettingsInstance_SaveEvent;
         }
+
+        ~EstimatedScanValue()
+        {
+            AppSettings.Settings.SettingsInstance.SaveEvent -= SettingsInstance_SaveEvent;
+        }
+
+        private void SettingsInstance_SaveEvent(object sender, System.EventArgs e)
+        {
+            _ = SaveState();
+        }
+
 
         private ulong estiatedScanValue;
 

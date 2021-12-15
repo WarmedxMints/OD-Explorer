@@ -19,8 +19,7 @@
     <Border BorderBrush="{DynamicResource Groupbox Border}"
             BorderThickness="2">
 
-        <Grid Width="1000"
-              Height="820">
+        <Grid Width="1055">
             <Grid.LayoutTransform>
                 <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
                                 ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
@@ -142,6 +141,12 @@
                                   Foreground="{DynamicResource Font Colour}"
                                   VerticalContentAlignment="Center"
                                   Click="CheckBox_Click"
+                                  Margin="5,0,0,10" />
+                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTerraformable}"
+                                  Content="Terraformable State"
+                                  Foreground="{DynamicResource Font Colour}"
+                                  VerticalContentAlignment="Center"
+                                  Click="CheckBox_Click"
                                   Margin="5,0,0,0" />
                     </StackPanel>
 
@@ -162,6 +167,12 @@
                                   Margin="5,0,0,10" />
                         <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceGravity}"
                                   Content="Surface Gravity"
+                                  Foreground="{DynamicResource Font Colour}"
+                                  VerticalContentAlignment="Center"
+                                  Click="CheckBox_Click"
+                                  Margin="5,0,0,10" />
+                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowHasRings}"
+                                  Content="Has Rings"
                                   Foreground="{DynamicResource Font Colour}"
                                   VerticalContentAlignment="Center"
                                   Click="CheckBox_Click"
@@ -398,6 +409,31 @@
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
 
+                                                            <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                       Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                       Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                       Margin="0,0,3,0">
+                                                                <Rectangle.Visibility>
+                                                                    <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                        <Binding Path="Terraformable" />
+                                                                        <Binding Source="{StaticResource AppSettings}"
+                                                                                 Path="SettingsInstance.ClonedValues.DisplaySettings.ShowTerraformable" />
+                                                                    </MultiBinding>
+                                                                </Rectangle.Visibility>
+                                                                <Rectangle.OpacityMask>
+                                                                    <ImageBrush ImageSource="/Images/cooling-tower.png" />
+                                                                </Rectangle.OpacityMask>
+                                                            </Rectangle>
+
+                                                            <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                       Visibility="{Binding HasRings, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
+                                                                       Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                       Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
+                                                                <Rectangle.OpacityMask>
+                                                                    <ImageBrush ImageSource="/Images/saturn.png" />
+                                                                </Rectangle.OpacityMask>
+                                                            </Rectangle>
+                                                            
                                                             <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                        Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                        Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">

@@ -1,4 +1,5 @@
-﻿using ODExplorer.NavData;
+﻿using ODExplorer.CustomMessageBox;
+using ODExplorer.NavData;
 using ODExplorer.Utils;
 using System;
 using System.ComponentModel;
@@ -113,6 +114,23 @@ namespace ODExplorer.ScanValueView
             {
                 SystemListBox.SelectedIndex = SystemListBox.Items.Count - 1;
                 SystemListBox.ScrollIntoView(SystemListBox.SelectedItem);
+            }
+        }
+
+        private void DeleteSystemData_Click(object sender, RoutedEventArgs e)
+        {
+            Button cmd = (Button)sender;
+
+            if (cmd.DataContext is SystemInfo deleteme)
+            {
+                MessageBoxResult result = ODMessageBox.Show(this,
+                                                            $"Do you want to delete scan data for\n{deleteme.SystemName}?",
+                                                            MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    ScanValue.ScannedSystems.RemoveFromCollection(deleteme);
+                }
             }
         }
     }

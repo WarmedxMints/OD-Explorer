@@ -19,6 +19,8 @@ using System.Linq;
 using ODExplorer.CsvControl;
 using System.Media;
 using System.Windows.Threading;
+using ODExplorer.GeologicalData;
+using ODExplorer.CustomMessageBox;
 
 namespace ODExplorer
 {
@@ -129,10 +131,11 @@ namespace ODExplorer
         {
             if (NavData.ScanValue.SaveState() == false)
             {
-                _ = MessageBox.Show("Error Saving Scan Value");
+                _ = ODMessageBox.Show(this,
+                                      "Error Saving Scan Value");
             }
 
-            _ = NavData.ScannedBio.SaveState();
+            Settings.SettingsInstance.SaveAll();
             CsvController.SaveState();
             _ = AppSettings.SaveSettings();
         }
@@ -322,7 +325,8 @@ namespace ODExplorer
 
                 if (csv is null)
                 {
-                    _ = MessageBox.Show("Unable to parse CSV");
+                    _ = ODMessageBox.Show(this,
+                                          "Unable to parse CSV");
                     return;
                 }
 
@@ -360,7 +364,7 @@ namespace ODExplorer
         {
             AboutBox.AboutBox about = new();
             about.Owner = this;
-            about.Show();
+            _ = about.ShowDialog();
         }
 
         private void OpenBioData_Click(object sender, RoutedEventArgs e)
@@ -373,6 +377,23 @@ namespace ODExplorer
             bdv.Show();
 
             OpenBioData.IsEnabled = false;
+        }
+
+        private void OpenGeoData_Click(object sender, RoutedEventArgs e)
+        {
+            ScannedGeoView gdv = new(NavData.ScannedGeo)
+            {
+                Owner = this
+            };
+            gdv.Closed += GeoDataViewClosed;
+            gdv.Show();
+
+            OpenGeoData.IsEnabled = false;
+        }
+
+        private void GeoDataViewClosed(object sender, EventArgs e)
+        {
+            OpenGeoData.IsEnabled = true;
         }
 
         private void BioDataViewClosed(object sender, EventArgs e)
@@ -505,7 +526,7 @@ namespace ODExplorer
 
         private void UpdateTime(int count)
         {
-            TimerDisplay.Text = secondsToString(count);
+            TimerDisplay.Text = SecondsToString(count);
         }
 
         private void EndTimer()
@@ -517,31 +538,7 @@ namespace ODExplorer
             TimerDisplay.Text = "00 : 00";
         }
 
-        private void Countdown(int count, TimeSpan interval, Action<int> ts)
-        {
-            System.Windows.Threading.DispatcherTimer dt = new()
-            {
-                Interval = interval
-            };
-
-            dt.Tick += (_, a) =>
-            {
-                if (count-- <= 0)
-                {
-                    dt.Stop();
-                    SystemSounds.Beep.Play();
-                }
-                else
-                {
-                    ts(count);
-                }
-            };
-
-            ts(count);
-            dt.Start();
-        }
-
-        private string secondsToString(int pTime)
+        private static string SecondsToString(int pTime)
         {
             return $"{pTime / 60:00} : {pTime % 60:00}";
         }

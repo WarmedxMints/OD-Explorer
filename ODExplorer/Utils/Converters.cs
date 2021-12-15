@@ -1,4 +1,5 @@
 ﻿using ParserLibrary;
+using EliteJournalReader;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace ODExplorer.Utils
 {
@@ -18,6 +20,22 @@ namespace ODExplorer.Utils
             int i = (int)value;
 
             return $"{i:N0}";
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.Empty;
+        }
+    }
+
+    public class JumpRangeToStringCoverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double i = (double)value;
+            string val = i.ToString((string)parameter);
+
+            return i <= 0.001 ? "?" : $"{val} ly";
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -51,11 +69,7 @@ namespace ODExplorer.Utils
                 return colour;
             }
 
-            if (i > 1.2)
-            {
-                colour = (SolidColorBrush)Application.Current.Resources["High Gravity"];
-                return colour;
-            }
+            colour = (SolidColorBrush)Application.Current.Resources["High Gravity"];
             return colour;
         }
 
@@ -153,6 +167,19 @@ namespace ODExplorer.Utils
             }
             string description = GetEnumDescription(myEnum);
 
+            if (parameter is not null)
+            {
+                _ = int.TryParse(parameter.ToString(), out int prefixLength);
+
+                if (prefixLength > 0)
+                {
+                    if (description.Length <= prefixLength)
+                    {
+                        return description;
+                    }
+                    return description.Substring(0, prefixLength);
+                }
+            }
             return !string.IsNullOrEmpty(description) ? description : myEnum.ToString();
         }
 
@@ -377,6 +404,82 @@ namespace ODExplorer.Utils
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
+        }
+    }
+
+    public class PrefixValueConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string s = value.ToString();
+            if (!int.TryParse(parameter.ToString(), out int prefixLength) ||
+                s.Length <= prefixLength)
+            {
+                return s;
+            }
+            return s.Substring(0, prefixLength);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class PlanetClassToImage : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            PlanetClass PlanetClass = (PlanetClass)value;
+
+            string uri;
+            switch (PlanetClass)
+            {
+                case PlanetClass.MetalRichBody:
+                case PlanetClass.HighMetalContentBody:
+                case PlanetClass.RockyBody:
+                case PlanetClass.IcyBody:
+                case PlanetClass.RockyIceBody:
+                    uri = "../Images/planet.png";
+                    break;
+
+                case PlanetClass.EarthlikeBody:
+                    uri = "../Images/earth.png";
+                    break;
+
+                case PlanetClass.WaterWorld:
+                case PlanetClass.WaterGiant:
+                case PlanetClass.WaterGiantWithLife:
+                    uri = "../Images/water.png";
+                    break;
+
+                case PlanetClass.AmmoniaWorld:
+                case PlanetClass.GasGiantWithWaterBasedLife:
+                case PlanetClass.GasGiantWithAmmoniaBasedLife:
+                case PlanetClass.SudarskyClassIGasGiant:
+                case PlanetClass.SudarskyClassIIGasGiant:
+                case PlanetClass.SudarskyClassIIIGasGiant:
+                case PlanetClass.SudarskyClassIVGasGiant:
+                case PlanetClass.SudarskyClassVGasGiant:
+                case PlanetClass.HeliumRichGasGiant:
+                case PlanetClass.HeliumGasGiant:
+                    uri = "../Images/jupiter.png";
+                    break;
+
+                case PlanetClass.EdsmValuableBody:
+                case PlanetClass.Unknown:
+                default:
+                    uri = "../Images/language.png";
+                    break;
+            }
+
+            return uri;
+        }
+
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 }

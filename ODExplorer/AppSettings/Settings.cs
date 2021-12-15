@@ -1,5 +1,6 @@
 ﻿using LoadSaveSystem;
 using ODExplorer.Utils;
+using System;
 using System.ComponentModel;
 using System.IO;
 
@@ -42,6 +43,7 @@ namespace ODExplorer.AppSettings
     {
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Settings.json");
 
+        public event EventHandler SaveEvent;
         public static Settings SettingsInstance { get; private set; }
         public Settings()
         {
@@ -81,6 +83,11 @@ namespace ODExplorer.AppSettings
             ClonedValues = null;
 
             _ = SaveSettings();
+        }
+
+        public void SaveAll()
+        {
+            SaveEvent?.Invoke(this, EventArgs.Empty);
         }
 
         public bool SaveSettings()

@@ -5,6 +5,8 @@ using ODExplorer.Utils;
 using System;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ODExplorer.NavData
 {
@@ -38,6 +40,11 @@ namespace ODExplorer.NavData
             SurfacePressure = e.SurfacePressure ?? 0;
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
             WasDiscovered = e.WasDiscovered ?? false;
+            if (e.Rings is not null)
+            {
+                HasRings = e.Rings.Length > 0;
+            }
+            RingReserves = e.ReserveLevel;
             //Whan a body is mapped by the user a scan event is fired
             //For some reason that scan event can report the body as not mapped when it has been previously
             //So, if the user has just mapped a body, we ignore what the scan event has to say about this.
@@ -91,6 +98,7 @@ namespace ODExplorer.NavData
                 OnPropertyChanged("IsPlanet");
                 OnPropertyChanged("IsNonBody");
                 OnPropertyChanged("IsEDSMvb");
+                OnPropertyChanged("BodyIcon");
             }
         }
 
@@ -120,6 +128,7 @@ namespace ODExplorer.NavData
             set { _surfacePressure = value; OnPropertyChanged(); OnPropertyChanged("SurfacePressureString"); }
         }
 
+        [IgnoreDataMember]
         public string SurfacePressureString
         {
             get
@@ -189,7 +198,8 @@ namespace ODExplorer.NavData
             set { }
         }
 
-        public TerraformState TerraformState { get; set; }
+        private TerraformState terraformState;
+        public TerraformState TerraformState { get => terraformState; set { terraformState = value; OnPropertyChanged("Terraformable"); } }
 
         public string SystemName { get; set; }
 
@@ -230,7 +240,7 @@ namespace ODExplorer.NavData
         private bool _wasMapped = true;
         public bool Wasmapped
         {
-            get { return !IsPlanet ? true : _wasMapped; }
+            get { return !IsPlanet || _wasMapped; }
             set { _wasMapped = value; OnPropertyChanged(); }
         }
 
@@ -240,7 +250,7 @@ namespace ODExplorer.NavData
             get => MappedValue >= Settings.SettingsInstance.Value.WorthMappingValue &&
                     (Settings.SettingsInstance.Value.WorthMappingDistance <= 0 || Settings.SettingsInstance.Value.WorthMappingDistance >= DistanceFromArrivalLs) &&
                     MappedByUser == false;
-            set { OnPropertyChanged(); }
+            set => OnPropertyChanged();
         }
         [IgnoreDataMember]
         public bool IsKnownToEDSM { get => WasDiscovered; }
@@ -248,7 +258,7 @@ namespace ODExplorer.NavData
         private bool _mappedByUser;
         public bool MappedByUser { get => _mappedByUser; set { _mappedByUser = value; OnPropertyChanged(); OnPropertyChanged("ScanValue"); } }
 
-        public bool EffeicentMapped;
+        public bool EffeicentMapped { get; set; }
         [IgnoreDataMember]
         public bool IsStar { get { return StarType != StarType.Unknown; } }
         [IgnoreDataMember]
@@ -272,6 +282,12 @@ namespace ODExplorer.NavData
             set { _biologicalSignals = value; OnPropertyChanged(); }
         }
 
+        private bool _hasRings;
+        public bool HasRings { get => _hasRings; set { _hasRings = value; OnPropertyChanged(); } }
+
+        private ReserveLevel _ringReserves;
+        public ReserveLevel RingReserves { get => _ringReserves; set { _ringReserves = value; OnPropertyChanged(); } }
+
         #endregion
         public void UpdateFromDetailedScan(SystemBody e, bool Ody = false)
         {
@@ -293,6 +309,8 @@ namespace ODExplorer.NavData
                 SurfacePressure = e.SurfacePressure;
                 SurfaceTemp = e.SurfaceTemp;
                 WasDiscovered = e.WasDiscovered;
+                HasRings = e.HasRings;
+                RingReserves = e.RingReserves;
                 //Whan a body is mapped by the user a scan event is fired
                 //For some reason that scan event can report the body as not mapped when it has been previously
                 //So, if the user has just mapped a body, we ignore what the scan event has to say about this.

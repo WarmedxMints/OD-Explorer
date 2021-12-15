@@ -1,9 +1,9 @@
 ﻿using ODExplorer.Utils;
 using System.Collections.ObjectModel;
 
-namespace ODExplorer.OrganicData
+namespace ODExplorer.GeologicalData
 {
-    public class BiologicalData : PropertyChangeNotify
+    public class GeoLogicalDataContainer : PropertyChangeNotify
     {
         private string _systemName;
         public string SystemName { get => _systemName; set { _systemName = value; OnPropertyChanged(); } }
@@ -11,7 +11,7 @@ namespace ODExplorer.OrganicData
         private string _bodyName;
         public string BodyName { get => _bodyName; set { _bodyName = value; OnPropertyChanged(); } }
 
-        public ObservableCollection<BioData> BodyBioData { get; set; } = new();
+        public ObservableCollection<GeoData> BodyBioData { get; set; } = new();
 
         public override string ToString()
         {

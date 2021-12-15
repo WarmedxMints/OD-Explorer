@@ -87,6 +87,19 @@ namespace ODExplorer.AppSettings
             set { _showUnmapped = value; OnPropertyChanged(); }
         }
 
+        private bool _showTerraformable = true;
+        public bool ShowTerraformable
+        {
+            get => _showTerraformable;
+            set { _showTerraformable = value; OnPropertyChanged(); }
+        }
+
+        private bool _showHasRings = true;
+        public bool ShowHasRings
+        {
+            get => _showHasRings;
+            set { _showHasRings = value; OnPropertyChanged(); }
+        }
         private bool _showBioSignals = true;
         public bool ShowBioSignals
         {

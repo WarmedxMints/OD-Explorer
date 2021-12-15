@@ -5,12 +5,7 @@ namespace ODExplorer.OrganicData
     public class BioData : PropertyChangeNotify
     {
         private string _species;
-
-        public string Species
-        {
-            get => _species;
-            set { _species = value; OnPropertyChanged(); }
-        }
+        public string Species { get => _species; set { _species = value; OnPropertyChanged(); } }
 
         private string _status;
 
@@ -37,5 +32,8 @@ namespace ODExplorer.OrganicData
                 OnPropertyChanged();
             }
         }
+
+        private string _variant;
+        public string Variant { get => _variant; set { _variant = value; OnPropertyChanged(); } }
     }
 }

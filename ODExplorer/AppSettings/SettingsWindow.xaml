@@ -272,6 +272,8 @@
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
                     </Grid.RowDefinitions>
 
                     <StackPanel Orientation="Horizontal"
@@ -389,6 +391,22 @@
                                 Foreground="{DynamicResource Font Colour}"
                                 FontSize="10"
                                 Text="Clear Biological Scan Data"
+                                VerticalAlignment="Center"
+                                TextWrapping="WrapWithOverflow" />
+
+                    <Button Grid.Row="14"
+                            Grid.Column="0"
+                            Content="Reset Geological Data"
+                            Width="140"
+                            HorizontalAlignment="Left"
+                            FontSize="14"
+                            x:Name="ClearGeoLogicalData"
+                            Click="ClearGeoLogicalData_Click" />
+                    <TextBlock  Grid.Row="14"
+                                Grid.Column="1"
+                                Foreground="{DynamicResource Font Colour}"
+                                FontSize="10"
+                                Text="Clear Geological Scan Data"
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
                 </Grid>

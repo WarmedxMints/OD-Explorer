@@ -16,12 +16,18 @@
     <None Remove="Images\asteroid.png" />
     <None Remove="Images\astronaut.ico" />
     <None Remove="Images\astronaut.png" />
+    <None Remove="Images\cooling-tower.png" />
     <None Remove="Images\copy.png" />
     <None Remove="Images\DNA.png" />
+    <None Remove="Images\earth.png" />
+    <None Remove="Images\jupiter.png" />
+    <None Remove="Images\language.png" />
     <None Remove="Images\moon-landing.png" />
     <None Remove="Images\planet.png" />
+    <None Remove="Images\saturn.png" />
     <None Remove="Images\StarIcon.png" />
     <None Remove="Images\volcano.png" />
+    <None Remove="Images\water.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,12 +45,18 @@
     <Resource Include="Images\asteroid.png" />
     <Resource Include="Images\astronaut.ico" />
     <Resource Include="Images\astronaut.png" />
+    <Resource Include="Images\cooling-tower.png" />
     <Resource Include="Images\copy.png" />
     <Resource Include="Images\DNA.png" />
+    <Resource Include="Images\earth.png" />
+    <Resource Include="Images\jupiter.png" />
+    <Resource Include="Images\language.png" />
     <Resource Include="Images\moon-landing.png" />
     <Resource Include="Images\planet.png" />
+    <Resource Include="Images\saturn.png" />
     <Resource Include="Images\StarIcon.png" />
     <Resource Include="Images\volcano.png" />
+    <Resource Include="Images\water.png" />
   </ItemGroup>
 
 </Project>

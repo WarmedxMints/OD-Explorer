@@ -22,6 +22,8 @@
     <utils:BoolToMargin x:Key="BoolToMargin" />
     <utils:CsvTypeEnumToVis x:Key="CsvTypeToVis" />
     <utils:EnumDescriptionConverter x:Key="EnumDesc" />
+    <utils:JumpRangeToStringCoverter x:Key="JumpRangToString" />
+    <utils:PlanetClassToImage x:Key="PlanetClassToImage" />
     <!--#endregion-->
 
     <!--#region DataGrid settings-->

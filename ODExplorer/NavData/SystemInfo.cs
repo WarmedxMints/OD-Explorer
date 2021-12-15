@@ -1,10 +1,10 @@
-﻿using EliteJournalReader.Events;
+﻿using EliteJournalReader;
+using EliteJournalReader.Events;
 using ODExplorer.Utils;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +22,7 @@ namespace ODExplorer.NavData
             StarClass = route.StarClass.ToUpperInvariant();
             SystemName = route.StarSystem.ToUpperInvariant();
             SystemAddress = route.SystemAddress;
-            SystemPos = new Vector3(route.StarPos[0], route.StarPos[1], route.StarPos[2]);
+            SystemPos = route.StarPos.Copy();
         }
 
         public SystemInfo(SystemInfo sys)
@@ -43,7 +43,7 @@ namespace ODExplorer.NavData
         #endregion
 
         #region Properties
-        public Vector3 SystemPos { get; set; }
+        public SystemPosition SystemPos { get; set; }
 
         private double jumpDistanceToSystem;
 
@@ -58,9 +58,9 @@ namespace ODExplorer.NavData
         }
 
 
-        private int jumpDistanceRemaining;
+        private double jumpDistanceRemaining;
 
-        public int JumpDistanceRemaining
+        public double JumpDistanceRemaining
         {
             get => jumpDistanceRemaining;
             set
@@ -104,6 +104,7 @@ namespace ODExplorer.NavData
             set { sysValue = value; OnPropertyChanged("SystemValue"); }
         }
 
+        [IgnoreDataMember]
         public string SystemValue
         {
             get => SysValue < 0 ? "?" : $"{SysValue:N0}";
@@ -182,7 +183,7 @@ namespace ODExplorer.NavData
                     return 100;
                 }
 
-                int scannedCount = Bodies.Count(x => x.IsNonBody == false && x.PlanetClass != EliteJournalReader.PlanetClass.EdsmValuableBody);
+                int scannedCount = Bodies.Count(x => x.IsNonBody == false && x.PlanetClass != PlanetClass.EdsmValuableBody);
 
                 if (scannedCount <= 0)
                 {

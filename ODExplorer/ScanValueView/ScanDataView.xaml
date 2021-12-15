@@ -180,9 +180,24 @@
                               Foreground="{DynamicResource Default Font Colour}"
                               BorderBrush="Transparent"
                               Grid.Row="1"
-                              ItemsSource="{Binding ScanValue.ScannedSystems, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
+                              ItemsSource="{Binding ScanValue.ScannedSystems}"
                               SelectionChanged="ListBox_SelectionChanged"
-                              Loaded="ListBox_Loaded" />
+                              Loaded="ListBox_Loaded">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel ContextMenu="{Binding ContextMenu}"
+                                            Orientation="Horizontal">
+                                    <Button x:Name="DeleteBodyData"
+                                            Width="18"
+                                            Height="18"
+                                            Content="&#xE106;"
+                                            Style="{StaticResource CaptionButtonStyleAutoWidth}"
+                                            Click="DeleteSystemData_Click" />
+                                    <TextBlock Text="{Binding SystemName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
 
                 <DataGrid Grid.Column="2"
@@ -209,38 +224,9 @@
                                                        Width="18"
                                                        Fill="White"
                                                        Margin="0,2,4,2"
-                                                       VerticalAlignment="Center">
-                                                <Rectangle.Style>
-                                                    <Style TargetType="{x:Type Rectangle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsStar}"
-                                                                         Value="True">
-                                                                <Setter Property="OpacityMask">
-                                                                    <Setter.Value>
-                                                                        <ImageBrush ImageSource="../../Images/StarIcon.png" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding IsPlanet}"
-                                                                         Value="True">
-                                                                <Setter Property="OpacityMask">
-                                                                    <Setter.Value>
-                                                                        <ImageBrush ImageSource="../../Images/planet.png" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding IsNonBody}"
-                                                                         Value="True">
-                                                                <Setter Property="OpacityMask">
-                                                                    <Setter.Value>
-                                                                        <ImageBrush ImageSource="../../Images/asteroid.png" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Rectangle.Style>
-                                            </Rectangle>
+                                                       Style="{DynamicResource BodyRectangle}"
+                                                       VerticalAlignment="Center" />
+
                                             <TextBlock Text="{Binding Path=BodyNameLocal}"
                                                        VerticalAlignment="Center" />
                                         </StackPanel>

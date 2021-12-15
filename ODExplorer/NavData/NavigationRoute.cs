@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using EliteJournalReader;
 
 namespace ODExplorer.NavData
 {
@@ -29,8 +30,8 @@ namespace ODExplorer.NavData
         [JsonProperty("SystemAddress", NullValueHandling = NullValueHandling.Ignore)]
         public long SystemAddress { get; set; }
 
-        [JsonProperty("StarPos", NullValueHandling = NullValueHandling.Ignore)]
-        public float[] StarPos { get; set; }
+        [JsonProperty("StarPos", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SystemPositionConverter))]
+        public SystemPosition StarPos { get; set; }
 
         [JsonProperty("StarClass", NullValueHandling = NullValueHandling.Ignore)]
         public string StarClass { get; set; }

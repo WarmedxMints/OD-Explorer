@@ -54,6 +54,42 @@ namespace ODExplorer.NavData
             _watcher.GetEvent<MultiSellExplorationDataEvent>()?.AddHandler(SellExplorationData);//
 
             _watcher.GetEvent<ScanOrganicEvent>()?.AddHandler(ScanOrganic);//
+
+            _watcher.GetEvent<SupercruiseEntryEvent>()?.AddHandler(SupercruiseEntry);
+
+            _watcher.GetEvent<SupercruiseExitEvent>()?.AddHandler(SupercruiseExit);
+
+            _watcher.GetEvent<CodexEntryEvent>()?.AddHandler(CodexEntry);
+        }
+
+        private void CodexEntry(object sender, CodexEntryEvent.CodexEntryEventArgs e)
+        {
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
+
+            _navData.OnCodexEntry(e);
+        }
+
+        private void SupercruiseExit(object sender, SupercruiseExitEvent.SupercruiseExitEventArgs e)
+        {
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
+
+            _navData.OnSupercruiseExit(e);
+        }
+
+        private void SupercruiseEntry(object sender, SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
+        {
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
+
+            _navData.OnSupercruiseEntry(e);
         }
 
         public void StartWatcher(NavigationData navData)
@@ -76,7 +112,7 @@ namespace ODExplorer.NavData
             }
 
             SystemInfo sys = new(e);
-
+            _navData.SetCurrentBody(e);
             _navData.SetCurrentSystem(sys);
         }
 
@@ -127,7 +163,7 @@ namespace ODExplorer.NavData
                 return;
             }
 
-            _navData.OnDSScanComplete(e);
+            _ = _navData.OnDSScanComplete(e);
         }
 
         private void AllBodiesFound(object sender, FSSAllBodiesFoundEvent.FSSAllBodiesFoundEventArgs e)
@@ -219,7 +255,7 @@ namespace ODExplorer.NavData
             {
                 SystemName = e.Name.ToUpperInvariant(),
                 SystemAddress = e.SystemAddress,
-                StarClass = e.StarClass
+                StarClass = e.StarClass,
             };
 
             _navData.OnFsdTarget(sys);

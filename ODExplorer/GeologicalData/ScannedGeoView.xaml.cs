@@ -8,12 +8,12 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ODExplorer.OrganicData
+namespace ODExplorer.GeologicalData
 {
     /// <summary>
-    /// Interaction logic for BioDataView.xaml
+    /// Interaction logic for ScannedGeoView.xaml
     /// </summary>
-    public partial class BioDataView : Window
+    public partial class ScannedGeoView : Window
     {
         #region Custom Title Bar
         // Can execute
@@ -64,15 +64,14 @@ namespace ODExplorer.OrganicData
         }
         #endregion
 
-        public ScannedBioData ScannedBioData { get; private set; }
-
-        public BioDataView(ScannedBioData scannedBioData)
+        public ScannedGeoData ScannedGeo { get; set; }
+        public ScannedGeoView(ScannedGeoData scannedGeoData)
         {
-            ScannedBioData = scannedBioData;
+            ScannedGeo = scannedGeoData;
             InitializeComponent();
         }
 
-        private void BioDataGrid_Loaded(object sender, RoutedEventArgs e)
+        private void GeoDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (sender is DataGrid lb && lb.HasItems)
             {
@@ -83,20 +82,20 @@ namespace ODExplorer.OrganicData
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ScannedBioData.ScannedData.CollectionChanged += ScannedData_CollectionChanged;
+            ScannedGeo.ScannedData.CollectionChanged += ScannedData_CollectionChanged;
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            ScannedBioData.ScannedData.CollectionChanged -= ScannedData_CollectionChanged;
+            ScannedGeo.ScannedData.CollectionChanged -= ScannedData_CollectionChanged;
         }
 
         private void ScannedData_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (BioDataGrid is not null && BioDataGrid.HasItems)
+            if (GeoDataGrid is not null && GeoDataGrid.HasItems)
             {
-                BioDataGrid.SelectedIndex = BioDataGrid.Items.Count - 1;
-                BioDataGrid.ScrollIntoView(BioDataGrid.SelectedItem);
+                GeoDataGrid.SelectedIndex = GeoDataGrid.Items.Count - 1;
+                GeoDataGrid.ScrollIntoView(GeoDataGrid.SelectedItem);
             }
         }
 
@@ -104,7 +103,7 @@ namespace ODExplorer.OrganicData
         {
             Button cmd = (Button)sender;
 
-            if (cmd.DataContext is BiologicalData deleteme)
+            if (cmd.DataContext is GeoLogicalDataContainer deleteme)
             {
                 MessageBoxResult result = ODMessageBox.Show(this,
                                                             $"Do you want to delete scan data for\n{deleteme.SystemName}?",
@@ -112,18 +111,18 @@ namespace ODExplorer.OrganicData
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    ScannedBioData.ScannedData.RemoveFromCollection(deleteme);
+                    ScannedGeo.ScannedData.RemoveFromCollection(deleteme);
                 }
             }
         }
 
-        private void BioDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void GeoDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CollectionViewSource viewSource = FindResource("ListCVS") as CollectionViewSource;
 
             viewSource.SortDescriptions.Clear();
 
-            viewSource.SortDescriptions.Add(new System.ComponentModel.SortDescription("Species", System.ComponentModel.ListSortDirection.Ascending));
+            viewSource.SortDescriptions.Add(new System.ComponentModel.SortDescription("GeoName", System.ComponentModel.ListSortDirection.Ascending));
 
             viewSource.View?.Refresh();
         }
@@ -168,7 +167,7 @@ namespace ODExplorer.OrganicData
 
             if (result == MessageBoxResult.Yes)
             {
-                ScannedBioData.ResetData();
+                ScannedGeo.ResetData();
             }
         }
     }

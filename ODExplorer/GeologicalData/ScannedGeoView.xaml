@@ -1,16 +1,16 @@
-﻿<Window x:Class="ODExplorer.OrganicData.BioDataView"
+﻿<Window x:Class="ODExplorer.GeologicalData.ScannedGeoView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:clr="clr-namespace:System;assembly=System.Runtime"
-        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:local="clr-namespace:ODExplorer.GeologicalData"
         xmlns:utils="clr-namespace:ODExplorer.Utils"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         FontFamily="Eurostile"
         FontSize="16"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="OD EXPLORER - BIOLOGICAL DATA"
+        Title="OD EXPLORER - GEOLOGICAL DATA"
         Height="600"
         Width="980"
         StateChanged="MainWindowStateChangeRaised"
@@ -52,18 +52,6 @@
                     Value="{DynamicResource Window Font Colour}" />
             <Setter Property="IsHitTestVisible"
                     Value="False" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Status}"
-                             Value="SAMPLED">
-                    <Setter Property="Foreground"
-                            Value="WhiteSmoke" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Status}"
-                             Value="ANALYSED">
-                    <Setter Property="Foreground"
-                            Value="{DynamicResource Analysed Colour}" />
-                </DataTrigger>
-            </Style.Triggers>
         </Style>
 
         <Style x:Key="DataGridRowStyleHitTest"
@@ -113,10 +101,10 @@
         </Style>
 
         <CollectionViewSource x:Key="ListCVS"
-                              Source="{Binding ElementName=BioDataGrid, Path=SelectedItem.BodyBioData}"
+                              Source="{Binding ElementName=GeoDataGrid, Path=SelectedItem.BodyBioData}"
                               IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Species" />
+                <scm:SortDescription PropertyName="GeoName" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
@@ -155,7 +143,7 @@
                            Margin="2"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                    <TextBlock Text="OD EXPLORER - BIOLOGICAL DATA"
+                    <TextBlock Text="OD EXPLORER - GEOLOGICAL DATA"
                                Margin="10,0,0,0"
                                VerticalAlignment="Center"
                                FontSize="16"
@@ -205,7 +193,7 @@
 
                 <DataGrid Grid.Row="1"
                           Grid.Column="1"
-                          x:Name="BioDataGrid"
+                          x:Name="GeoDataGrid"
                           Style="{DynamicResource DataGrid Settings}"
                           RowStyle="{DynamicResource DataGridRowStyleHitTest}"
                           ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
@@ -213,9 +201,9 @@
                           Foreground="{DynamicResource Window Font Colour}"
                           GridLinesVisibility="None"
                           SelectionUnit="FullRow"
-                          Loaded="BioDataGrid_Loaded"
-                          SelectionChanged="BioDataGrid_SelectionChanged"
-                          ItemsSource="{Binding ScannedBioData.ScannedData}">
+                          Loaded="GeoDataGrid_Loaded"
+                          SelectionChanged="GeoDataGrid_SelectionChanged"
+                          ItemsSource="{Binding ScannedGeo.ScannedData}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="30">
                             <DataGridTemplateColumn.CellTemplate>
@@ -278,7 +266,8 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
                                             Width="30" />
-                        <DataGridTextColumn Header="GENUS &amp; SPECIES"
+                        <DataGridTextColumn Header="NAME"
+                                            Binding="{Binding Path=GeoName}"
                                             SortDirection="Ascending"
                                             Width="*">
                             <DataGridTextColumn.ElementStyle>
@@ -287,16 +276,10 @@
                                             Value="Center" />
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
-                            <DataGridTextColumn.Binding>
-                                <MultiBinding StringFormat="{}{0}{1}">
-                                    <Binding Path="Species" />
-                                    <Binding Path="Variant" />
-                                </MultiBinding>
-                            </DataGridTextColumn.Binding>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="SCAN STATUS"
+                        <DataGridTextColumn Header="CODEX VALUE"
                                             Width="150"
-                                            Binding="{Binding Path=Status}">
+                                            Binding="{Binding Path=Value, StringFormat={}{0:N0}}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}">
                                     <Setter Property="Background"
@@ -335,4 +318,3 @@
         </Grid>
     </Border>
 </Window>
-

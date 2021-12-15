@@ -10,7 +10,7 @@
         Title="OD Explorer"
         x:Name="ODExplorer"
         Height="850"
-        Width="850"
+        Width="950"
         FontFamily="Eurostile"
         FontSize="18"
         Background="{DynamicResource MainWindowBackground}"
@@ -96,7 +96,7 @@
                                VerticalAlignment="Center"
                                FontSize="16"
                                Foreground="{DynamicResource Titlebar Forground}" />
-                    <TextBlock Text="{StaticResource AppVersion}"
+                    <TextBlock Text="{Binding Source={StaticResource AppVersion}, StringFormat={}v{0}}"
                                VerticalAlignment="Center"
                                FontSize="16"
                                Foreground="{DynamicResource Titlebar Forground}" />
@@ -152,6 +152,9 @@
                     <MenuItem x:Name="OpenBioData"
                               Header="Biological Scan Data"
                               Click="OpenBioData_Click" />
+                    <MenuItem x:Name="OpenGeoData"
+                              Header="Geological Scan Data"
+                              Click="OpenGeoData_Click" />
                     <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem x:Name="ShowCSBHeaders"
                               Header="Show CSB Headers"
@@ -405,6 +408,31 @@
                                                                         </Rectangle>
 
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Margin="0,0,3,0">
+                                                                            <Rectangle.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="Terraformable" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowTerraformable" />
+                                                                                </MultiBinding>
+                                                                            </Rectangle.Visibility>
+                                                                            <Rectangle.OpacityMask>
+                                                                                <ImageBrush ImageSource="/Images/cooling-tower.png" />
+                                                                            </Rectangle.OpacityMask>
+                                                                        </Rectangle>
+
+                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                   Visibility="{Binding HasRings, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
+                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
+                                                                            <Rectangle.OpacityMask>
+                                                                                <ImageBrush ImageSource="/Images/saturn.png" />
+                                                                            </Rectangle.OpacityMask>
+                                                                        </Rectangle>
+                                                                        
+                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Visibility="{Binding GeologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
                                                                                    Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                                    Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
@@ -530,7 +558,7 @@
 
                                     <DataGridTextColumn FontSize="15"
                                                         Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistRemaining, Converter={StaticResource BoolToVis}}"
-                                                        Binding="{Binding Path=JumpDistanceRemaining, NotifyOnTargetUpdated=True, StringFormat={}{0:N0} ly}">
+                                                        Binding="{Binding Path=JumpDistanceRemaining, NotifyOnTargetUpdated=True, Converter={StaticResource JumpRangToString}, ConverterParameter=N0}">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Setter Property="TextAlignment"
@@ -544,7 +572,7 @@
                                     <DataGridTextColumn Width="SizeToCells"
                                                         FontSize="15"
                                                         Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistToSystem, Converter={StaticResource BoolToVis}}"
-                                                        Binding="{Binding Path=JumpDistanceToSystem, NotifyOnTargetUpdated=True, StringFormat={}{0:N2} ly}">
+                                                        Binding="{Binding Path=JumpDistanceToSystem, NotifyOnTargetUpdated=True, Converter={StaticResource JumpRangToString}, ConverterParameter=N2}">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Setter Property="TextAlignment"

@@ -67,7 +67,7 @@ namespace ODExplorer.Utils
         /// <typeparam name="T"></typeparam>
         /// <param name="collection"></param>
         /// <param name="objectToAdd"></param>
-        public static void AddToCollection<T>(this ObservableCollection<T> collection, object objectToAdd)
+        public static void AddToCollection<T>(this ObservableCollection<T> collection, T objectToAdd)
         {
             if (objectToAdd is null)
             {
@@ -76,7 +76,7 @@ namespace ODExplorer.Utils
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                collection.Add((T)objectToAdd);
+                collection.Add(objectToAdd);
             });
         }
         /// <summary>
@@ -92,7 +92,7 @@ namespace ODExplorer.Utils
                 return;
             }
 
-            foreach (var item in collectionToAdd)
+            foreach (T item in collectionToAdd)
             {
                 AddToCollection(collection, item);
             }
@@ -103,7 +103,7 @@ namespace ODExplorer.Utils
         /// <typeparam name="T"></typeparam>
         /// <param name="collection"></param>
         /// <param name="objectToRemove"></param>
-        public static void RemoveFromCollection<T>(this ObservableCollection<T> collection, object objectToRemove)
+        public static void RemoveFromCollection<T>(this ObservableCollection<T> collection, T objectToRemove)
         {
             if (objectToRemove is null)
             {
@@ -112,7 +112,7 @@ namespace ODExplorer.Utils
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                collection.Remove((T)objectToRemove);
+                collection.Remove(objectToRemove);
             });
         }
 
@@ -128,6 +128,29 @@ namespace ODExplorer.Utils
                 collection.RemoveAt(index);
             });
         }
+
+        public static void RemoveAllBeforeItem<T>(this ObservableCollection<T> collection, T item, bool removeItem = false)
+        {
+            if (collection == null)
+            {
+                return;
+            }
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                int index = collection.IndexOf(item) - (removeItem ? 0 : 1);
+
+                if (index < 0)
+                {
+                    return;
+                }
+
+                for (int i = index; i > -1; i--)
+                {
+                    collection.RemoveAt(i);
+                }
+            });
+        }
         #endregion
 
         public static ListSortDirection Reverse(this ListSortDirection sortDirection)
@@ -139,6 +162,14 @@ namespace ODExplorer.Utils
         {
             string serialized = JsonConvert.SerializeObject(source);
             return JsonConvert.DeserializeObject<T>(serialized);
+        }
+
+        public static string TryAddKeyboardAccellerator(this string input)
+        {
+            const string accellerator = "_";            // This is the default WPF accellerator symbol - used to be & in WinForms
+
+            // If it already contains an accellerator, do nothing
+            return input.Contains(accellerator) ? input : accellerator + input;
         }
     }
 }
