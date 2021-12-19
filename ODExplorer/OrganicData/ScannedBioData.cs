@@ -71,7 +71,7 @@ namespace ODExplorer.OrganicData
 
             string[] speciesAndVariant = name.Split(" - ");
 
-            if(speciesAndVariant.Length < 2)
+            if (speciesAndVariant.Length < 2)
             {
                 return;
             }

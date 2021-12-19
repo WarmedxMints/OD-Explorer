@@ -8,8 +8,8 @@
         Title="ABOUT OD EXPLORER"
         FontFamily="Eurostile"
         FontSize="14"
-        Background="{DynamicResource MainWindowBackground}"
-        Foreground="{DynamicResource Font Colour}"
+        Background="{DynamicResource PrimaryBackground}"
+        Foreground="{DynamicResource PrimaryForeground}"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Width="580"
@@ -27,7 +27,7 @@
     </Window.CommandBindings>
 
     <Border x:Name="MainWindowBorder"
-            BorderBrush="{DynamicResource Groupbox Border}"
+            BorderBrush="{DynamicResource PrimaryBorder}"
             BorderThickness="0">
         <Grid>
             <Grid.RowDefinitions>
@@ -36,7 +36,7 @@
             </Grid.RowDefinitions>
             <!--#region Custom Title Bar-->
             <Grid Height="30"
-                  Background="#FF3C4043">
+                  Background="{DynamicResource TitleBarBackGround}">
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -51,7 +51,7 @@
                                Margin="5,0,0,0"
                                VerticalAlignment="Center"
                                FontSize="16"
-                               Foreground="{DynamicResource Titlebar Forground}" />
+                               Foreground="{DynamicResource TitlebarForeGround}" />
                 </StackPanel>
 
                 <!--Caption buttons-->
@@ -121,7 +121,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/eucalyp"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Eucalyp on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -140,7 +140,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/ayub-irawan"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Ayub Irawan on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -159,7 +159,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/kiranshastry"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Kiranshastry on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -178,7 +178,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/turkkub"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             turkkub on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -197,7 +197,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/nikita-golubev"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             nikita-golubev on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -216,7 +216,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/srip"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             srip on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -235,7 +235,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/kornkun"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             kornkun on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -254,7 +254,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/good-ware"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Good Ware on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -276,7 +276,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/khoirul-huda"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Khoirul Huda on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -295,7 +295,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/iconnut"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             iconnut on wwww.flaticon.com
                         </Hyperlink>
                         </TextBlock>
@@ -314,7 +314,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.freepik.com"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Freepik
                         </Hyperlink>
                         </TextBlock>
@@ -335,7 +335,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.freepik.com"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             FreePik
                         </Hyperlink>
                         </TextBlock>
@@ -354,7 +354,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.freepik.com"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             FreePik
                         </Hyperlink>
                         </TextBlock>
@@ -373,7 +373,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.freepik.com"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             FreePik
                         </Hyperlink>
                         </TextBlock>
@@ -392,7 +392,7 @@
                         <TextBlock VerticalAlignment="Center">
                         <Hyperlink NavigateUri="https://www.freepik.com"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             FreePik
                         </Hyperlink>
                         </TextBlock>
@@ -421,7 +421,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/WarmedxMints/OD-Explorer"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             GitHub Project
                         </Hyperlink>
                     </TextBlock>
@@ -430,7 +430,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/WarmedxMints/OD-Explorer/releases"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Lastest Release
                         </Hyperlink>
                     </TextBlock>
@@ -439,7 +439,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/MagicMau/EliteJournalReader"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Elite Journal Reader
                         </Hyperlink>
                     </TextBlock>
@@ -448,7 +448,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/WarmedxMints/EliteJournalReader"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             OD Explorer Elite Journal Reader Fork
                         </Hyperlink>
                     </TextBlock>
@@ -460,7 +460,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/joncage/ed-scout"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             ED Scout
                         </Hyperlink>
                     </TextBlock>
@@ -469,7 +469,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://www.spansh.co.uk/"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             Spansh
                         </Hyperlink>
                     </TextBlock>
@@ -479,7 +479,7 @@
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://www.edsm.net/"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource Font Colour}">
+                                   Foreground="{DynamicResource PrimaryForeground}">
                             EDSM
                         </Hyperlink>
                     </TextBlock>

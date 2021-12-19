@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ODExplorer.AppSettings"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         FontFamily="Eurostile"
         FontSize="18"
         ShowInTaskbar="False"
-        Background="{DynamicResource MainWindowBackground}"
+        Background="{DynamicResource PrimaryBackground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Display Settings"
         SizeToContent="WidthAndHeight"
@@ -16,10 +17,19 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
 
-    <Border BorderBrush="{DynamicResource Groupbox Border}"
+    <Window.Resources>
+        <ObjectDataProvider x:Key="CurrentTheme"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Theme"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Border BorderBrush="{DynamicResource PrimaryBorder}"
             BorderThickness="2">
 
-        <Grid Width="1055">
+        <Grid Width="1000">
             <Grid.LayoutTransform>
                 <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
                                 ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
@@ -27,14 +37,13 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -45,29 +54,46 @@
             <Label Grid.Row="0"
                    Grid.Column="1"
                    Content="Display Options"
-                   Foreground="{DynamicResource Font Colour}" />
+                   Foreground="{DynamicResource PrimaryForeground}" />
 
 
-            <GroupBox  Header="THEMES"
+            <GroupBox  Header="THEME"
                        Style="{DynamicResource SystemBorder}"
                        BorderThickness="0.5"
-                       Foreground="{DynamicResource Font Colour}"
+                       Foreground="{DynamicResource PrimaryForeground}"
                        Grid.Column="1"
-                       Grid.Row="1">
-                <TextBlock VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
-                           Text="IN DEVELOPMENT" />
+                       Grid.Row="1"
+                       Padding="10">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Current Theme : " 
+                               Margin="0,0,30,0"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource CurrentTheme}}"
+                          SelectedItem="{Binding Settings.ClonedValues.CurrentTheme}"
+                          Width="190"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          FontSize="14">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumCamelCaseConvertor}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                </StackPanel>
             </GroupBox>
 
             <GroupBox Header="DATA GRID OPTIONS"
                       Style="{DynamicResource SystemBorder}"
                       BorderThickness="0.5"
-                      Foreground="{DynamicResource Font Colour}"
-                      Grid.Column="3"
-                      Grid.Row="1"
-                      Padding="2">
+                      Foreground="{DynamicResource PrimaryForeground}"
+                      Grid.Column="1"
+                      Grid.Row="2"
+                      Padding="10">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
@@ -78,144 +104,168 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="Current System Bodies Grid Columns"
                                Grid.Column="0"
-                               Grid.Row="0" />
+                               Grid.Row="0"
+                               Grid.ColumnSpan="4"
+                               Margin="0,0,0,5" />
 
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="0"
-                                Margin="10">
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTypeColumn}"
-                                  Content="Type Column"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowInfoColumn}"
-                                  Content="Info Column"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,0" />
-                    </StackPanel>
+                    <CheckBox Grid.Row="1"
+                              Grid.Column="1"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTypeColumn}"
+                              Content="Type Column"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="1"
+                              Grid.Column="2"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowInfoColumn}"
+                              Content="Info Column"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="1"
+                              Grid.Column="3"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowDistanceColumn}"
+                              Content="Distance Column"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="1"
+                              Grid.Column="4"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowValueColumn}"
+                              Content="Value Column"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
 
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="10">
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowDistanceColumn}"
-                                  Content="Distance Column"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowValueColumn}"
-                                  Content="Value Column"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,0" />
-                    </StackPanel>
 
                     <TextBlock Text="Current System Bodies Info Column"
                                Grid.Column="0"
-                               Grid.Row="2" />
-                    <StackPanel Grid.Row="3"
-                                Grid.Column="0"
-                                Margin="10">
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceTemp}"
-                                  Content="Surface Temperature"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfacePressure}"
-                                  Content="Surface Pressure"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowUnmapped}"
-                                  Content="Mapped State"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTerraformable}"
-                                  Content="Terraformable State"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,0" />
-                    </StackPanel>
+                               Grid.ColumnSpan="3"
+                               Grid.Row="2"
+                               Margin="0,5" />
 
-                    <StackPanel Grid.Row="3"
-                                Grid.Column="1"
-                                Margin="10">
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowGeoSignals}"
-                                  Content="Geological Signals"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowBioSignals}"
-                                  Content="Biological Signals"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceGravity}"
-                                  Content="Surface Gravity"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowHasRings}"
-                                  Content="Has Rings"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Click="CheckBox_Click"
-                                  Margin="5,0,0,0" />
-                    </StackPanel>
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="1"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceTemp}"
+                              Content="Surface Temperature"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="2"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfacePressure}"
+                              Content="Surface Pressure"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="3"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowUnmapped}"
+                              Content="Mapped State"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="4"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTerraformable}"
+                              Content="Terraformable State"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+
+
+                    <CheckBox Grid.Row="4"
+                              Grid.Column="1"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowGeoSignals}"
+                              Content="Geological Signals"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,5,50,0" />
+                    <CheckBox Grid.Row="4"
+                              Grid.Column="2"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowBioSignals}"
+                              Content="Biological Signals"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,5,50,0" />
+                    <CheckBox Grid.Row="4"
+                              Grid.Column="3"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceGravity}"
+                              Content="Surface Gravity"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,5,50,0" />
+                    <CheckBox Grid.Row="4"
+                              Grid.Column="4"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowHasRings}"
+                              Content="Has Rings"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,5,50,0" />
+
 
                     <TextBlock Text="Systems In Route Grid"
                                Grid.Column="0"
-                               Grid.Row="4" />
-                    <StackPanel Grid.Row="5"
-                                Grid.Column="0"
-                                Margin="10">
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowJumpDistRemaining}"
-                                  Content="Jump Distance Remaining"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Margin="5,0,0,10" />
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowJumpDistToSystem}"
-                                  Content="Jump Distance To System"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Margin="5,0,0,0" />
-                    </StackPanel>
+                               Grid.Row="5"
+                               Grid.ColumnSpan="5"
+                               Margin="0,5" />
 
-                    <StackPanel Grid.Row="5"
-                                Grid.Column="1"
-                                Margin="10">
-                        <CheckBox IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowVaulableBodies}"
-                                  Content="Valuable Bodies"
-                                  Foreground="{DynamicResource Font Colour}"
-                                  VerticalContentAlignment="Center"
-                                  Margin="5,0,0,0" />
-                    </StackPanel>
+                    <CheckBox   Grid.Column="1"
+                                Grid.Row="6"
+                                IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowJumpDistRemaining}"
+                                Content="Jump Distance Remaining"
+                                Foreground="{DynamicResource PrimaryForeground}"
+                                VerticalContentAlignment="Center"
+                                Margin="0,0,50,0" />
+                    <CheckBox   Grid.Column="2"
+                                Grid.Row="6"
+                                IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowJumpDistToSystem}"
+                                Content="Jump Distance To System"
+                                Foreground="{DynamicResource PrimaryForeground}"
+                                VerticalContentAlignment="Center"
+                                Margin="0,0,50,0" />
+
+                    <CheckBox   Grid.Column="3"
+                                Grid.Row="6"
+                                IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowVaulableBodies}"
+                                Content="Valuable Bodies"
+                                Foreground="{DynamicResource PrimaryForeground}"
+                                VerticalContentAlignment="Center"
+                                Margin="0,0,50,0" />
                 </Grid>
             </GroupBox>
 
             <GroupBox Grid.Column="1"
-                      Grid.ColumnSpan="3"
-                      Grid.Row="3"
+                      Grid.Row="4"
                       BorderThickness="0.5"
                       Height="378"
                       Style="{DynamicResource SystemBorder}"
-                      Foreground="{DynamicResource Font Colour}"
+                      Foreground="{DynamicResource PrimaryForeground}"
                       Header="SYSTEM BORDER">
                 <StackPanel>
                     <DataGrid Margin="10"
@@ -231,7 +281,7 @@
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal"
                                                     HorizontalAlignment="Left">
-                                            <Border Style="{DynamicResource DataGrid Scoopable}"
+                                            <Border Style="{DynamicResource DataGridScoopable}"
                                                     Width="5" />
                                             <TextBlock Text="{Binding Path=StarClass}"
                                                        Margin="10,0,0,0"
@@ -253,6 +303,7 @@
                                                              Maximum="100"
                                                              BorderThickness="0"
                                                              Margin="0,0,0,0"
+                                                             Foreground="{DynamicResource ProgressBarColour}"
                                                              Background="Transparent"
                                                              Height="2"
                                                              VerticalAlignment="Bottom" />
@@ -318,7 +369,8 @@
                                           CanUserReorderColumns="True">
                                     <DataGrid.Columns>
                                         <DataGridTemplateColumn Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToDGColumnWidth}}"
-                                                                Header="NAME">
+                                                                Header="NAME"
+                                                                HeaderStyle="{DynamicResource DataGrid Header Left}">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Grid>
@@ -326,7 +378,7 @@
                                                             <Rectangle Style="{DynamicResource BodyRectangle}"
                                                                        Height="18"
                                                                        Width="18"
-                                                                       Margin="2,0,5,0" />
+                                                                       Margin="5,0,5,0" />
                                                             <TextBlock Text="{Binding BodyNameLocal}"
                                                                        VerticalAlignment="Center"
                                                                        HorizontalAlignment="Left"
@@ -433,7 +485,7 @@
                                                                     <ImageBrush ImageSource="/Images/saturn.png" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
-                                                            
+
                                                             <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                        Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                        Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
@@ -535,7 +587,6 @@
                               CellStyle="{DynamicResource RouteCells}"
                               GridLinesVisibility="Vertical"
                               Margin="10"
-                              VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
                               RowDetailsVisibilityMode="{Binding Settings.ClonedValues.DisplaySettings.ShowVaulableBodies, Converter={StaticResource BoolToRowVis}}">
                         <DataGrid.Columns>
 
@@ -543,7 +594,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Border Style="{DynamicResource DataGrid Scoopable}"
+                                            <Border Style="{DynamicResource DataGridScoopable}"
                                                     Width="5" />
                                             <TextBlock Text="{Binding Path=StarClass}"
                                                        Margin="10,0,0,0"
@@ -611,7 +662,7 @@
                                         <DataGridTemplateColumn Width="*">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Grid Margin="10,0,5,0">
+                                                    <Grid Margin="5,0,5,0">
                                                         <StackPanel Orientation="Horizontal">
                                                             <Rectangle Style="{DynamicResource BodyRectangle}"
                                                                        Height="18"
@@ -639,9 +690,8 @@
                 </StackPanel>
             </GroupBox>
 
-            <StackPanel Grid.Row="4"
+            <StackPanel Grid.Row="5"
                         Grid.Column="1"
-                        Grid.ColumnSpan="3"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"

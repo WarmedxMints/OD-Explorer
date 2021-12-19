@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json.Converters;
+﻿using EliteJournalReader;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using EliteJournalReader;
 
 namespace ODExplorer.NavData
 {

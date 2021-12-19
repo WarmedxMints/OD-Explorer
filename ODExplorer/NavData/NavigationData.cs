@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ODExplorer.AppSettings;
 using ODExplorer.EDSM;
+using ODExplorer.GeologicalData;
 using ODExplorer.OrganicData;
 using ODExplorer.Utils;
-using ODExplorer.GeologicalData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -449,7 +449,7 @@ namespace ODExplorer.NavData
             };
 
             GetSystemValue(sys);
-           
+
             SetCurrentSystem(sys);
         }
         #endregion
@@ -475,7 +475,7 @@ namespace ODExplorer.NavData
 
             //Clear our collections
             SystemsInRoute.ClearCollection();
-           
+
             List<Route> systems = route.Route;
 
             SystemInfo currentSys = new(systems[0]);
@@ -573,7 +573,7 @@ namespace ODExplorer.NavData
             {
                 foreach (SystemInfo sys in SystemsInRoute)
                 {
-                    if(lastPos.IsZero() && !isSol)
+                    if (lastPos.IsZero() && !isSol)
                     {
                         sys.JumpDistanceToSystem = 0;
                         lastPos = sys.SystemPos;
@@ -647,7 +647,7 @@ namespace ODExplorer.NavData
         #region Current Body Methods
         internal void OnSupercruiseExit(SupercruiseExitEvent.SupercruiseExitEventArgs e)
         {
-            if (!CurrentSystem.Any() && e.BodyType != BodyType.Planet && CurrentSystem[0].SystemAddress != e.SystemAddress)
+            if (!CurrentSystem.Any() || CurrentSystem[0].SystemAddress != e.SystemAddress)
             {
                 //Shouldn't be required but just in case a jump to SC or HS was missed for some reason
                 CurrentBody = null;
@@ -662,13 +662,17 @@ namespace ODExplorer.NavData
                 body = new()
                 {
                     BodyID = e.BodyID,
-                    BodyNameLocal = e.Body.Remove(0, e.StarSystem.Length).ToUpperInvariant(),
-                    BodyName = e.Body,
+                    BodyName = e.Body.ToUpperInvariant(),
                     SystemAddress = e.SystemAddress,
-                    SystemName = e.StarSystem
+                    SystemName = e.StarSystem.ToUpperInvariant()
                 };
 
-                CurrentSystem[0].Bodies.AddToCollection(body);
+                body.SetBodyNameLocal();
+
+                if (e.BodyType is BodyType.Planet or BodyType.Star)
+                {
+                    CurrentSystem[0].Bodies.AddToCollection(body);
+                }
             }
 
             CurrentBody = body;
@@ -734,7 +738,7 @@ namespace ODExplorer.NavData
             }
             try
             {
-       
+
                 JObject msg = JObject.Parse(json);
 
                 JObject coords = msg["coords"] as JObject;
@@ -743,7 +747,7 @@ namespace ODExplorer.NavData
                 ret.Y = coords["y"].ToObject<double>();
                 ret.Z = coords["z"].ToObject<double>();
 
-             
+
                 return ret;
             }
             catch
@@ -751,12 +755,12 @@ namespace ODExplorer.NavData
                 return ret;
             }
         }
-            /// <summary>
-            /// Contacts EDSM and gets the class of the primary star
-            /// </summary>
-            /// <param name="systemName"></param>
-            /// <returns></returns>
-            private static string GetSystemStarClass(string systemName)
+        /// <summary>
+        /// Contacts EDSM and gets the class of the primary star
+        /// </summary>
+        /// <param name="systemName"></param>
+        /// <returns></returns>
+        private static string GetSystemStarClass(string systemName)
         {
             string path = $"https://www.edsm.net/api-v1/system?systemName={HttpUtility.UrlEncode(systemName)}&showPrimaryStar=1";
 

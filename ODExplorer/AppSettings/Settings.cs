@@ -3,9 +3,20 @@ using ODExplorer.Utils;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Windows;
 
 namespace ODExplorer.AppSettings
 {
+    public enum Theme
+    {
+        [Description("pack://application:,,,/ODExplorer;component/Themes/DefaultTheme.xaml")]
+        ODExplorer,
+        [Description("pack://application:,,,/ODExplorer;component/Themes/Light.xaml")]
+        Light,
+        [Description("pack://application:,,,/ODExplorer;component/Themes/GreenTheme.xaml")]
+        LoudGreen,
+    }
+
     public enum SortCategory
     {
         [Description("Mapped Value")]
@@ -42,6 +53,18 @@ namespace ODExplorer.AppSettings
     public class Settings : PropertyChangeNotify
     {
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Settings.json");
+
+        private static Theme _currentTheme = Theme.ODExplorer;
+
+        public static Theme CurrentTheme
+        {
+            get => _currentTheme;
+            set
+            {
+                _currentTheme = value;
+                (Application.Current as App).ChangeSkin();
+            }
+        }
 
         public event EventHandler SaveEvent;
         public static Settings SettingsInstance { get; private set; }
@@ -111,7 +134,7 @@ namespace ODExplorer.AppSettings
         private Temperature temperatureUnit;
         private double uiScale = 1;
         private bool showAdditionWindowsInTaskBar;
-
+        private bool excludeStarsFromSorting = true;
         public SortCategory SortCategory { get => sortCategory; set { sortCategory = value; OnPropertyChanged(); } }
         public ListSortDirection SortDirection { get => sortDirection; set { sortDirection = value; OnPropertyChanged(); } }
         public int WorthMappingValue { get => worthMappingValue; set { worthMappingValue = value; OnPropertyChanged(); } }
@@ -122,6 +145,8 @@ namespace ODExplorer.AppSettings
         public Temperature TemperatureUnit { get => temperatureUnit; set { temperatureUnit = value; OnPropertyChanged(); } }
         public double UiScale { get => uiScale; set { uiScale = value; OnPropertyChanged(); } }
         public bool ShowAdditionalWindowsInTaskBar { get => showAdditionWindowsInTaskBar; set { showAdditionWindowsInTaskBar = value; OnPropertyChanged(); } }
+        public bool ExludeStarsFromSorting { get => excludeStarsFromSorting; set => excludeStarsFromSorting = value; }
+        public Theme CurrentTheme { get => Settings.CurrentTheme; set { Settings.CurrentTheme = value; OnPropertyChanged(); } }
         public void Copy(SettingsValues values)
         {
             SortCategory = values.SortCategory;

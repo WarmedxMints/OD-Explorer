@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         FontFamily="Eurostile"
         FontSize="16"
+        Background="{DynamicResource SecondaryWindowBackground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OD EXPLORER - BIOLOGICAL DATA"
         Height="600"
@@ -39,77 +40,26 @@
     </Window.CommandBindings>
 
     <Window.Resources>
-        <SolidColorBrush x:Key="Analysed Colour"
-                         Color="#FFDBF008" />
-        <SolidColorBrush x:Key="Window Font Colour"
-                         Color="#FFF56A00" />
-
-        <Style x:Key="DataGridRowStyle"
+        <Style x:Key="BioDataGridRowStyle"
                TargetType="{x:Type DataGridRow}">
             <Setter Property="Background"
                     Value="Transparent" />
             <Setter Property="Foreground"
-                    Value="{DynamicResource Window Font Colour}" />
+                    Value="{DynamicResource SecondaryWindowForeground}" />
             <Setter Property="IsHitTestVisible"
                     Value="False" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Status}"
                              Value="SAMPLED">
                     <Setter Property="Foreground"
-                            Value="WhiteSmoke" />
+                            Value="{DynamicResource BioDataSampledForeground}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}"
                              Value="ANALYSED">
                     <Setter Property="Foreground"
-                            Value="{DynamicResource Analysed Colour}" />
+                            Value="{DynamicResource BioDataAnaylsedForeground}" />
                 </DataTrigger>
             </Style.Triggers>
-        </Style>
-
-        <Style x:Key="DataGridRowStyleHitTest"
-               TargetType="{x:Type DataGridRow}">
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected"
-                         Value="True">
-                    <Setter Property="BorderThickness"
-                            Value="1" />
-                    <Setter Property="BorderBrush"
-                            Value="WhiteSmoke" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style TargetType="{x:Type DataGridCell}"
-               x:Key="Cell Style">
-            <Setter Property="FocusVisualStyle"
-                    Value="{x:Null}" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected"
-                         Value="True">
-                    <Setter Property="Background"
-                            Value="{DynamicResource EDSM Known}" />
-                    <Setter Property="BorderThickness"
-                            Value="0" />
-                    <Setter Property="BorderBrush"
-                            Value="Transparent" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="DataGridHeaderStyle"
-               TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="Foreground"
-                    Value="White" />
-            <Setter Property="FontSize"
-                    Value="20" />
-            <Setter Property="SnapsToDevicePixels"
-                    Value="True" />
-            <Setter Property="Margin"
-                    Value="0,0,0,10" />
         </Style>
 
         <CollectionViewSource x:Key="ListCVS"
@@ -123,17 +73,8 @@
         <utils:RowToIndexConv x:Key="RowToIndexConv" />
     </Window.Resources>
 
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1"
-                             StartPoint="0.5,0">
-            <GradientStop Color="#FF5A1A00" />
-            <GradientStop Color="Black"
-                          Offset="0.728" />
-        </LinearGradientBrush>
-    </Window.Background>
-
     <Border x:Name="MainWindowBorder"
-            BorderBrush="{DynamicResource MainWindowBackground}"
+            BorderBrush="{DynamicResource SecondaryWindowBackground}"
             BorderThickness="0">
         <Grid>
             <Grid.RowDefinitions>
@@ -143,7 +84,7 @@
 
             <!--#region Custom Title Bar-->
             <Grid Height="30"
-                  Background="#FF3C4043"
+                  Background="{DynamicResource TitleBarBackGround}"
                   Grid.Row="0">
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left"
@@ -159,7 +100,7 @@
                                Margin="10,0,0,0"
                                VerticalAlignment="Center"
                                FontSize="16"
-                               Foreground="{DynamicResource Titlebar Forground}" />
+                               Foreground="{DynamicResource TitlebarForeGround}" />
                 </StackPanel>
 
                 <!--Caption buttons-->
@@ -199,7 +140,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
 
@@ -207,10 +148,10 @@
                           Grid.Column="1"
                           x:Name="BioDataGrid"
                           Style="{DynamicResource DataGrid Settings}"
-                          RowStyle="{DynamicResource DataGridRowStyleHitTest}"
-                          ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
-                          CellStyle="{DynamicResource Cell Style}"
-                          Foreground="{DynamicResource Window Font Colour}"
+                          RowStyle="{DynamicResource SecondaryWindowDataGridRowStyleHitTestVisible}"
+                          ColumnHeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyle}"
+                          CellStyle="{DynamicResource SecondaryWindowCellStyle}"
+                          Foreground="{DynamicResource SecondaryWindowForeground}"
                           GridLinesVisibility="None"
                           SelectionUnit="FullRow"
                           Loaded="BioDataGrid_Loaded"
@@ -224,7 +165,7 @@
                                             Width="18"
                                             Height="18"
                                             Content="&#xE106;"
-                                            Style="{StaticResource CaptionButtonStyleAutoWidth}"
+                                            Style="{StaticResource SecondaryWindowDeleteButton}"
                                             Click="DeleteBodyData_Click" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -234,7 +175,7 @@
                                             Binding="{Binding SystemName}"
                                             Width="SizeToCells"
                                             MinWidth="150"
-                                            Foreground="#FFF56A00">
+                                            Foreground="{DynamicResource SecondaryWindowSystemNameForeground}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="VerticalAlignment"
@@ -249,7 +190,7 @@
                                             MinWidth="60"
                                             Binding="{Binding BodyName}"
                                             Width="SizeToCells"
-                                            Foreground="{DynamicResource Font Colour}">
+                                            Foreground="{DynamicResource SecondaryWindowBodyNameForeground}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="VerticalAlignment"
@@ -268,9 +209,9 @@
                           HeadersVisibility="Column"
                           Style="{DynamicResource DataGrid Settings}"
                           Background="Transparent"
-                          HorizontalGridLinesBrush="{DynamicResource Groupbox Border}"
-                          RowStyle="{DynamicResource DataGridRowStyle}"
-                          ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
+                          HorizontalGridLinesBrush="{DynamicResource SecondaryWindowHorizontalGridLine}"
+                          RowStyle="{DynamicResource BioDataGridRowStyle}"
+                          ColumnHeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyle}"
                           GridLinesVisibility="Horizontal"
                           AutoGenerateColumns="False"
                           Margin="20,0,0,0"
@@ -302,7 +243,7 @@
                                     <Setter Property="Background"
                                             Value="Transparent" />
                                     <Setter Property="Foreground"
-                                            Value="White" />
+                                            Value="{DynamicResource SecondaryWindowColumnHeadForeground}" />
                                     <Setter Property="FontSize"
                                             Value="20" />
                                     <Setter Property="Margin"
@@ -326,6 +267,8 @@
                 <Button Grid.Row="2"
                         Grid.Column="2"
                         Width="100"
+                        Height="25"
+                        Style="{DynamicResource SecondaryWindowButtonStyle}"
                         x:Name="ClearAllData"
                         Content="CLEAR ALL DATA"
                         HorizontalAlignment="Right"

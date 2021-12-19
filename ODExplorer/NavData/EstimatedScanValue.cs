@@ -33,7 +33,7 @@ namespace ODExplorer.NavData
             AppSettings.Settings.SettingsInstance.SaveEvent -= SettingsInstance_SaveEvent;
         }
 
-        private void SettingsInstance_SaveEvent(object sender, System.EventArgs e)
+        private void SettingsInstance_SaveEvent(object sender, EventArgs e)
         {
             _ = SaveState();
         }

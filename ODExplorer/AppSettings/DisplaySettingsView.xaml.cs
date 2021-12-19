@@ -11,6 +11,7 @@ namespace ODExplorer.AppSettings
     /// </summary>
     public partial class DisplaySettingsView : Window
     {
+        private Theme currentTHeme;
         public Settings Settings { get; private set; }
 
         public List<SystemInfo> CurrentSystem { get; set; } = new();
@@ -21,6 +22,7 @@ namespace ODExplorer.AppSettings
             CreateSystems();
             Settings = settings;
             settings.CloneValues();
+            currentTHeme = Settings.CurrentTheme;
             InitializeComponent();
         }
         private void CreateSystems()
@@ -83,7 +85,7 @@ namespace ODExplorer.AppSettings
             };
 
             system.Bodies.Add(body4);
-            
+
             SystemBody body5 = new()
             {
                 BodyNameLocal = "MEDIUM GRAVITY",
@@ -102,7 +104,7 @@ namespace ODExplorer.AppSettings
             };
 
             system.Bodies.Add(body5);
-            
+
             SystemBody body6 = new()
             {
                 BodyNameLocal = "HIGH GRAVITY",
@@ -121,7 +123,7 @@ namespace ODExplorer.AppSettings
             };
 
             system.Bodies.Add(body6);
-            
+
             SystemBody body7 = new()
             {
                 BodyNameLocal = "BODY WITH RINGS",
@@ -247,6 +249,7 @@ namespace ODExplorer.AppSettings
 
         private void Cancel_Btn_Click(object sender, RoutedEventArgs e)
         {
+            Settings.CurrentTheme = currentTHeme;
             DialogResult = false;
         }
     }

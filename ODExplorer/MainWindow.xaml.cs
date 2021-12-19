@@ -1,26 +1,26 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using ODExplorer.AppSettings;
+using ODExplorer.CsvControl;
+using ODExplorer.CustomMessageBox;
+using ODExplorer.GeologicalData;
+using ODExplorer.NavData;
+using ODExplorer.OrganicData;
+using ODExplorer.ScanValueView;
+using ODExplorer.Utils;
+using ParserLibrary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Media;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ParserLibrary;
-using Microsoft.Win32;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using ODExplorer.NavData;
-using ODExplorer.AppSettings;
-using ODExplorer.Utils;
-using ODExplorer.ScanValueView;
-using ODExplorer.OrganicData;
-using System.Threading.Tasks;
-using System.Linq;
-using ODExplorer.CsvControl;
-using System.Media;
 using System.Windows.Threading;
-using ODExplorer.GeologicalData;
-using ODExplorer.CustomMessageBox;
 
 namespace ODExplorer
 {
@@ -170,6 +170,8 @@ namespace ODExplorer
                 column.DisplayIndex = (layout.DisplayIndex <= count) ? layout.DisplayIndex : count;
             }
 
+            _currentSystemBodiesDataGrid.ItemContainerGenerator.StatusChanged += (sender, e) => ItemContainerGenerator_StatusChanged(sender, _currentSystemBodiesDataGrid);
+
             _currentSystemBodiesDataGrid.ColumnReordered += CurrentSystemBodiesDataGrid_ColumnReordered;
             SortCurrentSystemBodiesGrid();
         }
@@ -187,26 +189,11 @@ namespace ODExplorer
         //Clear reference to Datagrid when it is unloaded
         private void CurrentSystemBodies_Unloaded(object sender, RoutedEventArgs e)
         {
+            _currentSystemBodiesDataGrid.ItemContainerGenerator.StatusChanged -= (sender, e) => ItemContainerGenerator_StatusChanged(sender, _currentSystemBodiesDataGrid);
             _currentSystemBodiesDataGrid.ColumnReordered -= CurrentSystemBodiesDataGrid_ColumnReordered;
             _currentSystemBodiesDataGrid = null;
         }
-        //Not entirely happy with this, it seems a bit clumsy to me
-        //However, it is the only way I can find so far of getting the Body Name and Distance columns to auto size
-        //when there is a column with a * size.
-        private void CurrentSystemBodies_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-            if (_currentSystemBodiesDataGrid is null)
-            {
-                return;
-            }
 
-            foreach (DataGridColumn col in _currentSystemBodiesDataGrid.Columns)
-            {
-                DataGridLength width = col.Width;
-                col.Width = 0;
-                col.Width = width;
-            }
-        }
         //Method to apply sorting to the datagrids contents
         private void SortCurrentSystemBodiesGrid()
         {
@@ -216,8 +203,11 @@ namespace ODExplorer
             }
 
             List<SortDescription> sortDescriptions = new();
-            //Always put stars at the bottom of the list
-            sortDescriptions.Add(new SortDescription("IsStar", ListSortDirection.Ascending));
+            if (AppSettings.Value.ExludeStarsFromSorting)
+            {
+                //Always put stars at the bottom of the list
+                sortDescriptions.Add(new SortDescription("IsStar", ListSortDirection.Ascending));
+            }
             //Always put EDSM VB's at the top
             sortDescriptions.Add(new SortDescription("IsEDSMvb", ListSortDirection.Descending));
 
@@ -266,16 +256,6 @@ namespace ODExplorer
         }
         #endregion
 
-        private void SystemsInRouteGrid_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-            foreach (DataGridColumn col in SystemsInRouteGrid.Columns)
-            {
-                DataGridLength width = col.Width;
-                col.Width = 0;
-                col.Width = width;
-            }
-        }
-
         #region Top Menu Methods
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
         {
@@ -286,7 +266,7 @@ namespace ODExplorer
             {
                 NavData.RefreshBodiesStatus();
                 //Give the UI time to scale before sorting and resizing the datagrid
-                _ = Task.Delay(500).ContinueWith(t => Dispatcher.Invoke(() => SortCurrentSystemBodiesGrid()));
+                _ = Task.Delay(200).ContinueWith(t => Dispatcher.Invoke(() => SortCurrentSystemBodiesGrid()));
             }
         }
 
@@ -543,5 +523,34 @@ namespace ODExplorer
             return $"{pTime / 60:00} : {pTime % 60:00}";
         }
         #endregion
+
+        private void Datagrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            DataGrid dataGrid = (DataGrid)sender;
+
+            dataGrid.ItemContainerGenerator.StatusChanged += (sender, e) => ItemContainerGenerator_StatusChanged(sender, dataGrid);
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object sender, DataGrid dataGrid)
+        {
+            ItemContainerGenerator icg = (ItemContainerGenerator)sender;
+
+            if (icg.Status == System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            {
+                foreach (DataGridColumn col in dataGrid.Columns)
+                {
+                    DataGridLength width = col.Width;
+                    col.Width = 0;
+                    col.Width = width;
+                }
+            }
+        }
+
+        private void Datagrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DataGrid dataGrid = (DataGrid)sender;
+
+            dataGrid.ItemContainerGenerator.StatusChanged -= (sender, e) => ItemContainerGenerator_StatusChanged(sender, dataGrid);
+        }
     }
 }

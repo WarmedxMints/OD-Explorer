@@ -8,6 +8,7 @@
         FontFamily="Eurostile"
         FontSize="16"
         StateChanged="MainWindowStateChangeRaised"
+        Background="{DynamicResource SecondaryWindowBackground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OD EXPLORER - EXPLORATION DATA"
         Height="600"
@@ -36,40 +37,21 @@
     </Window.CommandBindings>
 
     <Window.Resources>
-        <SolidColorBrush x:Key="Mapped Colour"
-                         Color="#FFDBF008" />
-        <SolidColorBrush x:Key="Default Font Colour"
-                         Color="#FFF56A00" />
-
         <Style x:Key="DataGridRowStyle"
                TargetType="{x:Type DataGridRow}">
             <Setter Property="Background"
                     Value="Transparent" />
             <Setter Property="Foreground"
-                    Value="{DynamicResource Default Font Colour}" />
+                    Value="{DynamicResource SecondaryWindowForeground}" />
             <Setter Property="IsHitTestVisible"
                     Value="False" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding MappedByUser}"
                              Value="True">
                     <Setter Property="Foreground"
-                            Value="{DynamicResource Mapped Colour}" />
+                            Value="{DynamicResource BodyDataMappedForeground}" />
                 </DataTrigger>
             </Style.Triggers>
-        </Style>
-
-        <Style x:Key="DataGridHeaderStyle"
-               TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="Foreground"
-                    Value="White" />
-            <Setter Property="FontSize"
-                    Value="20" />
-            <Setter Property="SnapsToDevicePixels"
-                    Value="True" />
-            <Setter Property="Margin"
-                    Value="0,0,0,10" />
         </Style>
 
         <CollectionViewSource x:Key="ListCsv"
@@ -82,17 +64,9 @@
         </CollectionViewSource>
 
     </Window.Resources>
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1"
-                             StartPoint="0.5,0">
-            <GradientStop Color="#FF5A1A00" />
-            <GradientStop Color="Black"
-                          Offset="0.728" />
-        </LinearGradientBrush>
-    </Window.Background>
 
     <Border x:Name="MainWindowBorder"
-            BorderBrush="{DynamicResource MainWindowBackground}"
+            BorderBrush="{DynamicResource SecondaryWindowBackground}"
             BorderThickness="0">
         <Grid>
             <Grid.RowDefinitions>
@@ -101,7 +75,7 @@
             </Grid.RowDefinitions>
             <!--#region Custom Title Bar-->
             <Grid Height="30"
-                  Background="#FF3C4043"
+                  Background="{DynamicResource TitleBarBackGround}"
                   Grid.Row="0"
                   Grid.Column="0"
                   Grid.ColumnSpan="5">
@@ -119,7 +93,7 @@
                                Margin="10,0,0,0"
                                VerticalAlignment="Center"
                                FontSize="16"
-                               Foreground="{DynamicResource Titlebar Forground}" />
+                               Foreground="{DynamicResource TitlebarForeGround}" />
                 </StackPanel>
 
                 <!--Caption buttons-->
@@ -177,7 +151,7 @@
 
                     <ListBox  Background="Transparent"
                               x:Name="SystemListBox"
-                              Foreground="{DynamicResource Default Font Colour}"
+                              Foreground="{DynamicResource SecondaryWindowForeground}"
                               BorderBrush="Transparent"
                               Grid.Row="1"
                               ItemsSource="{Binding ScanValue.ScannedSystems}"
@@ -191,7 +165,7 @@
                                             Width="18"
                                             Height="18"
                                             Content="&#xE106;"
-                                            Style="{StaticResource CaptionButtonStyleAutoWidth}"
+                                            Style="{DynamicResource SecondaryWindowDeleteButton}"
                                             Click="DeleteSystemData_Click" />
                                     <TextBlock Text="{Binding SystemName}" />
                                 </StackPanel>
@@ -208,9 +182,9 @@
                           HeadersVisibility="Column"
                           Style="{DynamicResource DataGrid Settings}"
                           Background="Transparent"
-                          HorizontalGridLinesBrush="{DynamicResource Groupbox Border}"
+                          HorizontalGridLinesBrush="{DynamicResource SecondaryWindowHorizontalGridLiner}"
                           RowStyle="{DynamicResource DataGridRowStyle}"
-                          ColumnHeaderStyle="{DynamicResource DataGridHeaderStyle}"
+                          ColumnHeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyle}"
                           GridLinesVisibility="Horizontal"
                           AutoGenerateColumns="False">
                     <DataGrid.Columns>
@@ -222,9 +196,8 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Rectangle Height="18"
                                                        Width="18"
-                                                       Fill="White"
                                                        Margin="0,2,4,2"
-                                                       Style="{DynamicResource BodyRectangle}"
+                                                       Style="{DynamicResource ScanDataViewBodyRectangle}"
                                                        VerticalAlignment="Center" />
 
                                             <TextBlock Text="{Binding Path=BodyNameLocal}"
@@ -264,7 +237,7 @@
                                     <Setter Property="Background"
                                             Value="Transparent" />
                                     <Setter Property="Foreground"
-                                            Value="White" />
+                                            Value="{DynamicResource SecondaryWindowColumnHeadForeground}" />
                                     <Setter Property="FontSize"
                                             Value="20" />
                                     <Setter Property="Margin"
@@ -276,7 +249,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Foreground"
-                                            Value="White" />
+                                            Value="{DynamicResource SecondaryWindowColumnHeadForeground}" />
                                     <Setter Property="HorizontalAlignment"
                                             Value="Right" />
                                     <Setter Property="VerticalAlignment"

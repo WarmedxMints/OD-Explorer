@@ -5,8 +5,6 @@ using ODExplorer.Utils;
 using System;
 using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace ODExplorer.NavData
 {
@@ -40,7 +38,7 @@ namespace ODExplorer.NavData
             SurfacePressure = e.SurfacePressure ?? 0;
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
             WasDiscovered = e.WasDiscovered ?? false;
-            if (e.Rings is not null)
+            if (e.Rings is not null && IsPlanet)
             {
                 HasRings = e.Rings.Length > 0;
             }
@@ -322,11 +320,11 @@ namespace ODExplorer.NavData
 
                 CalcValues(Ody);
                 UpdateStatus();
-                SetBodyName();
+                SetBodyNameLocal();
             });
         }
 
-        private void SetBodyName()
+        public void SetBodyNameLocal()
         {
             if (BodyName.StartsWith(SystemName, StringComparison.OrdinalIgnoreCase) && BodyName.Length > SystemName.Length)
             {
@@ -366,7 +364,7 @@ namespace ODExplorer.NavData
             }
             SurfaceGravity = Math.Round(SurfaceGravity / 10, 2);
 
-            SetBodyName();
+            SetBodyNameLocal();
             UpdateStatus();
         }
 
@@ -378,7 +376,7 @@ namespace ODExplorer.NavData
             WasDiscovered = e.WasDiscovered;
             MappedValue = e.MappedValue;
 
-            SetBodyName();
+            SetBodyNameLocal();
             UpdateStatus();
         }
 

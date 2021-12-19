@@ -1,6 +1,8 @@
-﻿using ParserLibrary;
-using EliteJournalReader;
+﻿using EliteJournalReader;
+using ODExplorer.AppSettings;
+using ParserLibrary;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -9,7 +11,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Media.Imaging;
 
 namespace ODExplorer.Utils
 {
@@ -60,16 +61,16 @@ namespace ODExplorer.Utils
             }
             if (i <= 0.8)
             {
-                colour = (SolidColorBrush)Application.Current.Resources["Low Gravity"];
+                colour = (SolidColorBrush)Application.Current.Resources["LowGravity"];
                 return colour;
             }
             if (i <= 1.2)
             {
-                colour = (SolidColorBrush)Application.Current.Resources["Med Gravity"];
+                colour = (SolidColorBrush)Application.Current.Resources["MedGravity"];
                 return colour;
             }
 
-            colour = (SolidColorBrush)Application.Current.Resources["High Gravity"];
+            colour = (SolidColorBrush)Application.Current.Resources["HighGravity"];
             return colour;
         }
 
@@ -173,11 +174,7 @@ namespace ODExplorer.Utils
 
                 if (prefixLength > 0)
                 {
-                    if (description.Length <= prefixLength)
-                    {
-                        return description;
-                    }
-                    return description.Substring(0, prefixLength);
+                    return description.Length <= prefixLength ? description : description.Substring(0, prefixLength);
                 }
             }
             return !string.IsNullOrEmpty(description) ? description : myEnum.ToString();
@@ -189,6 +186,25 @@ namespace ODExplorer.Utils
         }
     }
 
+    public class EnumCamelCaseConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var myEnum = (Enum)value;
+
+            if (myEnum == null)
+            {
+                return null;
+            }
+
+            return myEnum.ToString().SplitCamelCase(); 
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.Empty;
+        }
+    }
     public class CenterBorderGapMaskConverter : IMultiValueConverter
     {
         // Methods
@@ -409,7 +425,7 @@ namespace ODExplorer.Utils
 
     public class PrefixValueConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string s = value.ToString();
             if (!int.TryParse(parameter.ToString(), out int prefixLength) ||
@@ -420,7 +436,7 @@ namespace ODExplorer.Utils
             return s.Substring(0, prefixLength);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
@@ -428,29 +444,34 @@ namespace ODExplorer.Utils
 
     public class PlanetClassToImage : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            PlanetClass PlanetClass = (PlanetClass)value;
+            if (value is not PlanetClass)
+            {
+                return null;
+            }
+
+            PlanetClass Planetclass = (PlanetClass)value;
 
             string uri;
-            switch (PlanetClass)
+            switch (Planetclass)
             {
                 case PlanetClass.MetalRichBody:
                 case PlanetClass.HighMetalContentBody:
                 case PlanetClass.RockyBody:
                 case PlanetClass.IcyBody:
                 case PlanetClass.RockyIceBody:
-                    uri = "../Images/planet.png";
+                    uri = "pack://application:,,,/ODExplorer;component/Images/planet.png";
                     break;
 
                 case PlanetClass.EarthlikeBody:
-                    uri = "../Images/earth.png";
+                    uri = "pack://application:,,,/ODExplorer;component/Images/earth.png";
                     break;
 
                 case PlanetClass.WaterWorld:
                 case PlanetClass.WaterGiant:
                 case PlanetClass.WaterGiantWithLife:
-                    uri = "../Images/water.png";
+                    uri = "pack://application:,,,/ODExplorer;component/Images/water.png";
                     break;
 
                 case PlanetClass.AmmoniaWorld:
@@ -463,13 +484,13 @@ namespace ODExplorer.Utils
                 case PlanetClass.SudarskyClassVGasGiant:
                 case PlanetClass.HeliumRichGasGiant:
                 case PlanetClass.HeliumGasGiant:
-                    uri = "../Images/jupiter.png";
+                    uri = "pack://application:,,,/ODExplorer;component/Images/jupiter.png";
                     break;
 
                 case PlanetClass.EdsmValuableBody:
                 case PlanetClass.Unknown:
                 default:
-                    uri = "../Images/language.png";
+                    uri = "pack://application:,,,/ODExplorer;component/Images/language.png";
                     break;
             }
 
@@ -477,7 +498,7 @@ namespace ODExplorer.Utils
         }
 
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

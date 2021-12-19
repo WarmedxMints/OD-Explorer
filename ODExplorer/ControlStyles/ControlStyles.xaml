@@ -2,60 +2,63 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ndata="clr-namespace:ODExplorer.NavData"
                     xmlns:utils="clr-namespace:ODExplorer.Utils">
-
+   
+    <utils:PlanetClassToImage x:Key="PlanetClassToImage" />
+    <utils:GravityToColourConvertor x:Key="gravToColour" />
+    
     <Style x:Key="DataGridFont"
            TargetType="{x:Type TextBlock}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsKnownToEDSM}"
                          Value="True">
                 <Setter Property="Foreground"
-                        Value="{DynamicResource Known Font Colour}" />
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding IsKnownToEDSM}"
                          Value="False">
                 <Setter Property="Foreground"
-                        Value="{DynamicResource UnKnown Font Colour}" />
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="DataGrid Scoopable"
+    <Style x:Key="DataGridScoopable"
            TargetType="{x:Type Border}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsScoopable}"
                          Value="True">
                 <Setter Property="Background"
-                        Value="{DynamicResource Scoopable Star}" />
+                        Value="{DynamicResource ScoopableStar}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding IsScoopable}"
                          Value="False">
                 <Setter Property="Background"
-                        Value="{DynamicResource Non-Scoopable Star}" />
+                        Value="{DynamicResource NonScoopableStar}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding StarClass}"
                          Value="N">
                 <Setter Property="Background"
-                        Value="{DynamicResource Neutron Star}" />
+                        Value="{DynamicResource NeutronStar}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type ToolTip}">
         <Setter Property="Background"
-                Value="{DynamicResource MainWindowBackground}" />
+                Value="{DynamicResource PrimaryBackground}" />
         <Setter Property="Foreground"
-                Value="{DynamicResource Font Colour}" />
+                Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush"
-                Value="{DynamicResource Groupbox Border}" />
+                Value="{DynamicResource PrimaryBorder}" />
     </Style>
 
     <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="Background"
-                Value="{DynamicResource MainWindowBackground}" />
+                Value="{DynamicResource PrimaryBackground}" />
         <Setter Property="Foreground"
-                Value="{DynamicResource Font Colour}" />
+                Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush"
-                Value="{DynamicResource Groupbox Border}" />
+                Value="{DynamicResource PrimaryBorder}" />
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="FontFamily"
@@ -66,7 +69,7 @@
 
     <ItemsPanelTemplate x:Key="MenuItemPanelTemplate">
         <StackPanel Margin="-25,0,-10,0"
-                    Background="{DynamicResource MainWindowBackground}" />
+                    Background="{DynamicResource PrimaryBackground}" />
     </ItemsPanelTemplate>
 
     <Style TargetType="{x:Type MenuItem}"
@@ -77,50 +80,34 @@
                 Value="16" />
     </Style>
 
-    <Style x:Key="DataGridFontBody"
-           TargetType="{x:Type TextBlock}">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding WasDiscovered}"
-                         Value="True">
-                <Setter Property="Foreground"
-                        Value="{DynamicResource Known Font Colour}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding WasDiscovered}"
-                         Value="False">
-                <Setter Property="Foreground"
-                        Value="{DynamicResource UnKnown Font Colour}" />
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <Style x:Key="Rectangle Style"
            TargetType="{x:Type Rectangle}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding Status}"
                          Value="{x:Static ndata:DiscoveryStatus.Discovered}">
                 <Setter Property="Fill"
-                        Value="{DynamicResource Known Font Colour}" />
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
                 <Setter Property="Opacity"
                         Value="1" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Status}"
                          Value="{x:Static ndata:DiscoveryStatus.UnDiscovered}">
                 <Setter Property="Fill"
-                        Value="{DynamicResource UnKnown Font Colour}" />
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
                 <Setter Property="Opacity"
                         Value="1" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Status}"
                          Value="{x:Static ndata:DiscoveryStatus.WorthMapping}">
                 <Setter Property="Fill"
-                        Value="{DynamicResource EDSM Unknown}" />
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
                 <Setter Property="Opacity"
                         Value="1" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Status}"
                          Value="{x:Static ndata:DiscoveryStatus.MappedByUser}">
                 <Setter Property="Fill"
-                        Value="{DynamicResource MainWindowBackground}" />
+                        Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -255,11 +242,11 @@
               VerticalAlignment="Center">
             <Path x:Name="grip"
                   Data="M 0,0 C0,0 11,0 11,0 11,0 11,18 11,18 11,18 0,18 0,18 0,18 0,0 0,0 z"
-                  Fill="{DynamicResource Groupbox Border}"
+                  Fill="{DynamicResource PrimaryControlBorder}"
                   SnapsToDevicePixels="True"
                   StrokeThickness="1"
                   Stretch="Fill"
-                  Stroke="{DynamicResource Font Colour}"
+                  Stroke="{DynamicResource PrimaryControlForeground}"
                   UseLayoutRounding="True"
                   VerticalAlignment="Center" />
         </Grid>
@@ -268,19 +255,19 @@
                      Value="true">
                 <Setter Property="Fill"
                         TargetName="grip"
-                        Value="{StaticResource SliderThumb.MouseOver.Background}" />
+                        Value="{DynamicResource PrimaryControlMouseOver}" />
                 <Setter Property="Stroke"
                         TargetName="grip"
-                        Value="{StaticResource SliderThumb.MouseOver.Border}" />
+                        Value="{DynamicResource PrimaryControlBorder}" />
             </Trigger>
             <Trigger Property="IsDragging"
                      Value="true">
                 <Setter Property="Fill"
                         TargetName="grip"
-                        Value="{StaticResource SliderThumb.Pressed.Background}" />
+                        Value="{DynamicResource PrimaryControlPressed}" />
                 <Setter Property="Stroke"
                         TargetName="grip"
-                        Value="{StaticResource SliderThumb.Pressed.Border}" />
+                        Value="{DynamicResource PrimaryControlBorder}" />
             </Trigger>
             <Trigger Property="IsEnabled"
                      Value="false">
@@ -289,7 +276,7 @@
                         Value="{StaticResource SliderThumb.Disabled.Background}" />
                 <Setter Property="Stroke"
                         TargetName="grip"
-                        Value="{StaticResource SliderThumb.Disabled.Border}" />
+                        Value="{DynamicResource PrimaryControlBorder}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -412,9 +399,9 @@
                          Grid.Row="2"
                          Visibility="Collapsed" />
                 <Border x:Name="TrackBackground"
-                        Background="{DynamicResource Font Colour}"
+                        Background="{DynamicResource PrimaryControlForeground}"
                         BorderThickness="1"
-                        BorderBrush="{DynamicResource Groupbox Border}"
+                        BorderBrush="{DynamicResource PrimaryControlBorder}"
                         Height="4.0"
                         Margin="5,0"
                         Grid.Row="1"
@@ -883,8 +870,8 @@
                 <Track.Thumb>
                     <Thumb Style="{StaticResource ScrollBarThumb}"
                            Margin="1,0,1,0"
-                           Background="{StaticResource Groupbox Border}"
-                           BorderBrush="{StaticResource HorizontalNormalBorderBrush}" />
+                           Background="{DynamicResource PrimaryControlForeground}"
+                           BorderBrush="{DynamicResource PrimaryControlBorder}" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"
@@ -1008,9 +995,11 @@
     <Style BasedOn="{StaticResource {x:Type Button}}"
            TargetType="{x:Type Button}">
         <Setter Property="Foreground"
-                Value="{DynamicResource Font Colour}" />
+                Value="{DynamicResource PrimaryControlForeground}" />
         <Setter Property="Background"
-                Value="{DynamicResource EDSM Known}" />
+                Value="{DynamicResource PrimaryControlBackground}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryControlBorder}" />
         <Setter Property="FontSize"
                 Value="10" />
         <Setter Property="Template">
@@ -1019,7 +1008,7 @@
                     <Border Name="border"
                             BorderThickness="1"
                             Padding="2"
-                            BorderBrush="{DynamicResource Groupbox Border}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
                             CornerRadius="1"
                             Background="{TemplateBinding Background}">
                         <Grid>
@@ -1034,24 +1023,24 @@
                             <Setter Property="BorderThickness"
                                     Value="5" />
                             <Setter Property="BorderBrush"
-                                    Value="#FF2B3C59" />
+                                    Value="{DynamicResource PrimaryControlBorder}" />
                             <Setter Property="Background"
-                                    Value="Gray" />
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                                  Value="True">
                             <Setter Property="BorderThickness"
                                     Value="20" />
                             <Setter Property="BorderBrush"
-                                    Value="{DynamicResource MainWindowBackground}" />
+                                    Value="{DynamicResource PrimaryControlBackground}" />
                             <Setter Property="Background"
-                                    Value="#FFA88D54" />
+                                    Value="{DynamicResource PrimaryControlPressed}" />
                         </Trigger>
                         <Trigger Property="IsDefaulted"
                                  Value="True">
                             <Setter TargetName="border"
                                     Property="BorderBrush"
-                                    Value="{DynamicResource Groupbox Border}" />
+                                    Value="{DynamicResource PrimaryBorder}" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
@@ -1060,9 +1049,9 @@
                                     Value="0.7" />
                             <Setter TargetName="border"
                                     Property="BorderBrush"
-                                    Value="{DynamicResource Known Font Colour}" />
+                                    Value="{DynamicResource PrimaryDisabled}" />
                             <Setter Property="Foreground"
-                                    Value="{DynamicResource Known Font Colour}" />
+                                    Value="{DynamicResource PrimaryDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1072,14 +1061,6 @@
     <!--#endregion-->
 
     <!--#region Menu Bar Style-->
-    <SolidColorBrush x:Key="HighlightedBackgroundBrush"
-                     Color="#FF797878" />
-    <SolidColorBrush x:Key="MenuBackgroundBrush"
-                     Color="#FF505050" />
-    <SolidColorBrush x:Key="SolidMenuFontBrush"
-                     Color="#FFECA804" />
-    <SolidColorBrush x:Key="HighlightedText"
-                     Color="#FFFFFFFF" />
     <Style x:Key="MenuYellow"
            TargetType="{x:Type Menu}">
         <Setter Property="OverridesDefaultStyle"
@@ -1089,12 +1070,12 @@
         <Setter Property="FontSize"
                 Value="16" />
         <Setter Property="Foreground"
-                Value="{StaticResource SolidMenuFontBrush}" />
+                Value="{DynamicResource MenuBarForeground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Menu}">
-                    <Border Background="{StaticResource MenuBackgroundBrush}"
-                            BorderBrush="{StaticResource MenuBackgroundBrush}"
+                    <Border Background="{DynamicResource MenuBarBackground}"
+                            BorderBrush="{DynamicResource MenuBarBackground}"
                             BorderThickness="1">
                         <StackPanel ClipToBounds="True"
                                     Orientation="Horizontal"
@@ -1284,23 +1265,23 @@
                         <Trigger Property="IsHighlighted"
                                  Value="true">
                             <Setter Property="Background"
-                                    Value="{StaticResource HighlightedBackgroundBrush}"
+                                    Value="{DynamicResource MenuBarMouseOverBackground}"
                                     TargetName="Border" />
                             <Setter Property="Foreground"
-                                    Value="{StaticResource HighlightedText}" />
+                                    Value="{DynamicResource MenuBarMouseOverForground}" />
                             <Setter Property="BorderBrush"
-                                    Value="{StaticResource NormalBorderBrush}"
+                                    Value="{DynamicResource MenuBarMouseOverBorder}"
                                     TargetName="Border" />
                         </Trigger>
                         <Trigger Property="IsHighlighted"
                                  Value="false">
                             <Setter Property="Background"
-                                    Value="{StaticResource MenuBackgroundBrush}"
+                                    Value="{DynamicResource MenuBarBackground}"
                                     TargetName="Border" />
                             <Setter Property="Foreground"
-                                    Value="{StaticResource SolidMenuFontBrush}" />
+                                    Value="{DynamicResource MenuBarForeground}" />
                             <Setter Property="BorderBrush"
-                                    Value="{StaticResource MenuBackgroundBrush}"
+                                    Value="{DynamicResource MenuBarBackground}"
                                     TargetName="Border" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
@@ -1315,14 +1296,12 @@
     </Style>
     <!--#endregion-->
 
-    <utils:GravityToColourConvertor x:Key="gravToColour" />
-
     <Style TargetType="{x:Type TextBlock}"
            x:Key="GravityTextBox">
         <Setter Property="Foreground"
-                Value="{Binding Path=SurfaceGravity, Converter={StaticResource gravToColour }}" />
+                Value="{Binding Path=SurfaceGravity, Converter={StaticResource gravToColour}}" />
         <Setter Property="Background"
-                Value="{DynamicResource MainWindowBackground}" />
+                Value="Black" />
         <Setter Property="FontWeight"
                 Value="Bold" />
         <Style.Triggers>
@@ -1342,7 +1321,7 @@
     <Style x:Key="Seperator Style"
            TargetType="{x:Type Separator}">
         <Setter Property="Background"
-                Value="{DynamicResource MainWindowBackground}" />
+                Value="{DynamicResource MenuBarBackground}" />
         <Setter Property="Margin"
                 Value="0,2,0,2" />
         <Setter Property="Focusable"
@@ -1350,9 +1329,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border BorderBrush="{DynamicResource MainWindowBackground}"
+                    <Border BorderBrush="{DynamicResource MenuBarBackground}"
                             BorderThickness="0"
-                            Background="{DynamicResource Groupbox Border}"
+                            Background="{DynamicResource PrimaryBorder}"
                             Height="1"
                             SnapsToDevicePixels="true" />
                 </ControlTemplate>
@@ -1362,13 +1341,13 @@
 
     <Style TargetType="CheckBox">
         <Setter Property="SnapsToDevicePixels"
-                Value="False" />
+                Value="True" />
         <Setter Property="OverridesDefaultStyle"
-                Value="true" />
+                Value="True" />
         <Setter Property="FocusVisualStyle"
                 Value="{x:Null}" />
         <Setter Property="BorderBrush"
-                Value="{DynamicResource Groupbox Border}" />
+                Value="{DynamicResource PrimaryControlBorder}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
@@ -1383,13 +1362,13 @@
                                     ClipToBounds="True">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="5"
-                                                      ShadowDepth="2" />
+                                                      ShadowDepth="1" />
                                 </Border.Effect>
 
                                 <Border x:Name="CheckMark"
                                         Width="7"
                                         Height="7"
-                                        Background="{DynamicResource Font Colour}" />
+                                        Background="{DynamicResource PrimaryControlForeground}" />
                             </Border>
                         </BulletDecorator.Bullet>
                         <ContentPresenter Margin="4,0,0,0"
@@ -1399,19 +1378,19 @@
                     </BulletDecorator>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked"
-                                 Value="false">
+                                 Value="False">
                             <Setter TargetName="CheckMark"
                                     Property="Visibility"
                                     Value="Collapsed" />
                         </Trigger>
                         <Trigger Property="IsFocused"
-                                 Value="true">
+                                 Value="True">
                         </Trigger>
 
                         <Trigger Property="IsEnabled"
-                                 Value="false">
+                                 Value="False">
                             <Setter Property="BorderBrush"
-                                    Value="Gray" />
+                                    Value="{DynamicResource PrimaryDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1422,44 +1401,30 @@
     <!--#region ComboBox-->
     <ControlTemplate x:Key="ComboBoxToggleButton"
                      TargetType="{x:Type ToggleButton}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="20" />
-            </Grid.ColumnDefinitions>
-            <Border x:Name="Border"
-                    Grid.ColumnSpan="2"
-                    CornerRadius="0"
-                    Background="#FF3F3F3F"
-                    BorderBrush="{DynamicResource Groupbox Border}"
-                    BorderThickness="1" />
-            <Border Grid.Column="0"
-                    CornerRadius="0"
-                    Margin="1"
-                    Background="#FF3F3F3F"
-                    BorderBrush="{DynamicResource Groupbox Border}"
-                    BorderThickness="0,0,1,0" />
-            <Path x:Name="Arrow"
-                  Grid.Column="1"
-                  Fill="{DynamicResource Font Colour}"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z" />
-        </Grid>
-        <!--<ControlTemplate.Triggers>
-            <Trigger Property="ToggleButton.IsMouseOver" Value="true">
-                <Setter TargetName="Border" Property="Background" Value="#808080" />
-            </Trigger>
-            <Trigger Property="ToggleButton.IsChecked" Value="true">
-                <Setter TargetName="Border" Property="Background" Value="#E0E0E0" />
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter TargetName="Border" Property="Background" Value="#EEEEEE" />
-                <Setter TargetName="Border" Property="BorderBrush" Value="#AAAAAA" />
-                <Setter Property="Foreground" Value="#888888"/>
-                <Setter TargetName="Arrow" Property="Fill" Value="#888888" />
-            </Trigger>
-        </ControlTemplate.Triggers>-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border"
+                        Grid.ColumnSpan="2"
+                        CornerRadius="0"
+                        Background="{DynamicResource PrimaryControlBackground}"
+                        BorderBrush="{DynamicResource PrimaryControlBorder}"
+                        BorderThickness="1" />
+                <Border Grid.Column="0"
+                        CornerRadius="0"
+                        Margin="1"
+                        Background="{DynamicResource PrimaryControlBackground}"
+                    BorderBrush="{DynamicResource PrimaryControlBorder}"
+                        BorderThickness="0,0,1,0" />
+                <Path x:Name="Arrow"
+                      Grid.Column="1"
+                      Fill="{DynamicResource PrimaryControlForeground}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z" />
+            </Grid>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ComboBoxTextBox"
@@ -1486,7 +1451,11 @@
         <Setter Property="MinHeight"
                 Value="20" />
         <Setter Property="Foreground"
-                Value="{DynamicResource Font Colour}" />
+                Value="{DynamicResource PrimaryControlForeground}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryControlBorder}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -1529,9 +1498,9 @@
                                   MinWidth="{TemplateBinding ActualWidth}"
                                   MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border x:Name="DropDownBorder"
-                                        Background="#FF3F3F3F"
+                                        Background="{DynamicResource PrimaryControlBackground}"
                                         BorderThickness="1"
-                                        BorderBrush="{DynamicResource Groupbox Border}" />
+                                        BorderBrush="{DynamicResource PrimaryControlBorder}" />
                                 <ScrollViewer Margin="4,6,4,6"
                                               SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True"
@@ -1550,7 +1519,7 @@
                         <Trigger Property="IsEnabled"
                                  Value="false">
                             <Setter Property="Foreground"
-                                    Value="#888888" />
+                                    Value="{DynamicResource PrimaryDisabled}" />
                         </Trigger>
                         <Trigger Property="IsGrouping"
                                  Value="true">
@@ -1592,7 +1561,7 @@
         <Setter Property="SnapsToDevicePixels"
                 Value="true" />
         <Setter Property="Foreground"
-                Value="{DynamicResource Font Colour}" />
+                Value="{DynamicResource PrimaryControlForeground}" />
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="Template">
@@ -1608,12 +1577,12 @@
                                  Value="true">
                             <Setter TargetName="Border"
                                     Property="Background"
-                                    Value="#FF4F4F4F" />
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="false">
                             <Setter Property="Foreground"
-                                    Value="#888888" />
+                                    Value="{DynamicResource PrimaryDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
