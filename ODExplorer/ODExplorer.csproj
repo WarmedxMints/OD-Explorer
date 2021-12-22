@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ColorPicker\src\ColorPicker\ColorPicker.csproj" />
     <ProjectReference Include="..\..\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj" />
     <ProjectReference Include="..\LoadSaveSystem\Utils.csproj" />
     <ProjectReference Include="..\ParserLibrary\ParserLibrary.csproj" />

@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ndata="clr-namespace:ODExplorer.NavData">
 
     <Style x:Key="SecondaryWindowDataGridRowStyle"
            TargetType="{x:Type DataGridRow}">
@@ -167,36 +168,69 @@
         <Setter Property="Fill"
                 Value="{DynamicResource SecondaryWindowForeground}" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding MappedByUser}"
-                         Value="True">
-                <Setter Property="Fill"
-                        Value="{DynamicResource BodyDataMappedForeground}" />
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static ndata:PlanetImage.Planet}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/planet.png" />
+                    </Setter.Value>
+                </Setter>
             </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static ndata:PlanetImage.Earth}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/earth.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static ndata:PlanetImage.Water}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/water.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static ndata:PlanetImage.Gas}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/jupiter.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static ndata:PlanetImage.Default}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/language.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
             <DataTrigger Binding="{Binding IsStar}"
                          Value="True">
                 <Setter Property="OpacityMask">
                     <Setter.Value>
-                        <ImageBrush ImageSource="../Images/StarIcon.png" />
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/StarIcon.png" />
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
+
             <DataTrigger Binding="{Binding IsNonBody}"
                          Value="True">
                 <Setter Property="OpacityMask">
                     <Setter.Value>
-                        <ImageBrush ImageSource="../Images/asteroid.png" />
-                    </Setter.Value>
-                </Setter>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsPlanet}"
-                         Value="True">
-                <Setter Property="OpacityMask">
-                    <Setter.Value>
-                        <ImageBrush ImageSource="{Binding PlanetClass, Converter={StaticResource PlanetClassToImage}}" />
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Images/asteroid.png" />
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
         </Style.Triggers>
     </Style>
-    
+
 </ResourceDictionary>

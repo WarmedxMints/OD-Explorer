@@ -1,6 +1,4 @@
-﻿using ODExplorer.AppSettings;
-using ODExplorer.Themes;
-using System.ComponentModel;
+﻿using ODExplorer.Themes;
 using System.Windows;
 
 namespace ODExplorer
@@ -19,6 +17,18 @@ namespace ODExplorer
                     skinDict.UpdateSource();
                 }
             }
+        }
+
+        public ResourceDictionary GetCurrentTheme()
+        {
+            foreach (ResourceDictionary dict in Resources.MergedDictionaries)
+            {
+                if (dict is ThemeManager skinDict)
+                {
+                    return skinDict;
+                }
+            }
+            return null;
         }
     }
 }

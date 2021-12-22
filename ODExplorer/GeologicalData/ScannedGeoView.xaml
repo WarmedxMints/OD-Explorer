@@ -13,6 +13,7 @@
         Title="OD EXPLORER - GEOLOGICAL DATA"
         Height="600"
         Width="980"
+        WindowStyle="None"
         StateChanged="MainWindowStateChangeRaised"
         Background="{DynamicResource SecondaryWindowBackground}"
         ShowInTaskbar="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.ShowAdditionalWindowsInTaskBar}"

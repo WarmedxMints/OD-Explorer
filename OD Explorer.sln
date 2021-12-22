@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParserLibrary", "ParserLibr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "LoadSaveSystem\Utils.csproj", "{BED142E3-5CE8-493C-ABBB-AD85B124D944}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorPicker", "..\ColorPicker\src\ColorPicker\ColorPicker.csproj", "{A0B3DA75-2B59-4270-A00D-9E249063DA5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{BED142E3-5CE8-493C-ABBB-AD85B124D944}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BED142E3-5CE8-493C-ABBB-AD85B124D944}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BED142E3-5CE8-493C-ABBB-AD85B124D944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B3DA75-2B59-4270-A00D-9E249063DA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B3DA75-2B59-4270-A00D-9E249063DA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B3DA75-2B59-4270-A00D-9E249063DA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B3DA75-2B59-4270-A00D-9E249063DA5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@ using ODExplorer.Utils;
 using System;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ODExplorer.NavData
 {
@@ -16,6 +17,15 @@ namespace ODExplorer.NavData
         MappedByUser
     }
 
+    public enum PlanetImage
+    {
+        None,
+        Default,
+        Planet,
+        Earth,
+        Water,
+        Gas,
+    }
     public class SystemBody : PropertyChangeNotify
     {
         #region Contructors
@@ -38,6 +48,13 @@ namespace ODExplorer.NavData
             SurfacePressure = e.SurfacePressure ?? 0;
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
             WasDiscovered = e.WasDiscovered ?? false;
+            Composition = e.Composition;
+            AtmosphericComposition = e.AtmosphereComposition ?? Array.Empty<ScanItemComponent>(); ;
+            Materials = e.Materials ?? Array.Empty<ScanItemComponent>(); ;
+            Volcanism = string.IsNullOrEmpty(e.Volcanism) ? "No Volcanism" : e.Volcanism;
+            TidalLock = e.TidalLock ?? false;
+            Radius = e.Radius ?? 0;
+            Rings = e.Rings ?? Array.Empty<PlanetRing>();
             if (e.Rings is not null && IsPlanet)
             {
                 HasRings = e.Rings.Length > 0;
@@ -53,22 +70,41 @@ namespace ODExplorer.NavData
             }
 
             SurfaceGravity = Math.Round(SurfaceGravity / 10, 2);
-
-            if (BodyName.StartsWith(SystemName, StringComparison.OrdinalIgnoreCase) && BodyName.Length > SystemName.Length)
-            {
-                BodyNameLocal = BodyName.Remove(0, SystemName.Length + 1).ToUpperInvariant();
-            }
-            else
-            {
-                BodyNameLocal = "";
-            }
+            SetBodyNameLocal();
 
             UpdateStatus();
         }
         #endregion
 
         #region Body Info
+        private PlanetRing[] rings = Array.Empty<PlanetRing>();
+        private double radius;
+        private bool tidalLock;
+        private string volcanism;
         private StarType starType;
+        private PlanetClass _planetClass;
+        private double _gravity;
+        private double _surfacePressure;
+        private AtmosphereClass _atmosphereType = AtmosphereClass.None;
+        private int _surfaceTemp;
+        private int _mappedValue;
+        private int _fssValue;
+        private TerraformState terraformState;
+        private ScanItemComponent[] materials = Array.Empty<ScanItemComponent>();
+        private Composition composition;
+
+        public PlanetRing[] Rings { get => rings; set { rings = value; OnPropertyChanged(); } }
+        public double Radius { get => radius; set { radius = value; OnPropertyChanged(); } }
+        public bool TidalLock { get => tidalLock; set { tidalLock = value; OnPropertyChanged(); } }
+        public string Volcanism { get => volcanism; set { volcanism = value; OnPropertyChanged(); } }
+        public ScanItemComponent[] Materials { get => materials; set { materials = value; OnPropertyChanged(); } }
+
+        private ScanItemComponent[] atmosphericComposition = Array.Empty<ScanItemComponent>();
+        public ScanItemComponent[] AtmosphericComposition { get => atmosphericComposition; set { atmosphericComposition = value; OnPropertyChanged(); } }
+
+        public Composition Composition { get => composition; set { composition = value; OnPropertyChanged(); OnPropertyChanged("HasComposition"); } }
+        public bool HasComposition { get { return Composition.Ice > 0.001 || Composition.Metal > 0.001 || Composition.Rock > 0.001; } }
+
         public StarType StarType
         {
             get => starType;
@@ -83,7 +119,7 @@ namespace ODExplorer.NavData
             }
         }
 
-        private PlanetClass _planetClass;
+
         public PlanetClass PlanetClass
         {
             get => _planetClass;
@@ -96,7 +132,7 @@ namespace ODExplorer.NavData
                 OnPropertyChanged("IsPlanet");
                 OnPropertyChanged("IsNonBody");
                 OnPropertyChanged("IsEDSMvb");
-                OnPropertyChanged("BodyIcon");
+                OnPropertyChanged("PlanetImage");
             }
         }
 
@@ -107,59 +143,40 @@ namespace ODExplorer.NavData
             set => OnPropertyChanged();
         }
 
-        public double StellarMass { get; set; }
-        public double MassEM { get; set; }
-
-        private double _gravity;
-
+        public double StellarMass { get => stellarMass; set { stellarMass = value; OnPropertyChanged(); } }
+        public double MassEM { get => massEM; set { massEM = value; OnPropertyChanged(); } }
         public double SurfaceGravity
         {
             get { return _gravity; }
             set { _gravity = value; OnPropertyChanged(); }
         }
-
-        private double _surfacePressure;
-
         public double SurfacePressure
         {
             get => _surfacePressure;
             set { _surfacePressure = value; OnPropertyChanged(); OnPropertyChanged("SurfacePressureString"); }
         }
-
         [IgnoreDataMember]
         public string SurfacePressureString
         {
-            get
-            {
-                if (AtmosphereType == AtmosphereClass.None || Landable == false)
-                {
-                    return "";
-                }
-
+            get =>
                 //Convert Pa to Standard Atmosphere
-                return $"{_surfacePressure / 101325:N2} atm";
-            }
+                $"{_surfacePressure / 101325:N2} atm";
             set => OnPropertyChanged();
         }
-
-        public AtmosphereClass AtmosphereType { get; set; } = AtmosphereClass.None;
-
-        private int _surfaceTemp;
-
+        public AtmosphereClass AtmosphereType { get => _atmosphereType; set { _atmosphereType = value; OnPropertyChanged(); OnPropertyChanged("HasAtmosphere"); } }
         public int SurfaceTemp
         {
             get => _surfaceTemp;
             set { _surfaceTemp = value; OnPropertyChanged(); OnPropertyChanged("SurfaceTempString"); }
         }
-
         public string SurfaceTempString
         {
             get
             {
-                if (Landable == false)
-                {
-                    return "";
-                }
+                //if (Landable == false)
+                //{
+                //    return "";
+                //}
 
                 return Settings.SettingsInstance.Value.TemperatureUnit switch
                 {
@@ -171,22 +188,20 @@ namespace ODExplorer.NavData
             }
             set => OnPropertyChanged();
         }
-        private int _mappedValue;
         public int MappedValue
         {
             get => _mappedValue;
             set { _mappedValue = value; OnPropertyChanged(); OnPropertyChanged("ScanValue"); }
         }
-
-        private int _fssValue;
         public int FssValue
         {
             get { return _fssValue; }
             set { _fssValue = value; OnPropertyChanged(); OnPropertyChanged("ScanValue"); }
         }
-
-        public int BonusValue { get; set; }
-
+        public int BonusValue
+        {
+            get => bonusValue; set { bonusValue = value; OnPropertyChanged(); }
+        }
         public int ScanValue
         {
             get
@@ -195,15 +210,12 @@ namespace ODExplorer.NavData
             }
             set { }
         }
-
-        private TerraformState terraformState;
         public TerraformState TerraformState { get => terraformState; set { terraformState = value; OnPropertyChanged("Terraformable"); } }
-
         public string SystemName { get; set; }
 
         public long SystemAddress { get; set; }
         public string BodyName { get; set; }
-        public string BodyNameLocal { get; set; }
+        public string BodyNameLocal { get => bodyNameLocal; set { bodyNameLocal = value; OnPropertyChanged(); } }
 
         private long _bodyID;
         public long BodyID { get => _bodyID; set { _bodyID = value; OnPropertyChanged(); } }
@@ -265,7 +277,8 @@ namespace ODExplorer.NavData
         public bool IsNonBody { get { return !IsStar && !IsPlanet; } }
         [IgnoreDataMember]
         public bool Terraformable { get { return TerraformState is TerraformState.Terraformable or TerraformState.Terraforming or TerraformState.Terraformed; } }
-
+        [IgnoreDataMember]
+        public bool HasAtmosphere { get { return AtmosphereType is not AtmosphereClass.None and not AtmosphereClass.NoAtmosphere and not AtmosphereClass.Unknown; } }
         private int _geologicalSignals { get; set; }
         public int GeologicalSignals
         {
@@ -286,6 +299,71 @@ namespace ODExplorer.NavData
         private ReserveLevel _ringReserves;
         public ReserveLevel RingReserves { get => _ringReserves; set { _ringReserves = value; OnPropertyChanged(); } }
 
+        private ToolTip toolTip;
+        private double stellarMass;
+        private double massEM;
+        private int bonusValue;
+        private string bodyNameLocal;
+
+        [IgnoreDataMember]
+        public ToolTip ToolTip
+        {
+            get
+            {
+                if (toolTip == null)
+                {
+                    toolTip = new ToolTip();
+
+                    ToolTip.Content = new CustomControls.BodyToolTip(this);
+                }
+
+                return toolTip;
+            }
+            set { toolTip = value; OnPropertyChanged(); }
+        }
+
+        [IgnoreDataMember]
+        public PlanetImage PlanetImage
+        {
+            get
+            {
+                switch (PlanetClass)
+                {
+                    case PlanetClass.MetalRichBody:
+                    case PlanetClass.HighMetalContentBody:
+                    case PlanetClass.RockyBody:
+                    case PlanetClass.IcyBody:
+                    case PlanetClass.RockyIceBody:
+                        return PlanetImage.Planet;
+
+                    case PlanetClass.EarthlikeBody:
+                        return PlanetImage.Earth;
+
+                    case PlanetClass.WaterWorld:
+                    case PlanetClass.WaterGiant:
+                    case PlanetClass.WaterGiantWithLife:
+                        return PlanetImage.Water;
+
+                    case PlanetClass.AmmoniaWorld:
+                    case PlanetClass.GasGiantWithWaterBasedLife:
+                    case PlanetClass.GasGiantWithAmmoniaBasedLife:
+                    case PlanetClass.SudarskyClassIGasGiant:
+                    case PlanetClass.SudarskyClassIIGasGiant:
+                    case PlanetClass.SudarskyClassIIIGasGiant:
+                    case PlanetClass.SudarskyClassIVGasGiant:
+                    case PlanetClass.SudarskyClassVGasGiant:
+                    case PlanetClass.HeliumRichGasGiant:
+                    case PlanetClass.HeliumGasGiant:
+                        return PlanetImage.Gas;
+
+                    case PlanetClass.EdsmValuableBody:
+                    case PlanetClass.Unknown:
+                        return PlanetImage.Default;
+                    default:
+                        return PlanetImage.None;
+                }
+            }
+        }
         #endregion
         public void UpdateFromDetailedScan(SystemBody e, bool Ody = false)
         {
@@ -306,6 +384,18 @@ namespace ODExplorer.NavData
                 SurfaceGravity = e.SurfaceGravity;
                 SurfacePressure = e.SurfacePressure;
                 SurfaceTemp = e.SurfaceTemp;
+                Composition = e.Composition;
+                AtmosphericComposition = e.AtmosphericComposition;
+                Materials = e.Materials;
+                Volcanism = e.Volcanism;
+                TidalLock = e.TidalLock;
+                Radius = e.Radius;
+                Rings = e.Rings;
+                if (e.Rings is not null && IsPlanet)
+                {
+                    HasRings = e.Rings.Length > 0;
+                }
+                RingReserves = e.RingReserves;
                 WasDiscovered = e.WasDiscovered;
                 HasRings = e.HasRings;
                 RingReserves = e.RingReserves;
@@ -316,56 +406,22 @@ namespace ODExplorer.NavData
                 {
                     Wasmapped = e.Wasmapped;
                 }
-                BodyNameLocal = e.BodyNameLocal.ToUpperInvariant();
-
+                SetBodyNameLocal();
                 CalcValues(Ody);
                 UpdateStatus();
-                SetBodyNameLocal();
             });
         }
 
         public void SetBodyNameLocal()
         {
-            if (BodyName.StartsWith(SystemName, StringComparison.OrdinalIgnoreCase) && BodyName.Length > SystemName.Length)
+            if (string.IsNullOrEmpty(SystemName))
             {
-                BodyNameLocal = BodyName.Remove(0, SystemName.Length + 1).ToUpperInvariant();
                 return;
             }
 
-            BodyNameLocal = "";
-        }
-
-        internal void UpdateFromScan(ScanEvent.ScanEventArgs e, bool Ody)
-        {
-            SystemName = e.StarSystem;
-            SystemAddress = e.SystemAddress;
-            BodyName = e.BodyName;
-            BodyID = e.BodyID;
-            DistanceFromArrivalLs = (int)e.DistanceFromArrivalLs;
-            StarType = e.StarType;
-            StellarMass = e.StellarMass ?? 0;
-            PlanetClass = e.PlanetClass;
-            MassEM = e.MassEM ?? 1;
-            AtmosphereType = e.AtmosphereType;
-            Landable = e.Landable ?? false;
-            TerraformState = e.TerraformState;
-            SurfaceGravity = e.SurfaceGravity ?? 0;
-            SurfacePressure = e.SurfacePressure ?? 0;
-            SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
-
-            WasDiscovered = e.WasDiscovered ?? false;
-            //Whan a body is mapped by the user a scan event is fired
-            //For some reason that scan event can report the body as not mapped when it has been previously
-            //So, if the user has just mapped a body, we ignore what the scan event has to say about this.
-            if (!MappedByUser)
-            {
-                Wasmapped = e.WasMapped ?? false;
-                CalcValues(Ody);
-            }
-            SurfaceGravity = Math.Round(SurfaceGravity / 10, 2);
-
-            SetBodyNameLocal();
-            UpdateStatus();
+            BodyNameLocal = BodyName.StartsWith(SystemName, StringComparison.OrdinalIgnoreCase) && BodyName.Length > SystemName.Length
+                ? BodyName.Remove(0, SystemName.Length + 1).ToUpperInvariant()
+                : IsPlanet ? string.IsNullOrEmpty(BodyNameLocal) ? BodyName.ToUpperInvariant() : BodyNameLocal : "";
         }
 
         internal void UpdateFromEDSM(SystemBody e)
@@ -384,6 +440,7 @@ namespace ODExplorer.NavData
         public void UpdateUI()
         {
             OnPropertyChanged("SurfaceTempString");
+            OnPropertyChanged("PlanetImage");
             UpdateStatus();
         }
 
@@ -427,6 +484,7 @@ namespace ODExplorer.NavData
                 return "-";
             }
         }
+
 
         public void CalcValues(bool odyssey)
         {

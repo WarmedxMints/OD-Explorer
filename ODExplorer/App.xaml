@@ -5,22 +5,22 @@
              xmlns:Theme="clr-namespace:ODExplorer.Themes"
              xmlns:settings="clr-namespace:ODExplorer.AppSettings"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>        
+    <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <Theme:ThemeManager DefaultSource="/ODExplorer;component/Themes/DefaultTheme.xaml" />
-                
+
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/Convertors.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/TitleBar.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/CenterGroupBox.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/DataGridStyles.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/ControlStyles.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/SecondaryWindowStyles.xaml" />
-                
+
                 <!--<ResourceDictionary Source="/ODExplorer;component/Themes/DefaultTheme.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
 
-            <System:String x:Key="AppVersion">0.9.4</System:String>
+            <System:String x:Key="AppVersion">0.9.5</System:String>
             <settings:Settings x:Key="AppSettings" />
         </ResourceDictionary>
     </Application.Resources>

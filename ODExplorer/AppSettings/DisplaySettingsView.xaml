@@ -29,7 +29,7 @@
     <Border BorderBrush="{DynamicResource PrimaryBorder}"
             BorderThickness="2">
 
-        <Grid Width="1000">
+        <Grid Width="1150">
             <Grid.LayoutTransform>
                 <ScaleTransform ScaleX="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}"
                                 ScaleY="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.UiScale}" />
@@ -60,32 +60,39 @@
             <GroupBox  Header="THEME"
                        Style="{DynamicResource SystemBorder}"
                        BorderThickness="0.5"
-                       Foreground="{DynamicResource PrimaryForeground}"
                        Grid.Column="1"
                        Grid.Row="1"
                        Padding="10">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Current Theme : " 
-                               Margin="0,0,30,0"/>
+                    <TextBlock Text="Current Theme : "
+                               VerticalAlignment="Center"
+                               Margin="0,0,30,0" />
                     <ComboBox ItemsSource="{Binding Source={StaticResource CurrentTheme}}"
-                          SelectedItem="{Binding Settings.ClonedValues.CurrentTheme}"
-                          Width="190"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          FontSize="14">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource EnumCamelCaseConvertor}}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                              SelectedItem="{Binding Settings.ClonedValues.CurrentTheme}"
+                              Width="190"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              FontSize="16">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumCamelCaseConvertor}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button x:Name="EditTheme"
+                            Click="EditTheme_Click"
+                            Content="Edit Theme"
+                            Width="130"
+                            Height="25"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Margin="25,0" />
                 </StackPanel>
             </GroupBox>
 
             <GroupBox Header="DATA GRID OPTIONS"
                       Style="{DynamicResource SystemBorder}"
                       BorderThickness="0.5"
-                      Foreground="{DynamicResource PrimaryForeground}"
                       Grid.Column="1"
                       Grid.Row="2"
                       Padding="10">
@@ -98,6 +105,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -159,6 +167,15 @@
 
                     <CheckBox Grid.Row="3"
                               Grid.Column="1"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowAtmosphereType}"
+                              Content="Atmosphere Type"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,0,50,0" />
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="2"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceTemp}"
                               Content="Surface Temperature"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -167,7 +184,7 @@
                               Click="CheckBox_Click"
                               Margin="0,0,50,0" />
                     <CheckBox Grid.Row="3"
-                              Grid.Column="2"
+                              Grid.Column="3"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfacePressure}"
                               Content="Surface Pressure"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -176,7 +193,7 @@
                               Click="CheckBox_Click"
                               Margin="0,0,50,0" />
                     <CheckBox Grid.Row="3"
-                              Grid.Column="3"
+                              Grid.Column="4"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowUnmapped}"
                               Content="Mapped State"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -184,8 +201,9 @@
                               VerticalAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="0,0,50,0" />
-                    <CheckBox Grid.Row="3"
-                              Grid.Column="4"
+
+                    <CheckBox Grid.Row="4"
+                              Grid.Column="1"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTerraformable}"
                               Content="Terraformable State"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -193,10 +211,16 @@
                               VerticalAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="0,0,50,0" />
-
-
                     <CheckBox Grid.Row="4"
-                              Grid.Column="1"
+                              Grid.Column="2"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowHasRings}"
+                              Content="Has Rings"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="0,5,50,0" />
+                    <CheckBox Grid.Row="4"
+                              Grid.Column="3"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowGeoSignals}"
                               Content="Geological Signals"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -204,46 +228,37 @@
                               Click="CheckBox_Click"
                               Margin="0,5,50,0" />
                     <CheckBox Grid.Row="4"
-                              Grid.Column="2"
+                              Grid.Column="4"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowBioSignals}"
                               Content="Biological Signals"
                               Foreground="{DynamicResource PrimaryForeground}"
                               VerticalContentAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="0,5,50,0" />
-                    <CheckBox Grid.Row="4"
-                              Grid.Column="3"
+                    <CheckBox Grid.Row="5"
+                              Grid.Column="1"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowSurfaceGravity}"
                               Content="Surface Gravity"
                               Foreground="{DynamicResource PrimaryForeground}"
                               VerticalContentAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="0,5,50,0" />
-                    <CheckBox Grid.Row="4"
-                              Grid.Column="4"
-                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowHasRings}"
-                              Content="Has Rings"
-                              Foreground="{DynamicResource PrimaryForeground}"
-                              VerticalContentAlignment="Center"
-                              Click="CheckBox_Click"
-                              Margin="0,5,50,0" />
-
 
                     <TextBlock Text="Systems In Route Grid"
                                Grid.Column="0"
-                               Grid.Row="5"
+                               Grid.Row="6"
                                Grid.ColumnSpan="5"
                                Margin="0,5" />
 
                     <CheckBox   Grid.Column="1"
-                                Grid.Row="6"
+                                Grid.Row="7"
                                 IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowJumpDistRemaining}"
                                 Content="Jump Distance Remaining"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 VerticalContentAlignment="Center"
                                 Margin="0,0,50,0" />
                     <CheckBox   Grid.Column="2"
-                                Grid.Row="6"
+                                Grid.Row="7"
                                 IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowJumpDistToSystem}"
                                 Content="Jump Distance To System"
                                 Foreground="{DynamicResource PrimaryForeground}"
@@ -251,7 +266,7 @@
                                 Margin="0,0,50,0" />
 
                     <CheckBox   Grid.Column="3"
-                                Grid.Row="6"
+                                Grid.Row="7"
                                 IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowVaulableBodies}"
                                 Content="Valuable Bodies"
                                 Foreground="{DynamicResource PrimaryForeground}"
@@ -265,7 +280,6 @@
                       BorderThickness="0.5"
                       Height="378"
                       Style="{DynamicResource SystemBorder}"
-                      Foreground="{DynamicResource PrimaryForeground}"
                       Header="SYSTEM BORDER">
                 <StackPanel>
                     <DataGrid Margin="10"
@@ -365,6 +379,7 @@
                                           ColumnHeaderStyle="{DynamicResource DataGrid Header Left}"
                                           Loaded="CurrentSystemBodies_Loaded"
                                           ColumnReordered="CurrentSystemBodiesDataGrid_ColumnReordered"
+                                          x:Name="Test"
                                           GridLinesVisibility="All"
                                           CanUserReorderColumns="True">
                                     <DataGrid.Columns>
@@ -413,7 +428,20 @@
                                                                     HorizontalAlignment="Center"
                                                                     Margin="2,0,2,0"
                                                                     VerticalAlignment="Center">
-
+                                                            <TextBlock Text="{Binding AtmosphereType, Converter={StaticResource AtmoshpereTypeToString}}"
+                                                                       VerticalAlignment="Center"
+                                                                       TextAlignment="Left"
+                                                                       Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToDouble}, ConverterParameter=70}"
+                                                                       Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                       FontSize="17">
+                                                                <TextBlock.Visibility>
+                                                                    <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                        <Binding Path="HasAtmosphere" />
+                                                                        <Binding Source="{StaticResource AppSettings}"
+                                                                                 Path="SettingsInstance.ClonedValues.DisplaySettings.ShowAtmosphereType" />
+                                                                    </MultiBinding>
+                                                                </TextBlock.Visibility>
+                                                            </TextBlock>
                                                             <TextBlock Text="{Binding SurfaceTempString}"
                                                                        VerticalAlignment="Center"
                                                                        TextAlignment="Right"
@@ -696,21 +724,33 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Margin="10">
-                <Button Content="Save"
+                <Button Content="_Save"
                         Width="100"
                         Height="30"
                         HorizontalAlignment="Left"
                         FontSize="14"
                         Margin="0,0,10,0"
                         x:Name="Save_Btn"
-                        Click="Save_Btn_Click" />
-                <Button Content="Cancel"
+                        Click="Save_Btn_Click">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <AccessText Text="{Binding}" />
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Content="_Cancel"
                         Width="100"
                         Height="30"
                         HorizontalAlignment="Left"
                         FontSize="14"
                         x:Name="Cancel_Btn"
-                        Click="Cancel_Btn_Click" />
+                        Click="Cancel_Btn_Click">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <AccessText Text="{Binding}" />
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
             </StackPanel>
         </Grid>
     </Border>

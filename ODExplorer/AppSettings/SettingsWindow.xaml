@@ -136,7 +136,7 @@
                               FontSize="14"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              IsChecked="{Binding AppSettings.ClonedValues.ExludeStarsFromSorting}"
+                              IsChecked="{Binding AppSettings.ClonedValues.ExcludeStarsFromSorting}"
                               Content="Exclude Stars From Sorting" />
 
                     <TextBlock  Grid.Row="3"
@@ -432,19 +432,31 @@
                         Grid.Column="1"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <Button Content="Save"
+                <Button Content="_Save"
                         Width="100"
                         HorizontalAlignment="Left"
                         FontSize="14"
                         Margin="0,0,10,0"
                         x:Name="Save_Btn"
-                        Click="Save_Btn_Click" />
-                <Button Content="Cancel"
+                        Click="Save_Btn_Click">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <AccessText Text="{Binding}" />
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <Button Content="_Cancel"
                         Width="100"
                         HorizontalAlignment="Left"
                         FontSize="14"
                         x:Name="Cancel_Btn"
-                        Click="Cancel_Btn_Click" />
+                        Click="Cancel_Btn_Click">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <AccessText Text="{Binding}" />
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
             </StackPanel>
         </Grid>
     </Border>

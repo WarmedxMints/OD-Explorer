@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:utils="clr-namespace:ODExplorer.Utils" >
+                    xmlns:utils="clr-namespace:ODExplorer.Utils">
     <!--#region Converters-->
     <utils:IntToBoolConverter x:Key="IntToBool" />
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -17,5 +17,19 @@
     <utils:JumpRangeToStringCoverter x:Key="JumpRangToString" />
     <utils:RowToIndexConv x:Key="RowToIndexConv" />
     <utils:EnumCamelCaseConverter x:Key="EnumCamelCaseConvertor" />
+    <utils:AstmosphereClassToString x:Key="AtmoshpereTypeToString" />
+    <utils:StringToUpperCaseFirstCharacter x:Key="StringToUpperFirst" />
+    <utils:BoolToStringConverter x:Key="BoolToYesNo"
+                                 FalseValue="No"
+                                 TrueValue="Yes" />
+    <utils:BoolToStringConverter x:Key="BoolToTidal"
+                                 FalseValue=""
+                                 TrueValue="Tidally Locked" />
+    <utils:DoubleToVisibilityConverter x:Key="DoubleToVis" />
+    <utils:DoubleMultiplicationConverter x:Key="DoubleMutplication" />
+    <utils:PlanetRingTypeConvertor x:Key="RingConverter" />
+    <utils:RingNameConvertor x:Key="RingNameConvertor" />
+    <utils:RingMassConvertor x:Key="RingMassConvertor" />
+    <utils:RingRadiusConvertor x:Key="RingRadiusConvertor" />
     <!--#endregion-->
 </ResourceDictionary>

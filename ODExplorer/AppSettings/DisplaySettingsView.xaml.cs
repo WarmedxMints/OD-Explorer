@@ -1,4 +1,5 @@
-﻿using ODExplorer.NavData;
+﻿using EliteJournalReader.Events;
+using ODExplorer.NavData;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -11,7 +12,7 @@ namespace ODExplorer.AppSettings
     /// </summary>
     public partial class DisplaySettingsView : Window
     {
-        private Theme currentTHeme;
+        private readonly Theme currentTheme;
         public Settings Settings { get; private set; }
 
         public List<SystemInfo> CurrentSystem { get; set; } = new();
@@ -22,7 +23,7 @@ namespace ODExplorer.AppSettings
             CreateSystems();
             Settings = settings;
             settings.CloneValues();
-            currentTHeme = Settings.CurrentTheme;
+            currentTheme = Settings.CurrentTheme;
             InitializeComponent();
         }
         private void CreateSystems()
@@ -49,7 +50,9 @@ namespace ODExplorer.AppSettings
                 BiologicalSignals = 9,
                 GeologicalSignals = 3,
                 SurfaceGravity = 0.25,
-                AtmosphereType = EliteJournalReader.AtmosphereClass.CarbonDioxide,
+                AtmosphereType = EliteJournalReader.AtmosphereClass.AmmoniaRich,
+                AtmosphericComposition = new ScanItemComponent[] { new EliteJournalReader.Events.ScanItemComponent() { Name = "Ammonia", Percent = 100 } },
+                Composition = new Composition() { Ice = 70, Metal = 20, Rock = 10 },
                 SurfacePressure = 10000,
                 SurfaceTemp = 310,
                 DistanceFromArrivalLs = 180,
@@ -95,7 +98,7 @@ namespace ODExplorer.AppSettings
                 BiologicalSignals = 1,
                 GeologicalSignals = 0,
                 SurfaceGravity = 1,
-                AtmosphereType = EliteJournalReader.AtmosphereClass.CarbonDioxide,
+                AtmosphereType = EliteJournalReader.AtmosphereClass.AmmoniaAndOxygen,
                 SurfacePressure = 100000,
                 SurfaceTemp = 110,
                 DistanceFromArrivalLs = 1200,
@@ -114,7 +117,7 @@ namespace ODExplorer.AppSettings
                 BiologicalSignals = 0,
                 GeologicalSignals = 2,
                 SurfaceGravity = 19.52,
-                AtmosphereType = EliteJournalReader.AtmosphereClass.CarbonDioxide,
+                AtmosphereType = EliteJournalReader.AtmosphereClass.MetallicVapour,
                 SurfacePressure = 1900000,
                 SurfaceTemp = 3200,
                 DistanceFromArrivalLs = 18452,
@@ -230,7 +233,7 @@ namespace ODExplorer.AppSettings
 
         private void CurrentSystemBodiesDataGrid_ColumnReordered(object sender, DataGridColumnEventArgs e)
         {
-            var SystemBodiesGrid = (DataGrid)sender;
+            DataGrid SystemBodiesGrid = (DataGrid)sender;
 
             Settings.ClonedValues.DisplaySettings.CSBColumnOrder.Clear();
 
@@ -249,8 +252,20 @@ namespace ODExplorer.AppSettings
 
         private void Cancel_Btn_Click(object sender, RoutedEventArgs e)
         {
-            Settings.CurrentTheme = currentTHeme;
+            Settings.CurrentTheme = currentTheme;
             DialogResult = false;
+        }
+
+        private void EditTheme_Click(object sender, RoutedEventArgs e)
+        {
+            ThemeEditor editor = new();
+            editor.Owner = this;
+
+            if ((bool)editor.ShowDialog())
+            {
+                Settings.ClonedValues.CurrentTheme = Theme.Custom;
+                ExampleGrid.Items.Refresh();
+            }
         }
     }
 }

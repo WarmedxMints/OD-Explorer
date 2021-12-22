@@ -114,6 +114,8 @@ namespace ODExplorer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+
             NavData.AppSettings = AppSettings;
 
             _journalData.StartWatcher(NavData);
@@ -203,7 +205,7 @@ namespace ODExplorer
             }
 
             List<SortDescription> sortDescriptions = new();
-            if (AppSettings.Value.ExludeStarsFromSorting)
+            if (AppSettings.Value.ExcludeStarsFromSorting)
             {
                 //Always put stars at the bottom of the list
                 sortDescriptions.Add(new SortDescription("IsStar", ListSortDirection.Ascending));
@@ -312,9 +314,11 @@ namespace ODExplorer
 
                 CsvController.ProcessCsv(csv);
 
-                AppSettings.Value.ShowParser = !AppSettings.Value.ShowParser;
-
-                UpdateLabel();
+                if (AppSettings.Value.ShowParser == false)
+                {
+                    AppSettings.Value.ShowParser = true;
+                    UpdateLabel();
+                }
             }
         }
 

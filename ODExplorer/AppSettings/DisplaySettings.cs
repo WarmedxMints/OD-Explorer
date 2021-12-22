@@ -59,6 +59,13 @@ namespace ODExplorer.AppSettings
         #endregion
 
         #region Info Panel Vibility Bools
+        private bool _showAtmosphereType = true;
+        public bool ShowAtmosphereType
+        {
+            get => _showAtmosphereType;
+            set { _showAtmosphereType = value; OnPropertyChanged(); }
+        }
+
         private bool _showSurfaceTemp = true;
         public bool ShowSurfaceTemp
         {

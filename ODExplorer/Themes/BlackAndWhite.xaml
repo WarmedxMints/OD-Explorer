@@ -3,94 +3,94 @@
 
     <!--Primary Colours-->
     <SolidColorBrush x:Key="PrimaryBackground"
-                     Color="#FF064718" />
+                     Color="#202020" />
     <SolidColorBrush x:Key="PrimaryForeground"
-                     Color="White" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="PrimaryBorder"
-                     Color="White" />
+                     Color="#404040" />
     <SolidColorBrush x:Key="PrimaryDisabled"
                      Color="#FF8A999F" />
 
     <!--TitleBar-->
     <SolidColorBrush x:Key="TitleBarBackGround"
-                     Color="LightGreen" />
+                     Color="#FF3C4043" />
     <SolidColorBrush x:Key="TitlebarForeGround"
-                     Color="White" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="TitlebarMouseOver"
-                     Color="#FF0D440D" />
+                     Color="#FF7A7A7A" />
 
     <!--MenuBar-->
     <SolidColorBrush x:Key="MenuBarBackground"
-                     Color="Green" />
+                     Color="#FF505050" />
     <SolidColorBrush x:Key="MenuBarForeground"
-                     Color="White" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="MenuBarMouseOverBackground"
                      Color="#FF797878" />
     <SolidColorBrush x:Key="MenuBarMouseOverForground"
-                     Color="#FF0D440D" />
+                     Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="MenuBarMouseOverBorder"
-                     Color="Green" />
+                     Color="#404040" />
     <SolidColorBrush x:Key="MenuBarSeperator"
-                     Color="#FF0D440D" />
+                     Color="#404040" />
     <!--Progress Bar-->
     <SolidColorBrush x:Key="ProgressBarColour"
-                     Color="#FF00CF00" />
+                     Color="Black" />
 
     <!--Groupbox-->
     <SolidColorBrush x:Key="GroupBoxForegound"
-                     Color="White" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="GroupBoxBorder"
-                     Color="LightGreen" />
+                     Color="Snow" />
 
     <!--DataGrid - Column Headers-->
     <SolidColorBrush x:Key="DataGridColumnHeaderBackground"
                      Color="Transparent" />
     <SolidColorBrush x:Key="DataGridColumnHeaderForeground"
-                     Color="White" />
+                     Color="Snow" />
     <!--Datagrid - Rows-->
     <SolidColorBrush x:Key="DataGridRowKnownBodyBackground"
-                     Color="#FF829988" />
+                     Color="#FF747474" />
     <SolidColorBrush x:Key="DataGridRowKnownBodyForeGround"
-                     Color="#FF056E26" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="DataGridRowUnknownBodyBackground"
-                     Color="#FF097404" />
+                     Color="#FF444444" />
     <SolidColorBrush x:Key="DataGridRowUnknownBodyForeGround"
-                     Color="Black" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="DataGridRowHighValueBodyBackground"
-                     Color="#FFA9E40C" />
+                     Color="#1E1E1E" />
     <SolidColorBrush x:Key="DataGridRowHighValueBodyForeGround"
-                     Color="Black" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="DataGridRowUserMappedBodyBackground"
-                     Color="#FF024007" />
+                     Color="#FFC7C7C7" />
     <SolidColorBrush x:Key="DataGridRowUserMappedBodyForeGround"
-                     Color="Black" />
+                     Color="#1E1E1E" />
 
     <SolidColorBrush x:Key="DataGridHorizontalGridLine"
-                     Color="#1E1E1E" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="DataGridVerticalGridLine"
-                     Color="#1E1E1E" />
+                     Color="Snow" />
 
     <SolidColorBrush x:Key="ScoopableStar"
-                     Color="#FF37BD37" />
+                     Color="#FF938E8E" />
     <SolidColorBrush x:Key="NonScoopableStar"
-                     Color="#FFE42323" />
+                     Color="Black" />
     <SolidColorBrush x:Key="NeutronStar"
-                     Color="#FF60B7FD" />
+                     Color="Snow" />
 
     <SolidColorBrush x:Key="LowGravity"
-                     Color="#FF37BD37" />
+                     Color="#1E1E1E" />
     <SolidColorBrush x:Key="MedGravity"
-                     Color="#FFEAB80E" />
+                     Color="#FF444444" />
     <SolidColorBrush x:Key="HighGravity"
-                     Color="#FFE42323" />
+                     Color="Snow" />
 
     <!--Primary Controls-->
     <SolidColorBrush x:Key="PrimaryControlBackground"
-                     Color="#FF0D440D" />
+                     Color="#404040" />
     <SolidColorBrush x:Key="PrimaryControlBorder"
-                     Color="White" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="PrimaryControlForeground"
-                     Color="GreenYellow" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="PrimaryControlMouseOver"
                      Color="#FF7A7A7A" />
     <SolidColorBrush x:Key="PrimaryControlPressed"
@@ -98,35 +98,35 @@
 
     <!--Additional Windows-->
     <SolidColorBrush x:Key="SecondaryWindowBackground"
-                     Color="#FF064718" />
+                     Color="#202020" />
     <SolidColorBrush x:Key="SecondaryWindowForeground"
-                     Color="White" />
+                     Color="Snow" />
 
     <!--Addition Window Datagrid-->
     <SolidColorBrush x:Key="SecondaryWindowDataGridSelected"
-                     Color="#7F30702A" />
+                     Color="#BF343434" />
     <SolidColorBrush x:Key="SecondaryWindowSystemNameForeground"
-                     Color="#FF62B80D" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="SecondaryWindowBodyNameForeground"
-                     Color="#FF38F700" />
+                     Color="#FF9E9E9E" />
     <SolidColorBrush x:Key="SecondaryWindowHorizontalGridLine"
-                     Color="#FF008F1A" />
+                     Color="#404040" />
     <SolidColorBrush x:Key="SecondaryWindowColumnHeadForeground"
-                     Color="#FFA0FF84" />
+                     Color="White" />
     <SolidColorBrush x:Key="BioDataSampledForeground"
                      Color="WhiteSmoke" />
     <SolidColorBrush x:Key="BioDataAnaylsedForeground"
-                     Color="#FFDBF008" />
+                     Color="#BF4D4949" />
     <SolidColorBrush x:Key="BodyDataMappedForeground"
-                     Color="#FFDBF008" />
+                     Color="#BF4D4949" />
 
     <!--Addition Window Controls-->
     <SolidColorBrush x:Key="SecondaryWindowControlBackground"
-                     Color="#FF0D440D" />
+                     Color="#404040" />
     <SolidColorBrush x:Key="SecondaryWindowControlBorder"
-                     Color="White" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="SecondaryWindowControlForeground"
-                     Color="GreenYellow" />
+                     Color="Snow" />
     <SolidColorBrush x:Key="SecondaryWindowControlMouseOver"
                      Color="#FF7A7A7A" />
     <SolidColorBrush x:Key="SecondaryWindowControlPressed"

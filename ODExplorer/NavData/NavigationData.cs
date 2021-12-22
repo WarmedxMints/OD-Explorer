@@ -267,7 +267,7 @@ namespace ODExplorer.NavData
             }
             else
             {
-                string[] names = GeBodyNameFromEDSM(e.SystemAddress, e.Body);
+                string[] names = GetBodyNameFromEDSM(e.SystemAddress, e.Body);
                 systemName = names[0];
                 bodyName = names[1];
             }
@@ -361,6 +361,8 @@ namespace ODExplorer.NavData
                 };
             }
 
+            GetEDSMBodyCount(sys);
+
             LastJumpSystem = sys;
 
             CurrentSystem.ClearCollection();
@@ -436,7 +438,7 @@ namespace ODExplorer.NavData
 
                 GetSystemValue(sys);
 
-                SetCurrentSystem(sys);
+                SetCurrentSystem(sys, false);
 
                 return;
             }
@@ -502,7 +504,7 @@ namespace ODExplorer.NavData
             PopulatingRoute = false;
         }
         //Method to set the current system
-        public void SetCurrentSystem(SystemInfo sys)
+        public void SetCurrentSystem(SystemInfo sys, bool getCount = true)
         {
             //Check we aren't already in the system
             SystemInfo currentSystem = CurrentSystem.FirstOrDefault(x => x.SystemAddress == sys.SystemAddress);
@@ -519,7 +521,10 @@ namespace ODExplorer.NavData
             {
                 //Update EDSM Data
                 knownSystem.PolledEDSMValue = false;
-                GetEDSMBodyCount(knownSystem);
+                if (getCount)
+                {
+                    GetEDSMBodyCount(knownSystem);
+                }
                 GetSystemValue(knownSystem);
                 //Make it the current system
                 CurrentSystem.ClearCollection();
@@ -544,7 +549,10 @@ namespace ODExplorer.NavData
             CurrentSystem.ClearCollection();
             CurrentSystem.AddToCollection(sys);
             UpdateRemainingJumpDistace();
-            GetEDSMBodyCount(sys);
+            if (getCount)
+            {
+                GetEDSMBodyCount(sys);
+            }
             //If our system information is missing the main star details, get it from EDSM
             if (string.IsNullOrEmpty(sys.StarClass))
             {
@@ -669,10 +677,10 @@ namespace ODExplorer.NavData
 
                 body.SetBodyNameLocal();
 
-                if (e.BodyType is BodyType.Planet or BodyType.Star)
-                {
-                    CurrentSystem[0].Bodies.AddToCollection(body);
-                }
+                //if (e.BodyType is BodyType.Planet or BodyType.Star)
+                //{
+                //    CurrentSystem[0].Bodies.AddToCollection(body);
+                //}
             }
 
             CurrentBody = body;
@@ -820,7 +828,7 @@ namespace ODExplorer.NavData
             }
         }
 
-        private static string[] GeBodyNameFromEDSM(long systemId, long bodyID)
+        private static string[] GetBodyNameFromEDSM(long systemId, long bodyID)
         {
             string[] ret = { "UNKOWN", "-" };
             string path = $"https://www.edsm.net/api-system-v1/bodies?systemId64={systemId}";

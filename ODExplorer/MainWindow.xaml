@@ -14,6 +14,7 @@
         FontFamily="Eurostile"
         FontSize="18"
         Background="{DynamicResource PrimaryBackground}"
+        Foreground="{DynamicResource PrimaryForeground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Loaded="Window_Loaded"
         WindowStyle="SingleBorderWindow"
@@ -47,6 +48,11 @@
                 <x:Type TypeName="CsvParser:CsvType"></x:Type>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground"
+                    Value="{DynamicResource PrimaryForeground}" />
+        </Style>
     </Window.Resources>
 
     <!--Title bar button commands-->
@@ -131,39 +137,39 @@
 
             <Menu Grid.Row="1"
                   Style="{DynamicResource MenuYellow}">
-                <MenuItem Header="File">
+                <MenuItem Header="_File">
                     <MenuItem Header="Import CSV"
                               Click="ImportCSV_Click" />
                     <Separator Style="{DynamicResource Seperator Style}" />
-                    <MenuItem Header="Exit"
+                    <MenuItem Header="E_xit"
                               Click="ExitApp" />
                 </MenuItem>
-                <MenuItem Header="Options">
+                <MenuItem Header="_Options">
                     <MenuItem x:Name="OpenSettings"
-                              Header="Settings"
+                              Header="_Settings"
                               Click="OpenSettings_Click" />
                     <MenuItem x:Name="DisplaySettings"
-                              Header="Display Options"
+                              Header="_Display Options"
                               Click="DisplaySettings_Click" />
                     <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem x:Name="OpenScanData"
-                              Header="Body Scan Data"
+                              Header="_Body Scan Data"
                               Click="OpenScanData_Click" />
                     <MenuItem x:Name="OpenBioData"
-                              Header="Biological Scan Data"
+                              Header="Bi_ological Scan Data"
                               Click="OpenBioData_Click" />
                     <MenuItem x:Name="OpenGeoData"
-                              Header="Geological Scan Data"
+                              Header="_Geological Scan Data"
                               Click="OpenGeoData_Click" />
                     <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem x:Name="ShowCSBHeaders"
-                              Header="Show CSB Headers"
+                              Header="Show _CSB Headers"
                               ToolTip="Show Headers in the Current System Bodies Grid"
                               IsCheckable="True"
                               IsChecked="{Binding AppSettings.Value.DisplaySettings.ShowCSBHeaders}" />
                     <Separator Style="{DynamicResource Seperator Style}" />
                     <MenuItem x:Name="OpenAboutbox"
-                              Header="About"
+                              Header="_About"
                               Click="OpenAboutbox_Click" />
                 </MenuItem>
             </Menu>
@@ -204,8 +210,8 @@
                                 <TextBlock Text="HYPERSPACE"
                                            FontWeight="Normal"
                                            TextAlignment="Center"
-                                           Background="{DynamicResource Font Colour}"
-                                           Foreground="{DynamicResource MainWindowBackground}"
+                                           Background="{DynamicResource DataGridRowHighValueBodyBackground}"
+                                           Foreground="{DynamicResource DataGridRowHighValueBodyForeGround}"
                                            VerticalAlignment="Center"
                                            Visibility="{Binding NavData.InHyperSpace, Converter={StaticResource BoolToVis}}" />
 
@@ -359,6 +365,21 @@
                                                                                 Margin="2,0,2,0"
                                                                                 VerticalAlignment="Center">
 
+                                                                        <TextBlock Text="{Binding AtmosphereType, Converter={StaticResource AtmoshpereTypeToString}}"
+                                                                                   VerticalAlignment="Center"
+                                                                                   TextAlignment="Left"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToDouble}, ConverterParameter=70}"
+                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                   FontSize="17">
+                                                                            <TextBlock.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="HasAtmosphere" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowAtmosphereType" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Visibility>
+                                                                        </TextBlock>
+
                                                                         <TextBlock Text="{Binding SurfaceTempString}"
                                                                                    VerticalAlignment="Center"
                                                                                    TextAlignment="Center"
@@ -430,7 +451,7 @@
                                                                                 <ImageBrush ImageSource="/Images/saturn.png" />
                                                                             </Rectangle.OpacityMask>
                                                                         </Rectangle>
-                                                                        
+
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Visibility="{Binding GeologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
                                                                                    Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
@@ -568,7 +589,7 @@
                                     </DataGridTextColumn>
 
                                     <DataGridTextColumn Width="SizeToCells"
-                                                        FontSize="15"                                                        
+                                                        FontSize="15"
                                                         Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistToSystem, Converter={StaticResource BoolToVis}}"
                                                         Binding="{Binding Path=JumpDistanceToSystem, Converter={StaticResource JumpRangToString}, ConverterParameter=N2}">
                                         <DataGridTextColumn.ElementStyle>
@@ -576,7 +597,7 @@
                                                 <Setter Property="TextAlignment"
                                                         Value="Right" />
                                                 <Setter Property="Margin"
-                                                        Value="5,0,5,0" />                                                
+                                                        Value="5,0,5,0" />
                                             </Style>
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
@@ -599,7 +620,7 @@
                                                   GridLinesVisibility="All"
                                                   VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
                                                   RowStyle="{DynamicResource RowStyle Bodies}"
-                                                  Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}" >
+                                                  Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}">
                                             <DataGrid.Columns>
                                                 <DataGridTemplateColumn Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>

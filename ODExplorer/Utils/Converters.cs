@@ -1,8 +1,7 @@
 ﻿using EliteJournalReader;
-using ODExplorer.AppSettings;
+using ODExplorer.NavData;
 using ParserLibrary;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -84,10 +83,30 @@ namespace ODExplorer.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is null)
+            {
+                return (Visibility)Enum.Parse(typeof(Visibility), (string)parameter);
+            }
             int val = (int)value;
             Visibility visibility = (Visibility)Enum.Parse(typeof(Visibility), (string)parameter);
 
             return val > 0 ? Visibility.Visible : visibility;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    public class DoubleToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double val = (double)value;
+            Visibility visibility = (Visibility)Enum.Parse(typeof(Visibility), (string)parameter);
+
+            return val > 0.001 ? Visibility.Visible : visibility;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -197,7 +216,7 @@ namespace ODExplorer.Utils
                 return null;
             }
 
-            return myEnum.ToString().SplitCamelCase(); 
+            return myEnum.ToString().SplitCamelCase();
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -442,59 +461,64 @@ namespace ODExplorer.Utils
         }
     }
 
-    public class PlanetClassToImage : IValueConverter
+    [ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
+    internal class ColorToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not PlanetClass)
+            SolidColorBrush c = (SolidColorBrush)value;
+
+            return c.Color;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Color col = (Color)value;
+
+            return new SolidColorBrush(col);
+        }
+
+    }
+
+    public class AstmosphereClassToString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is not AtmosphereClass)
             {
                 return null;
             }
 
-            PlanetClass Planetclass = (PlanetClass)value;
+            AtmosphereClass atmosphereType = (AtmosphereClass)value;
 
-            string uri;
-            switch (Planetclass)
+            string ret = atmosphereType switch
             {
-                case PlanetClass.MetalRichBody:
-                case PlanetClass.HighMetalContentBody:
-                case PlanetClass.RockyBody:
-                case PlanetClass.IcyBody:
-                case PlanetClass.RockyIceBody:
-                    uri = "pack://application:,,,/ODExplorer;component/Images/planet.png";
-                    break;
-
-                case PlanetClass.EarthlikeBody:
-                    uri = "pack://application:,,,/ODExplorer;component/Images/earth.png";
-                    break;
-
-                case PlanetClass.WaterWorld:
-                case PlanetClass.WaterGiant:
-                case PlanetClass.WaterGiantWithLife:
-                    uri = "pack://application:,,,/ODExplorer;component/Images/water.png";
-                    break;
-
-                case PlanetClass.AmmoniaWorld:
-                case PlanetClass.GasGiantWithWaterBasedLife:
-                case PlanetClass.GasGiantWithAmmoniaBasedLife:
-                case PlanetClass.SudarskyClassIGasGiant:
-                case PlanetClass.SudarskyClassIIGasGiant:
-                case PlanetClass.SudarskyClassIIIGasGiant:
-                case PlanetClass.SudarskyClassIVGasGiant:
-                case PlanetClass.SudarskyClassVGasGiant:
-                case PlanetClass.HeliumRichGasGiant:
-                case PlanetClass.HeliumGasGiant:
-                    uri = "pack://application:,,,/ODExplorer;component/Images/jupiter.png";
-                    break;
-
-                case PlanetClass.EdsmValuableBody:
-                case PlanetClass.Unknown:
-                default:
-                    uri = "pack://application:,,,/ODExplorer;component/Images/language.png";
-                    break;
-            }
-
-            return uri;
+                AtmosphereClass.Unknown => "?",
+                AtmosphereClass.None => "None",
+                AtmosphereClass.NoAtmosphere => "No Atm",
+                AtmosphereClass.SuitableForWaterBasedLife => "SWBL",
+                AtmosphereClass.AmmoniaAndOxygen => "NH\u2083 O\u2082",
+                AtmosphereClass.Ammonia => "NH\u2083",
+                AtmosphereClass.Water => "H\u2082O",
+                AtmosphereClass.CarbonDioxide => "CO\u2082",
+                AtmosphereClass.SulphurDioxide => "SO\u2082",
+                AtmosphereClass.Nitrogen => "N\u2082",
+                AtmosphereClass.WaterRich => "H\u2082O Rich",
+                AtmosphereClass.MethaneRich => "CH\u2084 Rich",
+                AtmosphereClass.AmmoniaRich => "NH\u2083 Rich",
+                AtmosphereClass.CarbonDioxideRich => "CO\u2082 Rich",
+                AtmosphereClass.Methane => "CH\u2084",
+                AtmosphereClass.Helium => "He",
+                AtmosphereClass.SilicateVapour => "Sil Vap",
+                AtmosphereClass.MetallicVapour => "Met Vap",
+                AtmosphereClass.NeonRich => "Ne Rich",
+                AtmosphereClass.ArgonRich => "Ar Rich",
+                AtmosphereClass.Neon => "Ne",
+                AtmosphereClass.Argon => "Ar",
+                AtmosphereClass.Oxygen => "O\u2082",
+                _ => "?",
+            };
+            return ret;
         }
 
 
@@ -503,5 +527,138 @@ namespace ODExplorer.Utils
             throw new NotSupportedException();
         }
     }
-}
 
+    public class StringToUpperCaseFirstCharacter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            CultureInfo ci = new("en-GB", false);
+
+            return value is string input ? ci.TextInfo.ToTitleCase(input.ToLower(ci)) : null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class BoolToStringConverter : BoolToValueConverter<string> { }
+    public class BoolToValueConverter<T> : IValueConverter
+    {
+        public T FalseValue { get; set; }
+        public T TrueValue { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value == null ? FalseValue : (object)((bool)value ? TrueValue : FalseValue);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value != null && value.Equals(TrueValue);
+        }
+    }
+
+    public class DoubleMultiplicationConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double v = (double)value;
+            double timesby = (double)double.Parse((string)parameter);
+
+            return v * timesby;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class PlanetRingTypeConvertor : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string str = (string)value;
+
+            string[] split = str.Split('_');
+
+            return split.Length < 2 ? str : split[1].SplitCamelCase();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class RingNameConvertor : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            SystemBody body = (SystemBody)value;
+
+            int count = body.Rings.Length;
+
+            if (count < 1)
+            {
+                return "";
+            }
+
+            if (body.IsStar)
+            {
+                return count < 2 ? "Belt :" : "Belts :";
+            }
+
+            return count < 2 ? "Ring :" : "Rings :";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class RingMassConvertor : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            double v = (double)values[0];
+            bool IsStar = (bool)values[1];
+
+            if (IsStar)
+            {
+                return v > 7347673090 ? $"{v * 1.360975083881964e-14:N4} Moons" : $"{v / 1000:N0} Km";
+            }
+
+            return $"{v / 1000:N0} Km";
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class RingRadiusConvertor : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            double v = (double)values[0];
+            bool IsStar = (bool)values[1];
+
+            if (IsStar)
+            {
+                return v > 3000000 ? $"{v / 299792458:0.00} ls" : $"{v / 1000:N0} Km";
+            }
+
+            return $"{v / 1000:N0} Km";
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+}

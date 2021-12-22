@@ -110,7 +110,7 @@
                            Text="Icon Credits"
                            VerticalAlignment="Center"
                            Margin="0,5" />
-                
+
                 <StackPanel Grid.Row="3"
                             Grid.Column="1">
 
@@ -259,7 +259,7 @@
                         </Hyperlink>
                         </TextBlock>
                     </StackPanel>
-                    </StackPanel>
+                </StackPanel>
 
                 <StackPanel Grid.Row="3"
                             Grid.Column="3">
@@ -300,7 +300,7 @@
                         </Hyperlink>
                         </TextBlock>
                     </StackPanel>
-                    
+
                     <StackPanel Orientation="Horizontal">
                         <Rectangle Height="18"
                                    Width="18"
@@ -411,9 +411,9 @@
                 <TextBlock  Grid.Row="4"
                             Grid.Column="1"
                             Text="Links"
-                           VerticalAlignment="Center"
-                           Margin="0,5" />
-                
+                            VerticalAlignment="Center"
+                            Margin="0,5" />
+
                 <StackPanel Grid.Row="5"
                             Grid.Column="1">
 
@@ -453,7 +453,7 @@
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="5"
                             Grid.Column="3">
                     <TextBlock VerticalAlignment="Center"
@@ -492,7 +492,7 @@
                         Height="20"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
-                        Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                        Command="{x:Static SystemCommands.CloseWindowCommand}" />
             </Grid>
         </Grid>
     </Border>

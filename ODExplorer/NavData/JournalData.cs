@@ -97,6 +97,9 @@ namespace ODExplorer.NavData
             _navData = navData;
             //Start watcher
             _ = _watcher.StartWatching().ConfigureAwait(false);
+#if DEBUG
+            ReadNavRouteJson();
+#endif
         }
 
         private void FileHeader(object sender, FileheaderEvent.FileheaderEventArgs e)
