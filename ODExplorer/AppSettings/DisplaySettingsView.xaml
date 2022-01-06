@@ -319,7 +319,7 @@
                       Margin="10,0,0,0"
                       Padding="10"
                       Style="{DynamicResource SystemBorder}"
-                      Header="NOTEABLE BODY OPTIONS">
+                      Header="NOTABLE BODY OPTIONS">
                 <StackPanel VerticalAlignment="Center"
                             HorizontalAlignment="Stretch">
 

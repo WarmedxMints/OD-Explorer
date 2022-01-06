@@ -111,7 +111,7 @@ namespace ODExplorer.AppSettings
 
             SystemBody body6 = new()
             {
-                BodyNameLocal = "HIGH GRAVITY & NOTEABLE",
+                BodyNameLocal = "HIGH GRAVITY & NOTABLE",
                 PlanetClass = EliteJournalReader.PlanetClass.IcyBody,
                 Wasmapped = true,
                 Landable = true,
