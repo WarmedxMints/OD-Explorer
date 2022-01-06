@@ -106,6 +106,9 @@ namespace ODExplorer
         public CsvController CsvController { get; set; } = new();
         public NavigationData NavData { get; private set; } = new();
 
+        private bool showCurrentSystemTable;
+        public bool ShowCurrenSystemTable { get => showCurrentSystemTable; set { showCurrentSystemTable = value; OnPropertyChanged(); } }
+
         #region Window Methods
         public MainWindow()
         {
@@ -115,6 +118,8 @@ namespace ODExplorer
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+
+            NavData.CurrentSystem.CollectionChanged += CurrentSystem_CollectionChanged;
 
             NavData.AppSettings = AppSettings;
 
@@ -127,6 +132,19 @@ namespace ODExplorer
             UpdateLabel();
 
             TimerDisplay.Text = "00 : 00";
+
+            NavData.OnCurrentSystemChanged += NavData_OnCurrentSystemChanged;
+        }
+
+        private void NavData_OnCurrentSystemChanged(SystemInfo systemInfo)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (AppSettings.Value.AutoSelectNextCsvSystem)
+                {
+                    CsvController.NavData_OnCurrentSystemChanged(systemInfo);
+                }
+            });
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -142,6 +160,10 @@ namespace ODExplorer
             _ = AppSettings.SaveSettings();
         }
         #endregion
+        private void CurrentSystem_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ShowCurrenSystemTable = NavData.CurrentSystem.Count > 0;
+        }
 
         private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -279,6 +301,7 @@ namespace ODExplorer
 
             if ((bool)displaySettings.ShowDialog())
             {
+                NavData.RefreshBodiesStatus();
                 CurrentSystemGrid.Items.Refresh();
             }
         }
@@ -462,10 +485,17 @@ namespace ODExplorer
 
         private void CopySystemToClipboard(ExplorationTarget e)
         {
-            CSVParserStatus.Text = $"\'{e.SystemName}\' Copied To Clipboard";
-            Clipboard.SetText(e.SystemName);
-
-            ((Storyboard)FindResource("FadeOut")).Begin(CSVParserStatus);
+            try
+            {
+                CSVParserStatus.Text = $"\'{e.SystemName}\' Copied To Clipboard";
+                Clipboard.SetDataObject(e.SystemName);
+                Clipboard.SetText(e.SystemName);
+                ((Storyboard)FindResource("FadeOut")).Begin(CSVParserStatus);
+            }
+            catch (Exception ex)
+            {
+                _ = MessageBox.Show($"Erroe sending System Name to Clipboard\nError : {ex.Message}");
+            }
         }
 
         private void Rectangle_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

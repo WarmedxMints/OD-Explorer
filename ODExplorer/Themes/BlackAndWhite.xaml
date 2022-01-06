@@ -64,7 +64,10 @@
                      Color="#FFC7C7C7" />
     <SolidColorBrush x:Key="DataGridRowUserMappedBodyForeGround"
                      Color="#1E1E1E" />
-
+    <SolidColorBrush x:Key="DataGridRowNoteableBodyBackground"
+                     Color="#FF4C4F4C" />
+    <SolidColorBrush x:Key="DataGridRowNoteableBodyForeGround"
+                     Color="Snow" />
     <SolidColorBrush x:Key="DataGridHorizontalGridLine"
                      Color="Snow" />
     <SolidColorBrush x:Key="DataGridVerticalGridLine"

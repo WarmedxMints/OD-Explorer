@@ -1,4 +1,5 @@
-﻿using ODExplorer.Utils;
+﻿using ODExplorer.AppSettings.NoteableBody;
+using ODExplorer.Utils;
 using System.ComponentModel;
 
 namespace ODExplorer.AppSettings
@@ -8,12 +9,16 @@ namespace ODExplorer.AppSettings
         private DisplaySettings displaySettings = new();
         public DisplaySettings DisplaySettings { get => displaySettings; set { displaySettings = value; OnPropertyChanged(); } }
 
+        private Noteable noteableSettings = new();
+        public Noteable NotableSettings { get => noteableSettings; set { noteableSettings = value; OnPropertyChanged(); } }
+
         private SortCategory sortCategory = SortCategory.Value;
         private ListSortDirection sortDirection = ListSortDirection.Descending;
         private int worthMappingValue = 300000;
         private int worthMappingDistance;
         private bool ignoreNonBodies = true;
         private bool autoCopyCsvSystemToClipboard = true;
+        private bool autoSelectNextCsvSystem = true;
         private bool showParser;
         private Temperature temperatureUnit;
         private double uiScale = 1;
@@ -26,6 +31,7 @@ namespace ODExplorer.AppSettings
         public bool IgnoreNonBodies { get => ignoreNonBodies; set { ignoreNonBodies = value; OnPropertyChanged(); } }
         public bool ShowParser { get => showParser; set { showParser = value; OnPropertyChanged(); } }
         public bool AutoCopyCsvSystemToClipboard { get => autoCopyCsvSystemToClipboard; set { autoCopyCsvSystemToClipboard = value; OnPropertyChanged(); } }
+        public bool AutoSelectNextCsvSystem { get => autoSelectNextCsvSystem; set { autoSelectNextCsvSystem = value; OnPropertyChanged(); } }
         public Temperature TemperatureUnit { get => temperatureUnit; set { temperatureUnit = value; OnPropertyChanged(); } }
         public double UiScale { get => uiScale; set { uiScale = value; OnPropertyChanged(); } }
         public bool ShowAdditionalWindowsInTaskBar { get => showAdditionWindowsInTaskBar; set { showAdditionWindowsInTaskBar = value; OnPropertyChanged(); } }

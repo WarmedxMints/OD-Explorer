@@ -97,6 +97,9 @@ namespace ODExplorer.AppSettings
         public void CloneValues()
         {
             ClonedValues = Value.Clone();
+            ClonedValues.NotableSettings.Atmospheres.UpdateMenuItems();
+            ClonedValues.NotableSettings.Volcanism.UpdateMenuItems();
+            ClonedValues.NotableSettings.NoteablePresets.BuildMenu();
         }
 
         public void SetClonedValues()
@@ -106,6 +109,7 @@ namespace ODExplorer.AppSettings
             Value = clonedValues;
             //To prompt the onpropertyupdated for ui update
             Value.DisplaySettings = clonedValues.DisplaySettings;
+            Value.NotableSettings = clonedValues.NotableSettings;
 
             ClonedValues = null;
 

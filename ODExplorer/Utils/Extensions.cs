@@ -12,6 +12,19 @@ namespace ODExplorer.Utils
 {
     public static class Extensions
     {
+        public static string GetDescription(this Enum value)
+        {
+            System.Reflection.FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
+            if (fieldInfo == null)
+            {
+                return value.ToString();
+            }
+
+            object[] attribArray = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            return attribArray.Length == 0 ? value.ToString() : ((DescriptionAttribute)attribArray[0]).Description;
+        }
+
         public static void Sort<T>(this ObservableCollection<T> collection) where T : IComparable
         {
             List<T> sorted = collection.OrderBy(x => x).ToList();

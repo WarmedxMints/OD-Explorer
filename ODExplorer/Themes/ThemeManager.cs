@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using ODExplorer.AppSettings;
-using ODExplorer.Utils;
+using ODExplorer.Utils.Converters;
 
 namespace ODExplorer.Themes
 {

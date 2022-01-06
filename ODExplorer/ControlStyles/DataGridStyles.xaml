@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ndata="clr-namespace:ODExplorer.NavData"
-                    xmlns:utils="clr-namespace:ODExplorer.Utils"
+                    xmlns:converters="clr-namespace:ODExplorer.Utils.Converters"
                     xmlns:CsvParser="clr-namespace:ParserLibrary;assembly=ParserLibrary">
 
-    <utils:IntToVisibilityConverter x:Key="intToVis" />
+    <converters:IntToVisibilityConverter x:Key="intToVis" />
 
     <!--#region DataGrid settings-->
     <Style x:Key="DataGrid Settings"
@@ -250,6 +250,13 @@
                         Value="{DynamicResource DataGridRowUserMappedBodyBackground}" />
                 <Setter Property="Foreground"
                         Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.Noteable}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowNoteableBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
             </DataTrigger>
             <Trigger Property="IsSelected"
                      Value="True">

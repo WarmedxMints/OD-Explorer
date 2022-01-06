@@ -21,6 +21,11 @@ namespace ODExplorer.NavData
 {
     public class NavigationData : PropertyChangeNotify
     {
+        #region Events
+        public delegate void OnCurrentSystemChange(SystemInfo systemInfo);
+
+        public event OnCurrentSystemChange OnCurrentSystemChanged;
+        #endregion
         #region Properties
         public Settings AppSettings { get; set; }
 
@@ -33,30 +38,31 @@ namespace ODExplorer.NavData
         public ScannedBioData ScannedBio { get => _scannedBioData; set { _scannedBioData = value; OnPropertyChanged(); } }
 
         //Scneed Geo Data
-        private ScannedGeoData scannedGeo = new();
-        public ScannedGeoData ScannedGeo { get => scannedGeo; set { scannedGeo = value; OnPropertyChanged(); } }
+        private ScannedGeoData _scannedGeo = new();
+        public ScannedGeoData ScannedGeo { get => _scannedGeo; set { _scannedGeo = value; OnPropertyChanged(); } }
 
         //Collection for the current system
-        private ObservableCollection<SystemInfo> currentSystem = new();
-        public ObservableCollection<SystemInfo> CurrentSystem { get => currentSystem; set { currentSystem = value; OnPropertyChanged(); } }
+        private ObservableCollection<SystemInfo> _currentSystem = new();
+        public ObservableCollection<SystemInfo> CurrentSystem { get => _currentSystem; set { _currentSystem = value; OnPropertyChanged(); } }
 
         //Collection for the systems in route between the current system and the destination
-        private ObservableCollection<SystemInfo> systemsInRoute = new();
-        public ObservableCollection<SystemInfo> SystemsInRoute { get => systemsInRoute; set { systemsInRoute = value; OnPropertyChanged(); } }
+        private ObservableCollection<SystemInfo> _systemsInRoute = new();
+        public ObservableCollection<SystemInfo> SystemsInRoute { get => _systemsInRoute; set { _systemsInRoute = value; OnPropertyChanged(); } }
 
         //This collection is a backup just in case the user targets another system not in the route and then
         //re-targets the next system in the calulated route
-        private ObservableCollection<SystemInfo> _backupRoute { get; set; } = new();
+        private ObservableCollection<SystemInfo> _backupRoute = new();
         //This is a reference to the system the user started a hyperspace jump to
-        public SystemInfo LastJumpSystem { get; set; }
+        private SystemInfo _lastJumpSystem;
+        public SystemInfo LastJumpSystem { get => _lastJumpSystem; set { _lastJumpSystem = value; OnPropertyChanged("HyperSpaceText"); } }
+        public string HyperSpaceText => InHyperSpace ? LastJumpSystem == null ? "HYPERSPACE" : $"JUMPING TO {LastJumpSystem.SystemName}" : "WAITING FOR DATA";
         //The body we are current on/in orbit of if any
         public SystemBody CurrentBody { get; set; }
         //Exploration Values are tweaked in Odyssey       
-        public bool Odyssey { get; set; }
+        public static bool Odyssey { get; set; }
         //Bool set to true when the user is jumping
-        private bool _inHyperSpace { get; set; }
-
-        public bool InHyperSpace { get => _inHyperSpace; set { _inHyperSpace = value; OnPropertyChanged(); CurrentBody = null; } }
+        private bool _inHyperSpace;
+        public bool InHyperSpace { get => _inHyperSpace; set { _inHyperSpace = value; OnPropertyChanged(); OnPropertyChanged("HyperSpaceText"); CurrentBody = null; } }
 
         //This is set to true when we are populating a route for NavRoute.json as an fsd targeted event will also be called
         //and we would want to ignore it in that case.
@@ -118,8 +124,10 @@ namespace ODExplorer.NavData
             //Add the body to the current system
             SystemBody bodyToAdd = AddBodyToCurrentSystem(true, false, body);
 
+
             if (bodyToAdd is not null)
             {
+                bodyToAdd.UpdateStatus();
                 ScanValue.UpdateMainStarValue(CurrentSystem[0]);
             }
         }
@@ -211,9 +219,10 @@ namespace ODExplorer.NavData
             //Add the detected signal count to our body
             body.BiologicalSignals = bio;
             body.GeologicalSignals = geo;
+            body.UpdateStatus();
         }
 
-        public void SAASignalsFound(SAASignalsFoundEvent.SAASignalsFoundEventArgs e)
+        public async Task SAASignalsFound(SAASignalsFoundEvent.SAASignalsFoundEventArgs e)
         {
             //Failsafe which should never be needed but just in case check the event contains data 
             //and we have a current system.
@@ -222,12 +231,22 @@ namespace ODExplorer.NavData
                 return;
             }
 
+            int i = 0;
+        TryAgain:
+
+            if (i > 20)
+            {
+                return;
+            }
+
+            await Task.Delay(100);
             //Find the body we have just scanned in our collection on known bodies
             SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyName.ToUpperInvariant() == e.BodyName.ToUpperInvariant());
 
             if (body == default)
             {
-                return;
+                i++;
+                goto TryAgain;
             }
 
             int geo = 0;
@@ -250,44 +269,30 @@ namespace ODExplorer.NavData
             //Add the detected signal count to our body
             body.BiologicalSignals = bio;
             body.GeologicalSignals = geo;
+            body.UpdateStatus();
         }
 
         public void ScanOrganic(ScanOrganicEvent.ScanOrganicEventArgs e)
         {
-            string systemName = "UNKOWN";
-            string bodyName = "?";
-
-            SystemInfo system = CurrentSystem.FirstOrDefault(x => x.SystemAddress == e.SystemAddress);
-            SystemBody body = system?.Bodies.FirstOrDefault(x => x.BodyID == e.Body);
-
-            if (system is not null && body is not null)
+            if (CurrentBody == null)
             {
-                systemName = system.SystemName.ToUpperInvariant();
-                bodyName = body.BodyNameLocal.ToUpperInvariant();
-            }
-            else
-            {
-                string[] names = GetBodyNameFromEDSM(e.SystemAddress, e.Body);
-                systemName = names[0];
-                bodyName = names[1];
+                CurrentBody = GetSystemBodyFromEDSM(e.SystemAddress, e.Body);
             }
 
-            ScannedBio.AddData(systemName, bodyName, e.Species_Localised.ToUpperInvariant(), e.ScanType);
+            ScannedBio.AddData(CurrentBody, e.Species_Localised.ToUpperInvariant(), e.ScanType, e.EliteTimeString);
         }
 
         internal void OnCodexEntry(CodexEntryEvent.CodexEntryEventArgs e)
         {
-            string bodyName = "?";
-
-            if (CurrentBody is not null)
+            if (CurrentBody is null)
             {
-                bodyName = CurrentBody.BodyNameLocal;
+                return;
             }
 
             //Geo Scan
             if (e.SubCategory_Localised.Contains("Geology"))
             {
-                ScannedGeo.AddCodexData(e.System.ToUpperInvariant(), bodyName, e.Name_Localised.ToUpperInvariant(), e.VoucherAmount ?? 0);
+                ScannedGeo.AddCodexData(e.System.ToUpperInvariant(), CurrentBody.BodyName, e.Name_Localised.ToUpperInvariant(), e.VoucherAmount ?? 0);
                 return;
 
 
@@ -296,7 +301,7 @@ namespace ODExplorer.NavData
             //Bio Scan
             if (e.SubCategory_Localised.Contains("Organic"))
             {
-                ScannedBio.AddCodexData(e.System.ToUpperInvariant(), bodyName, e.Name_Localised.ToUpperInvariant());
+                ScannedBio.AddCodexData(CurrentBody, e.EliteTimeString, e.Name_Localised.ToUpperInvariant());
                 return;
             }
         }
@@ -330,12 +335,12 @@ namespace ODExplorer.NavData
 
             //If the system is not in our route, clear the collection
             SystemsInRoute.ClearCollection();
-            //Add the system to our collection
-            SystemsInRoute.AddToCollection(sys);
             //Get the scan value of the system from EDSM
             GetSystemValue(sys);
             sys.SystemPos = GetSystemPosition(sys.SystemName);
             UpdateRemainingJumpDistace();
+            //Add the system to our collection
+            SystemsInRoute.AddToCollection(sys);
         }
 
         //Called when a hyperspace jump is started
@@ -542,6 +547,7 @@ namespace ODExplorer.NavData
                         _ = AddBodyToCurrentSystem(false, true, body);
                     }
                 }
+                OnCurrentSystemChanged?.Invoke(knownSystem);
                 return;
             }
 
@@ -563,6 +569,8 @@ namespace ODExplorer.NavData
             {
                 GetSystemValue(sys);
             }
+
+            OnCurrentSystemChanged?.Invoke(sys);
         }
         //Update remaining jump distance
         private void UpdateRemainingJumpDistace()
@@ -586,6 +594,7 @@ namespace ODExplorer.NavData
                         sys.JumpDistanceToSystem = 0;
                         lastPos = sys.SystemPos;
                         isSol = sys.SystemName.Equals("SOL", StringComparison.OrdinalIgnoreCase);
+                        continue;
                     }
                     sys.JumpDistanceToSystem = SystemPosition.Distance(lastPos, sys.SystemPos);
                     totaldistance += sys.JumpDistanceToSystem;
@@ -666,30 +675,14 @@ namespace ODExplorer.NavData
 
             if (body is null)
             {
-                //We don't about the body but the user may have scanned it previously so no body data has been sent
-                body = new()
-                {
-                    BodyID = e.BodyID,
-                    BodyName = e.Body.ToUpperInvariant(),
-                    SystemAddress = e.SystemAddress,
-                    SystemName = e.StarSystem.ToUpperInvariant()
-                };
-
-                body.SetBodyNameLocal();
-
-                //if (e.BodyType is BodyType.Planet or BodyType.Star)
-                //{
-                //    CurrentSystem[0].Bodies.AddToCollection(body);
-                //}
+                //We don't know about the body but the user may have scanned it previously so no body data has been sent
+                body = GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
             }
 
             CurrentBody = body;
         }
 
-        internal void OnSupercruiseEntry(SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
-        {
-            CurrentBody = null;
-        }
+        internal void OnSupercruiseEntry() => CurrentBody = null;
 
         internal void SetCurrentBody(LocationEvent.LocationEventArgs e)
         {
@@ -699,14 +692,13 @@ namespace ODExplorer.NavData
                 return;
             }
 
-            SystemBody body = new()
+            SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
+
+            if (body is null)
             {
-                BodyID = e.BodyID,
-                BodyNameLocal = e.Body.Remove(0, e.StarSystem.Length).ToUpperInvariant(),
-                BodyName = e.Body,
-                SystemAddress = e.SystemAddress,
-                SystemName = e.StarSystem
-            };
+
+                body = GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
+            }
 
             CurrentBody = body;
         }
@@ -800,7 +792,7 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="system"></param>
         /// <returns></returns>
-        private void GetEDSMBodyCount(SystemInfo system)
+        private static void GetEDSMBodyCount(SystemInfo system)
         {
             string path = $"https://www.edsm.net/api-system-v1/bodies?systemName={system.SystemName}";
 
@@ -828,9 +820,9 @@ namespace ODExplorer.NavData
             }
         }
 
-        private static string[] GetBodyNameFromEDSM(long systemId, long bodyID)
+        private static SystemBody GetSystemBodyFromEDSM(long systemId, long bodyID)
         {
-            string[] ret = { "UNKOWN", "-" };
+            SystemBody ret = new();
             string path = $"https://www.edsm.net/api-system-v1/bodies?systemId64={systemId}";
 
             string json = GetEDSMJson(path);
@@ -849,14 +841,25 @@ namespace ODExplorer.NavData
 
                 JObject msg = JObject.Parse(json);
 
+                ret.SystemAddress = msg["id64"].ToObject<long>();
+                ret.SystemName = msg["name"].ToObject<string>().ToUpperInvariant();
+
                 JArray Bodies = msg["bodies"] as JArray;
 
-                foreach (JToken body in Bodies)
+                foreach (JObject body in Bodies)
                 {
                     if ((int)body["bodyId"] == bodyID)
                     {
-                        ret[0] = msg["name"].ToObject<string>().ToUpperInvariant();
-                        ret[1] = body["name"].ToObject<string>().ToUpperInvariant();
+                        ret.BodyID = body["bodyId"].ToObject<int>();
+                        ret.BodyName = body["name"].ToObject<string>().ToUpperInvariant();
+                        ret.SetBodyNameLocal();
+                        ret.PlanetClass = EnumHelpers.ToEnum(body["subType"].ToObject<string>(), PlanetClass.Unknown);
+                        ret.AtmosphereDescrtiption = body["atmosphereType"].ToObject<string>();
+                        ret.Volcanism = body["volcanismType"].ToObject<string>();
+                        ret.SurfacePressure = body["surfacePressure"].ToObject<double>();
+                        ret.SurfaceGravity = body["gravity"].ToObject<double>();
+                        ret.SurfaceTemp = body["surfaceTemperature"].ToObject<int>();
+
                         return ret;
                     }
                 }

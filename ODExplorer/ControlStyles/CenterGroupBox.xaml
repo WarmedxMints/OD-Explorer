@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:utils="clr-namespace:ODExplorer.Utils">
+                    xmlns:utils="clr-namespace:ODExplorer.Utils.Converters">
 
     <utils:CenterBorderGapMaskConverter x:Key="CenterBorderGapMaskConverter" />
 

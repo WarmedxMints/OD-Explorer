@@ -11,7 +11,7 @@
         x:Name="ODExplorer"
         Height="850"
         Width="950"
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="18"
         Background="{DynamicResource PrimaryBackground}"
         Foreground="{DynamicResource PrimaryForeground}"
@@ -21,7 +21,6 @@
         StateChanged="MainWindowStateChangeRaised"
         Closing="Window_Closing"
         WindowStartupLocation="CenterScreen">
-
     <!--Add the WindowChrome object-->
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" />
@@ -207,13 +206,30 @@
                                   Margin="0,0,0,5"
                                   Padding="5,5,5,5">
                             <Grid>
-                                <TextBlock Text="HYPERSPACE"
+                                <TextBlock Text="{Binding NavData.HyperSpaceText}"
                                            FontWeight="Normal"
                                            TextAlignment="Center"
-                                           Background="{DynamicResource DataGridRowHighValueBodyBackground}"
-                                           Foreground="{DynamicResource DataGridRowHighValueBodyForeGround}"
                                            VerticalAlignment="Center"
-                                           Visibility="{Binding NavData.InHyperSpace, Converter={StaticResource BoolToVis}}" />
+                                           TextWrapping="Wrap"
+                                           Visibility="{Binding ShowCurrenSystemTable, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Background"
+                                                    Value="{DynamicResource PrimaryForeground}" />
+                                            <Setter Property="Foreground"
+                                                    Value="{DynamicResource PrimaryBackground}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="Text"
+                                                             Value="WAITING FOR DATA">
+                                                    <Setter Property="Background"
+                                                            Value="{DynamicResource PrimaryBackground}" />
+                                                    <Setter Property="Foreground"
+                                                            Value="{DynamicResource PrimaryForeground}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
 
                                 <DataGrid ItemsSource="{Binding NavData.CurrentSystem}"
                                           Style="{DynamicResource DataGrid Settings}"
@@ -223,7 +239,7 @@
                                           PreviewMouseWheel="DataGrid_PreviewMouseWheel"
                                           Loaded="Datagrid_Loaded"
                                           Unloaded="Datagrid_Unloaded"
-                                          Visibility="{Binding NavData.InHyperSpace, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}"
+                                          Visibility="{Binding ShowCurrenSystemTable, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
                                           x:Name="CurrentSystemGrid">
                                     <DataGrid.Columns>
                                         <DataGridTemplateColumn Width="70">
@@ -1012,20 +1028,28 @@
                            FontSize="16"
                            Visibility="{Binding NavData.PopulatingRoute, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}" />
 
-                <Label Content="Estimated Scan Value : "
+                <Label Content="Estimated Scan Value |"
                        Grid.Column="2"
                        FontSize="16"
                        Foreground="{DynamicResource MenuBarForeground}"
                        VerticalAlignment="Center" />
-                <TextBlock Text="{Binding NavData.ScanValue.EstiatedScanValue, StringFormat={}{0:N0} CR}"
-                           HorizontalAlignment="Stretch"
+                
+                <TextBlock HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource MenuBarForeground}"
                            Grid.Column="3"
-                           FontSize="16"
+                           FontSize="14"
+                           TextWrapping="Wrap"
                            Margin="0,0,5,0"
                            MinWidth="130"
-                           TextAlignment="Right" />
+                           TextAlignment="Right">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}Min  : {0:N0} CR&#x0a;Max : {1:N0} CR">
+                            <Binding Path="NavData.ScanValue.EstimatedScanValueMin" />
+                            <Binding Path="NavData.ScanValue.EstimatedScanValueMax" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </Grid>
 
         </Grid>

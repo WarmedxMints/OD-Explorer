@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:clr="clr-namespace:System;assembly=System.Runtime"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        xmlns:utils="clr-namespace:ODExplorer.Utils"
+        xmlns:converters="clr-namespace:ODExplorer.Utils.Converters"
         mc:Ignorable="d"
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="16"
         Background="{DynamicResource SecondaryWindowBackground}"
+        Foreground="{DynamicResource SecondaryWindowForeground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OD EXPLORER - BIOLOGICAL DATA"
         Height="600"
@@ -70,7 +71,7 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
-        <utils:RowToIndexConv x:Key="RowToIndexConv" />
+        <converters:RowToIndexConv x:Key="RowToIndexConv" />
     </Window.Resources>
 
     <Border x:Name="MainWindowBorder"
@@ -140,6 +141,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="15" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
@@ -235,6 +237,18 @@
                                 </MultiBinding>
                             </DataGridTextColumn.Binding>
                         </DataGridTextColumn>
+                        <DataGridTextColumn Header="VALUE"
+                                            Width="70"
+                                            Binding="{Binding Path=Value, StringFormat={}{0:N0}}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Right" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="SCAN STATUS"
                                             Width="150"
                                             Binding="{Binding Path=Status}">
@@ -264,16 +278,36 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button Grid.Row="2"
-                        Grid.Column="2"
-                        Width="100"
-                        Height="25"
-                        Style="{DynamicResource SecondaryWindowButtonStyle}"
-                        x:Name="ClearAllData"
-                        Content="CLEAR ALL DATA"
-                        HorizontalAlignment="Right"
-                        Click="ClearAllData_Click"
-                        Margin="0,0,25,0" />
+                <Grid Grid.Row="3"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{Binding ScannedBioData.TotalValue, StringFormat={}TOTAL VALUE (WITHOUT BONUS) : {0:N0} CR}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left" />
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Column="2"
+                                HorizontalAlignment="Right">
+                        <Button x:Name="ExportCSV"
+                                Width="100"
+                                Height="25"
+                                Style="{DynamicResource SecondaryWindowButtonStyle}"
+                                Content="EXPORT TO CSV"
+                                Click="ExportCSV_Click" />
+                        <Button Grid.Column="2"
+                                Width="100"
+                                Height="25"
+                                Style="{DynamicResource SecondaryWindowButtonStyle}"
+                                x:Name="ClearAllData"
+                                Content="CLEAR ALL DATA"
+                                Click="ClearAllData_Click"
+                                Margin="25,0" />
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
     </Border>

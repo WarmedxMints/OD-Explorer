@@ -2,9 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ndata="clr-namespace:ODExplorer.NavData"
                     xmlns:settings="clr-namespace:ODExplorer.AppSettings"
-                    xmlns:utils="clr-namespace:ODExplorer.Utils">
+                    xmlns:converters="clr-namespace:ODExplorer.Utils.Converters">
     <settings:Settings x:Key="AppSettings" />
-    <utils:GravityToColourConvertor x:Key="gravToColour" />
+    <converters:GravityToColourConvertor x:Key="gravToColour" />
 
     <Style x:Key="DataGridFont"
            TargetType="{x:Type TextBlock}">
@@ -66,7 +66,7 @@
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="FontFamily"
-                Value="Eurostile" />
+                Value="{StaticResource Eurostile}" />
         <Setter Property="ItemsPanel"
                 Value="{DynamicResource MenuItemPanelTemplate}" />
     </Style>
@@ -112,6 +112,11 @@
                          Value="{x:Static ndata:DiscoveryStatus.MappedByUser}">
                 <Setter Property="Fill"
                         Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.Noteable}">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -1104,6 +1109,74 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style BasedOn="{StaticResource {x:Type Button}}"
+           TargetType="{x:Type Button}"
+           x:Key="EnumFlagButton">
+        <Setter Property="Foreground"
+                Value="{DynamicResource PrimaryControlForeground}" />
+        <Setter Property="Background"
+                Value="{DynamicResource PrimaryControlBackground}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryControlBorder}" />
+        <Setter Property="FontSize"
+                Value="10" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="border"
+                            BorderThickness="1"
+                            Padding="2"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="1"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="BorderThickness"
+                                    Value="5" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryControlBorder}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="BorderThickness"
+                                    Value="20" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryControlBackground}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsDefaulted"
+                                 Value="True">
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryBorder}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="border"
+                                    Property="Opacity"
+                                    Value="0.7" />
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <!--#endregion-->
 
     <!--#region Menu Bar Style-->
@@ -1133,6 +1206,10 @@
     </Style>
     <Style x:Key="{x:Type MenuItem}"
            TargetType="{x:Type MenuItem}">
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -1167,11 +1244,10 @@
                                   Margin="4,0,6,0"
                                   x:Name="GlyphPanel"
                                   VerticalAlignment="Center">
-                                <Path x:Name="GlyphPanelpath"
-                                      VerticalAlignment="Center"
-                                      Fill="{TemplateBinding Foreground}"
-                                      Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z"
-                                      FlowDirection="LeftToRight" />
+                                <Border x:Name="GlyphPanelpath"
+                                        Width="7"
+                                        Height="7"
+                                        Background="{DynamicResource PrimaryControlForeground}" />
                             </Grid>
 
                             <!-- Content for the menu text etc -->
@@ -1207,7 +1283,7 @@
                                    Focusable="false"
                                    PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                 <Border x:Name="SubMenuBorder"
-                                        BorderBrush="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}"
+                                        BorderBrush="{DynamicResource PrimaryControlBorder}"
                                         BorderThickness="1"
                                         Padding="2,2,2,2">
                                     <Grid x:Name="SubMenu"
@@ -1487,7 +1563,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="Eurostile" />
+                Value="{StaticResource Eurostile}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
                 Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
@@ -1645,7 +1721,7 @@
         <Setter Property="BorderBrush"
                 Value="{DynamicResource PrimaryBorder}" />
         <Setter Property="FontFamily"
-                Value="EuroStile" />
+                Value="{StaticResource Eurostile}" />
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="Template">
@@ -1673,4 +1749,217 @@
         </Setter>
     </Style>
 
+    <Style x:Key="EnumFlagMenuItem"
+           x:Name="EnumFlagMenuItemStyle"
+           TargetType="{x:Type MenuItem}">
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="Col0"
+                                                  MinWidth="17"
+                                                  Width="Auto"
+                                                  SharedSizeGroup="MenuItemIconColumnGroup" />
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="MenuTextColumnGroup" />
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="MenuItemIGTColumnGroup" />
+                                <ColumnDefinition x:Name="Col3"
+                                                  Width="14" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- ContentPresenter to show an Icon if needed -->
+                            <ContentPresenter Grid.Column="0"
+                                              Margin="4,0,6,0"
+                                              x:Name="Icon"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Icon" />
+
+                            <!-- Glyph is a checkmark if needed for a checkable menu -->
+                            <Grid Grid.Column="0"
+                                  Visibility="Hidden"
+                                  Margin="4,0,6,0"
+                                  x:Name="GlyphPanel"
+                                  VerticalAlignment="Center">
+                                <Border x:Name="GlyphPanelpath"
+                                        Width="7"
+                                        Height="7"
+                                        Background="{DynamicResource PrimaryControlForeground}" />
+                            </Grid>
+
+                            <!-- Content for the menu text etc -->
+                            <ContentPresenter Grid.Column="1"
+                                              Margin="{TemplateBinding Padding}"
+                                              x:Name="HeaderHost"
+                                              RecognizesAccessKey="True"
+                                              ContentSource="Header" />
+
+                            <!-- Content for the menu IGT -->
+                            <ContentPresenter Grid.Column="2"
+                                              Margin="8,1,8,1"
+                                              x:Name="IGTHost"
+                                              ContentSource="InputGestureText"
+                                              VerticalAlignment="Center" />
+
+                            <!-- Arrow drawn path which points to the next level of the menu -->
+                            <Grid Grid.Column="3"
+                                  Margin="4,0,6,0"
+                                  x:Name="ArrowPanel"
+                                  VerticalAlignment="Center">
+                                <Path x:Name="ArrowPanelPath"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Fill="{TemplateBinding Foreground}"
+                                      Data="M0,0 L0,8 L4,4 z" />
+                            </Grid>
+
+                            <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
+                            <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Right"
+                                   x:Name="SubMenuPopup"
+                                   Focusable="false"
+                                   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                <Border x:Name="SubMenuBorder"
+                                        BorderBrush="{DynamicResource PrimaryControlBorder}"
+                                        BorderThickness="1"
+                                        Padding="2,2,2,2">
+                                    <Grid x:Name="SubMenu"
+                                          Grid.IsSharedSizeScope="True">
+                                        <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                                        <StackPanel IsItemsHost="True"
+                                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </Border>
+
+                    <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+                    <ControlTemplate.Triggers>
+                        <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+                        <Trigger Property="Role"
+                                 Value="TopLevelHeader">
+                            <Setter Property="Padding"
+                                    Value="6,1,6,1" />
+                            <Setter Property="Placement"
+                                    Value="Bottom"
+                                    TargetName="SubMenuPopup" />
+                            <Setter Property="MinWidth"
+                                    Value="0"
+                                    TargetName="Col0" />
+                            <Setter Property="Width"
+                                    Value="Auto"
+                                    TargetName="Col3" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="Icon" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="GlyphPanel" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="IGTHost" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="ArrowPanel" />
+                        </Trigger>
+
+                        <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
+                        <Trigger Property="Role"
+                                 Value="TopLevelItem">
+                            <Setter Property="Padding"
+                                    Value="6,1,6,1" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="ArrowPanel" />
+                        </Trigger>
+
+                        <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
+                        <Trigger Property="Role"
+                                 Value="SubmenuHeader">
+                            <Setter Property="DockPanel.Dock"
+                                    Value="Top" />
+                            <Setter Property="Padding"
+                                    Value="0,2,0,2" />
+                        </Trigger>
+
+                        <!-- Role = SubMenuItem : this is a child menu item which has children-->
+                        <Trigger Property="Role"
+                                 Value="SubmenuItem">
+                            <Setter Property="DockPanel.Dock"
+                                    Value="Top" />
+                            <Setter Property="Padding"
+                                    Value="0,2,0,2" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="ArrowPanel" />
+                        </Trigger>
+                        <Trigger Property="IsSuspendingPopupAnimation"
+                                 Value="true">
+                            <Setter Property="PopupAnimation"
+                                    Value="None"
+                                    TargetName="SubMenuPopup" />
+                        </Trigger>
+
+                        <!-- If no Icon is present the we collapse the Icon Content -->
+                        <Trigger Property="Icon"
+                                 Value="{x:Null}">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="Icon" />
+                        </Trigger>
+
+                        <!-- The GlyphPanel contains the CheckMark -->
+                        <Trigger Property="IsChecked"
+                                 Value="true">
+                            <Setter Property="Visibility"
+                                    Value="Visible"
+                                    TargetName="GlyphPanel" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="Icon" />
+                        </Trigger>
+
+                        <!-- Using the system colors for the Menu Highlight and IsEnabled-->
+                        <Trigger Property="IsHighlighted"
+                                 Value="true">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource MenuBarMouseOverBackground}"
+                                    TargetName="Border" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource MenuBarMouseOverForground}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource MenuBarMouseOverBorder}"
+                                    TargetName="Border" />
+                        </Trigger>
+                        <Trigger Property="IsHighlighted"
+                                 Value="false">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource MenuBarBackground}"
+                                    TargetName="Border" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource MenuBarForeground}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource MenuBarBackground}"
+                                    TargetName="Border" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="false">
+                            <Setter Property="Foreground"
+                                    Value="LightGray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

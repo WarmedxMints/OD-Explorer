@@ -86,7 +86,7 @@ namespace ParserLibrary
                 ExplorationTarget target = new()
                 {
                     SystemName = fields[0].ToUpperInvariant(),
-                    Property1 = $"{int.Parse(fields[1], new CultureInfo("en-GB")):N0}", //jumps
+                    Property1 = $"{double.Parse(fields[1], new CultureInfo("en-GB")):N0}", //jumps
                 };
 
                 ret.Targets.Add(target);
@@ -122,12 +122,12 @@ namespace ParserLibrary
                     ret.Targets.Add(target);
                 }
 
-                BodiesInfo bodyinfo = new()
-                {
-                    Body = fields[1].Remove(0, target.SystemName.Length).ToUpperInvariant(),
-                    Distance = $"{double.Parse(fields[2], new CultureInfo("en-GB")):N0}",
-                    Property1 = $"{int.Parse(fields[3], new CultureInfo("en-GB")):N0}",
-                };
+                BodiesInfo bodyinfo = new();
+
+                bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
+                bodyinfo.Distance = $"{double.Parse(fields[2], new CultureInfo("en-GB")):N0}";
+                bodyinfo.Property1 = $"{double.Parse(fields[3], new CultureInfo("en-GB")):N0}";
+                
 
                 if (target.BodiesInfo == null)
                 {
@@ -267,12 +267,12 @@ namespace ParserLibrary
                     ret.Targets.Add(target);
                 }
 
-                BodiesInfo bodyinfo = new()
-                {
-                    Body = fields[1].Remove(0, target.SystemName.Length).ToUpperInvariant(),
-                    Distance = $"{int.Parse(fields[4], new CultureInfo("en-GB")):N0}",
-                    Property1 = $"{int.Parse(fields[6], new CultureInfo("en-GB")):N0}",
-                };
+                BodiesInfo bodyinfo = new();
+
+                bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
+                bodyinfo.Distance = $"{double.Parse(fields[4], new CultureInfo("en-GB")):N0}";
+                bodyinfo.Property1 = $"{double.Parse(fields[6], new CultureInfo("en-GB")):N0}";
+                
 
                 if (target.BodiesInfo == null)
                 {
@@ -296,6 +296,19 @@ namespace ParserLibrary
             }
 
             return Tuple.Create(CsvType.RoadToRiches, false);
+        }
+
+        private static string GetBodyName(string bodyName, string systemName)
+        {            
+            if(bodyName.Length > systemName.Length)
+            {
+                bodyName = bodyName.Remove(0, systemName.Length).ToUpperInvariant();
+
+                return bodyName;
+            }
+
+            return bodyName.ToUpperInvariant();
+
         }
     }
 }

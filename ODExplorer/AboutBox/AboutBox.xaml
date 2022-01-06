@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ODExplorer.AboutBox"
         mc:Ignorable="d"
         Title="ABOUT OD EXPLORER"
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="14"
         Background="{DynamicResource PrimaryBackground}"
         Foreground="{DynamicResource PrimaryForeground}"

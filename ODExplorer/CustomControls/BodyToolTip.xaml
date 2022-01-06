@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:ODExplorer.CustomControls"
              DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Body}"
              mc:Ignorable="d"
-             FontFamily="EuroStile"
+             FontFamily="{StaticResource Eurostile}"
              FontSize="14"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -79,8 +79,13 @@
                 <TextBlock Text="{Binding BodyDescription, Converter={StaticResource StringToUpperFirst}}" />
                 <TextBlock Text="{Binding TidalLock, Converter={StaticResource BoolToTidal}}"
                            Visibility="{Binding TidalLock, Converter={StaticResource BoolToVis}}" />
-                <TextBlock Text="{Binding Volcanism , Converter={StaticResource StringToUpperFirst}}" />
+                <TextBlock Text="{Binding Volcanism , Converter={StaticResource StringToUpperFirst}}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}"/>
                 <TextBlock Text="{Binding Radius, Converter={StaticResource DoubleMutplication}, ConverterParameter=0.001, StringFormat={}Radius : {0:N0} km}" />
+                <TextBlock Text="{Binding MassEM, StringFormat={}Earth Masses : {0:N4}}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="{Binding StellarMass, StringFormat={}Solar Masses : {0:N4}}"
+                           Visibility="{Binding IsStar, Converter={StaticResource BoolToVis}}" />
             </StackPanel>
 
             <Grid Grid.Column="0"
@@ -126,12 +131,17 @@
                         Grid.Row="2"
                         Margin="0,5,10,0">
                 <TextBlock Text="Discovered" />
-                <TextBlock Text="Mapped" />
-                <TextBlock Text="Terraformable" />
+                <TextBlock Text="Mapped"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="Terraformable"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}"/>
                 <TextBlock Text="Landable"
-                           Margin="0,0,0,10" />
+                           Margin="0,0,0,10"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}" />
                 <TextBlock Text="Distance From Arrival" />
                 <TextBlock Text="Atmoshpere Type"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="Description"
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
             </StackPanel>
 
@@ -139,12 +149,17 @@
                         Grid.Row="2"
                         Margin="0,5,10,0">
                 <TextBlock Text="{Binding WasDiscovered, Converter={StaticResource BoolToYesNo}}" />
-                <TextBlock Text="{Binding Wasmapped, Converter={StaticResource BoolToYesNo}}" />
-                <TextBlock Text="{Binding Terraformable, Converter={StaticResource BoolToYesNo}}" />
+                <TextBlock Text="{Binding Wasmapped, Converter={StaticResource BoolToYesNo}}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="{Binding Terraformable, Converter={StaticResource BoolToYesNo}}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
                 <TextBlock Text="{Binding Landable, Converter={StaticResource BoolToYesNo}}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
                            Margin="0,0,0,10" />
                 <TextBlock Text="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls}" />
                 <TextBlock Text="{Binding AtmosphereType, Converter={StaticResource EnumCamelCaseConvertor}}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="{Binding AtmosphereDescrtiption}"
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
             </StackPanel>
 

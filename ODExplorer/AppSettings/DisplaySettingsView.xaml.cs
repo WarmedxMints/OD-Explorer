@@ -1,5 +1,6 @@
 ﻿using EliteJournalReader.Events;
 using ODExplorer.NavData;
+using ODExplorer.TextInputBox;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -110,7 +111,7 @@ namespace ODExplorer.AppSettings
 
             SystemBody body6 = new()
             {
-                BodyNameLocal = "HIGH GRAVITY",
+                BodyNameLocal = "HIGH GRAVITY & NOTEABLE",
                 PlanetClass = EliteJournalReader.PlanetClass.IcyBody,
                 Wasmapped = true,
                 Landable = true,
@@ -122,7 +123,7 @@ namespace ODExplorer.AppSettings
                 SurfaceTemp = 3200,
                 DistanceFromArrivalLs = 18452,
                 MappedValue = 680,
-                Status = DiscoveryStatus.Discovered
+                Status = DiscoveryStatus.Noteable
             };
 
             system.Bodies.Add(body6);
@@ -265,6 +266,19 @@ namespace ODExplorer.AppSettings
             {
                 Settings.ClonedValues.CurrentTheme = Theme.Custom;
                 ExampleGrid.Items.Refresh();
+            }
+        }
+
+        private void SaveCustomPreset_Click(object sender, RoutedEventArgs e)
+        {
+            TextInputMessageBox input = new()
+            {
+                Owner = this
+            };
+
+            if ((bool)input.ShowDialog())
+            {
+                Settings.ClonedValues.NotableSettings.AddCustomPreset(input.InputText);
             }
         }
     }

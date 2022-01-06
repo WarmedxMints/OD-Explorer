@@ -9,7 +9,7 @@
         xmlns:SystemCM="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.TypeConverter"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="18"
         Background="{DynamicResource PrimaryBackground}"
         Title="ED EXPLORER - Settings"
@@ -291,6 +291,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" /> 
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                     </Grid.RowDefinitions>
 
@@ -349,12 +351,27 @@
 
                     <CheckBox Grid.Row="6"
                               Grid.Column="0"
+                              Content="Auto Select Next CSV System"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              FontSize="14"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding AppSettings.ClonedValues.AutoCopyCsvSystemToClipboard}" />
+                    <TextBlock  Grid.Row="6"
+                                Grid.Column="1"
+                                Foreground="{DynamicResource PrimaryForeground}"
+                                FontSize="10"
+                                VerticalAlignment="Center"
+                                Text="When enabled this option will automatically select the next system in a CSV route when you jump to one which is included in said route"
+                                TextWrapping="WrapWithOverflow" />
+                    
+                    <CheckBox Grid.Row="8"
+                              Grid.Column="0"
                               Content="Show Addditional Windows in Taskbar"
                               Foreground="{DynamicResource PrimaryForeground}"
                               FontSize="14"
                               VerticalAlignment="Center"
                               IsChecked="{Binding AppSettings.ClonedValues.ShowAdditionalWindowsInTaskBar}" />
-                    <TextBlock  Grid.Row="6"
+                    <TextBlock  Grid.Row="8"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 FontSize="10"
@@ -362,7 +379,7 @@
                                 Text="When enabled the Biological and Scan Data windows will show in the taskbar"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="8"
+                    <Button Grid.Row="10"
                             Grid.Column="0"
                             Content="Set to Default"
                             Width="140"
@@ -370,7 +387,7 @@
                             FontSize="14"
                             x:Name="ResetSettingsButton"
                             Click="ResetSettingsButton_Click" />
-                    <TextBlock  Grid.Row="8"
+                    <TextBlock  Grid.Row="10"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 FontSize="10"
@@ -378,7 +395,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="10"
+                    <Button Grid.Row="12"
                             Grid.Column="0"
                             Content="Reset Scan Value"
                             Width="140"
@@ -386,7 +403,7 @@
                             FontSize="14"
                             x:Name="ResetExplorationValueButton"
                             Click="ResetExplorationValueButton_Click" />
-                    <TextBlock  Grid.Row="10"
+                    <TextBlock  Grid.Row="12"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 FontSize="10"
@@ -394,7 +411,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="12"
+                    <Button Grid.Row="14"
                             Grid.Column="0"
                             Content="Reset Biological Data"
                             Width="140"
@@ -402,7 +419,7 @@
                             FontSize="14"
                             x:Name="ClearBioLogicalData"
                             Click="ClearBioLogicalData_Click" />
-                    <TextBlock  Grid.Row="12"
+                    <TextBlock  Grid.Row="14"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 FontSize="10"
@@ -410,7 +427,7 @@
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
 
-                    <Button Grid.Row="14"
+                    <Button Grid.Row="16"
                             Grid.Column="0"
                             Content="Reset Geological Data"
                             Width="140"
@@ -418,7 +435,7 @@
                             FontSize="14"
                             x:Name="ClearGeoLogicalData"
                             Click="ClearGeoLogicalData_Click" />
-                    <TextBlock  Grid.Row="14"
+                    <TextBlock  Grid.Row="16"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 FontSize="10"

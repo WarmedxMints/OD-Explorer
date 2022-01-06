@@ -4,14 +4,17 @@ namespace ODExplorer.OrganicData
 {
     public class BioData : PropertyChangeNotify
     {
-        private string _species;
-        public string Species { get => _species; set { _species = value; OnPropertyChanged(); } }
+        private string timeStamp;
+        public string TimeStamp { get => timeStamp; set { timeStamp = value; OnPropertyChanged(); } }
 
-        private string _status;
+        private string species;
+        public string Species { get => species; set { species = value; OnPropertyChanged(); } }
+
+        private string status;
 
         public string Status
         {
-            get => _status;
+            get => status;
             set
             {
                 switch (value)
@@ -28,12 +31,20 @@ namespace ODExplorer.OrganicData
                     default:
                         break;
                 }
-                _status = value;
+                status = value;
                 OnPropertyChanged();
             }
         }
 
-        private string _variant;
-        public string Variant { get => _variant; set { _variant = value; OnPropertyChanged(); } }
+        private string variant;
+        public string Variant { get => variant; set { variant = value; OnPropertyChanged(); } }
+
+        private int value;
+        public int Value { get => value; set { this.value = value; OnPropertyChanged(); } }
+
+        public int GetValueToCommander()
+        {
+            return status == "ANALYSED" ? value : 0;
+        }
     }
 }

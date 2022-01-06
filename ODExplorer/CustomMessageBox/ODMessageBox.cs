@@ -21,5 +21,23 @@ namespace ODExplorer.CustomMessageBox
 
             return msg.Result;
         }
+
+        public static MessageBoxResult Show(Window owner, string message, MessageBoxButton messageBoxButton, string title)
+        {
+            CustomMessageBoxView msg = new(message, "_YES", "_NO", messageBoxButton, title);
+            msg.Owner = owner;
+            _ = msg.ShowDialog();
+
+            return msg.Result;
+        }
+
+        public static MessageBoxResult Show(Window owner, string message, string title)
+        {
+            CustomMessageBoxView msg = new(message, "_YES", "_NO", MessageBoxButton.OK, title);
+            msg.Owner = owner;
+            _ = msg.ShowDialog();
+
+            return msg.Result;
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using EliteJournalReader;
 using EliteJournalReader.Events;
+using Newtonsoft.Json;
 using ODExplorer.AppSettings;
 using ODExplorer.Utils;
+using ODExplorer.Utils.Converters;
 using System;
 using System.Runtime.Serialization;
 using System.Windows;
@@ -14,7 +16,8 @@ namespace ODExplorer.NavData
         Discovered,
         UnDiscovered,
         WorthMapping,
-        MappedByUser
+        MappedByUser,
+        Noteable
     }
 
     public enum PlanetImage
@@ -50,6 +53,7 @@ namespace ODExplorer.NavData
             WasDiscovered = e.WasDiscovered ?? false;
             Composition = e.Composition;
             AtmosphericComposition = e.AtmosphereComposition ?? Array.Empty<ScanItemComponent>(); ;
+            AtmosphereDescrtiption = Settings.SettingsInstance.Value.NotableSettings.Atmospheres.GetInfoString(e.Atmosphere ?? "");
             Materials = e.Materials ?? Array.Empty<ScanItemComponent>(); ;
             Volcanism = string.IsNullOrEmpty(e.Volcanism) ? "No Volcanism" : e.Volcanism;
             TidalLock = e.TidalLock ?? false;
@@ -87,6 +91,7 @@ namespace ODExplorer.NavData
         private double _surfacePressure;
         private AtmosphereClass _atmosphereType = AtmosphereClass.None;
         private int _surfaceTemp;
+        private int mappedValueMin;
         private int _mappedValue;
         private int _fssValue;
         private TerraformState terraformState;
@@ -119,7 +124,7 @@ namespace ODExplorer.NavData
             }
         }
 
-
+        [JsonConverter(typeof(ExtendedStringEnumConverter<PlanetClass>))]
         public PlanetClass PlanetClass
         {
             get => _planetClass;
@@ -163,6 +168,9 @@ namespace ODExplorer.NavData
                 $"{_surfacePressure / 101325:N2} atm";
             set => OnPropertyChanged();
         }
+
+        private string atmosphereDescription;
+        public string AtmosphereDescrtiption { get => atmosphereDescription; set { atmosphereDescription = value; OnPropertyChanged(); } }
         public AtmosphereClass AtmosphereType { get => _atmosphereType; set { _atmosphereType = value; OnPropertyChanged(); OnPropertyChanged("HasAtmosphere"); } }
         public int SurfaceTemp
         {
@@ -188,6 +196,12 @@ namespace ODExplorer.NavData
             }
             set => OnPropertyChanged();
         }
+        public int MappedValueMin
+        {
+            get => mappedValueMin;
+            set { mappedValueMin = value; OnPropertyChanged(); }
+        }
+
         public int MappedValue
         {
             get => _mappedValue;
@@ -279,14 +293,14 @@ namespace ODExplorer.NavData
         public bool Terraformable { get { return TerraformState is TerraformState.Terraformable or TerraformState.Terraforming or TerraformState.Terraformed; } }
         [IgnoreDataMember]
         public bool HasAtmosphere { get { return AtmosphereType is not AtmosphereClass.None and not AtmosphereClass.NoAtmosphere and not AtmosphereClass.Unknown; } }
-        private int _geologicalSignals { get; set; }
+        private int _geologicalSignals;
         public int GeologicalSignals
         {
             get => _geologicalSignals;
             set { _geologicalSignals = value; OnPropertyChanged(); }
         }
 
-        private int _biologicalSignals { get; set; }
+        private int _biologicalSignals;
         public int BiologicalSignals
         {
             get => _biologicalSignals;
@@ -327,41 +341,15 @@ namespace ODExplorer.NavData
         {
             get
             {
-                switch (PlanetClass)
+                return PlanetClass switch
                 {
-                    case PlanetClass.MetalRichBody:
-                    case PlanetClass.HighMetalContentBody:
-                    case PlanetClass.RockyBody:
-                    case PlanetClass.IcyBody:
-                    case PlanetClass.RockyIceBody:
-                        return PlanetImage.Planet;
-
-                    case PlanetClass.EarthlikeBody:
-                        return PlanetImage.Earth;
-
-                    case PlanetClass.WaterWorld:
-                    case PlanetClass.WaterGiant:
-                    case PlanetClass.WaterGiantWithLife:
-                        return PlanetImage.Water;
-
-                    case PlanetClass.AmmoniaWorld:
-                    case PlanetClass.GasGiantWithWaterBasedLife:
-                    case PlanetClass.GasGiantWithAmmoniaBasedLife:
-                    case PlanetClass.SudarskyClassIGasGiant:
-                    case PlanetClass.SudarskyClassIIGasGiant:
-                    case PlanetClass.SudarskyClassIIIGasGiant:
-                    case PlanetClass.SudarskyClassIVGasGiant:
-                    case PlanetClass.SudarskyClassVGasGiant:
-                    case PlanetClass.HeliumRichGasGiant:
-                    case PlanetClass.HeliumGasGiant:
-                        return PlanetImage.Gas;
-
-                    case PlanetClass.EdsmValuableBody:
-                    case PlanetClass.Unknown:
-                        return PlanetImage.Default;
-                    default:
-                        return PlanetImage.None;
-                }
+                    PlanetClass.MetalRichBody or PlanetClass.HighMetalContentBody or PlanetClass.RockyBody or PlanetClass.IcyBody or PlanetClass.RockyIceBody => PlanetImage.Planet,
+                    PlanetClass.EarthlikeBody => PlanetImage.Earth,
+                    PlanetClass.WaterWorld or PlanetClass.WaterGiant or PlanetClass.WaterGiantWithLife => PlanetImage.Water,
+                    PlanetClass.AmmoniaWorld or PlanetClass.GasGiantWithWaterBasedLife or PlanetClass.GasGiantWithAmmoniaBasedLife or PlanetClass.SudarskyClassIGasGiant or PlanetClass.SudarskyClassIIGasGiant or PlanetClass.SudarskyClassIIIGasGiant or PlanetClass.SudarskyClassIVGasGiant or PlanetClass.SudarskyClassVGasGiant or PlanetClass.HeliumRichGasGiant or PlanetClass.HeliumGasGiant => PlanetImage.Gas,
+                    PlanetClass.EdsmValuableBody or PlanetClass.Unknown => PlanetImage.Default,
+                    _ => PlanetImage.None,
+                };
             }
         }
         #endregion
@@ -386,6 +374,7 @@ namespace ODExplorer.NavData
                 SurfaceTemp = e.SurfaceTemp;
                 Composition = e.Composition;
                 AtmosphericComposition = e.AtmosphericComposition;
+                AtmosphereDescrtiption = e.AtmosphereDescrtiption;
                 Materials = e.Materials;
                 Volcanism = e.Volcanism;
                 TidalLock = e.TidalLock;
@@ -452,6 +441,12 @@ namespace ODExplorer.NavData
                 return;
             }
 
+            if(Settings.SettingsInstance.Value.NotableSettings.IsNoteable(this))
+            {
+                Status = DiscoveryStatus.Noteable;
+                return;
+            }
+
             //Only planets can be mapped so stars and non-bodies are not marked as so
             if (WorthMapping && IsPlanet && PlanetClass != PlanetClass.EdsmValuableBody)
             {
@@ -498,6 +493,7 @@ namespace ODExplorer.NavData
             {
                 FssValue = MathFunctions.GetBodyValue(this, odyssey, false, false);
 
+                mappedValueMin = MathFunctions.GetPlanetValue(PlanetClass, MassEM, !WasDiscovered, !Wasmapped, Terraformable, odyssey, true, true);
                 MappedValue = MathFunctions.GetPlanetValue(PlanetClass, MassEM, !WasDiscovered, !Wasmapped, Terraformable, odyssey, true, true);
 
                 WorthMapping = (MappedValue >= Settings.SettingsInstance.Value.WorthMappingValue)

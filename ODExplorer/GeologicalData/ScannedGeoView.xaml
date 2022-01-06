@@ -7,7 +7,7 @@
         xmlns:utils="clr-namespace:ODExplorer.Utils"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="16"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OD EXPLORER - GEOLOGICAL DATA"

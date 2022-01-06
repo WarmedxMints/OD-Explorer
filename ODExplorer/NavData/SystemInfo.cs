@@ -39,6 +39,7 @@ namespace ODExplorer.NavData
         {
             systemName = e.StarSystem.ToUpperInvariant();
             SystemAddress = e.SystemAddress;
+            SystemPos = e.StarPos;
         }
         #endregion
 
@@ -278,7 +279,14 @@ namespace ODExplorer.NavData
         //Copies the system name to clipboard
         private void CopySystemNameToClipboard(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(SystemName);
+            try
+            {
+                Clipboard.SetDataObject(SystemName);
+            }
+            catch (Exception ex)
+            {
+                _ = MessageBox.Show($"Erroe sending System Name to Clipboard\nError : {ex.Message}");
+            }
         }
 
         public override string ToString()

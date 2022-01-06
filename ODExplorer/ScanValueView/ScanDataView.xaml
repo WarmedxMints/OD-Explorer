@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:clr="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="16"
         StateChanged="MainWindowStateChangeRaised"
         Background="{DynamicResource SecondaryWindowBackground}"

@@ -89,7 +89,7 @@ namespace ODExplorer.NavData
                 return;
             }
 
-            _navData.OnSupercruiseEntry(e);
+            _navData.OnSupercruiseEntry();
         }
 
         public void StartWatcher(NavigationData navData)
@@ -98,13 +98,13 @@ namespace ODExplorer.NavData
             //Start watcher
             _ = _watcher.StartWatching().ConfigureAwait(false);
 #if DEBUG
-            ReadNavRouteJson();
+            //ReadNavRouteJson();
 #endif
         }
 
         private void FileHeader(object sender, FileheaderEvent.FileheaderEventArgs e)
         {
-            _navData.Odyssey = e.Odyssey;
+            NavigationData.Odyssey = e.Odyssey;
         }
 
         private void Location(object sender, LocationEvent.LocationEventArgs e)
@@ -115,8 +115,9 @@ namespace ODExplorer.NavData
             }
 
             SystemInfo sys = new(e);
-            _navData.SetCurrentBody(e);
+
             _navData.SetCurrentSystem(sys);
+            _navData.SetCurrentBody(e);
         }
 
         private void Scan(object sender, ScanEvent.ScanEventArgs e)
@@ -146,7 +147,7 @@ namespace ODExplorer.NavData
                 return;
             }
 
-            _navData.SAASignalsFound(e);
+            _ = _navData.SAASignalsFound(e);
         }
 
         private void DiscoveryScan(object sender, FSSDiscoveryScanEvent.FSSDiscoveryScanEventArgs e)

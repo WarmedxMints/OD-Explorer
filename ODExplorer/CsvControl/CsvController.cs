@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace ODExplorer.CsvControl
 {
@@ -20,6 +21,13 @@ namespace ODExplorer.CsvControl
             {
                 CsvContainers.Add(new CsvContainer());
             }
+
+            AppSettings.Settings.SettingsInstance.SaveEvent += SettingsInstance_SaveEvent;
+        }
+
+        ~CsvController()
+        {
+            AppSettings.Settings.SettingsInstance.SaveEvent -= SettingsInstance_SaveEvent;
         }
 
         private ObservableCollection<CsvContainer> csvContainers = new();
@@ -33,10 +41,10 @@ namespace ODExplorer.CsvControl
                 CsvContainers[(int)currentCsvType].CurrentTarget = value;
 
                 OnCurrentTargetUpdated?.Invoke(this, new CsvEventArgs { CsvType = CurrentCsvType, Target = value });
-                OnPropertyChanged();
                 UpdateUiProperties();
             }
         }
+
         public event EventHandler<CsvEventArgs> OnCurrentTargetUpdated;
         public bool CurrentTargetHasData
         {
@@ -149,6 +157,25 @@ namespace ODExplorer.CsvControl
             CurrentIndex = 0;
         }
 
+        internal void NavData_OnCurrentSystemChanged(NavData.SystemInfo systemInfo)
+        {
+            CsvContainer container = GetCsvContainer(CurrentCsvType);
+
+            if (container is null || container.Targets.Count < 1)
+            {
+                return;
+            }
+
+            ExplorationTarget target = container.Targets.FirstOrDefault(x => x.SystemName.Equals(systemInfo.SystemName, StringComparison.OrdinalIgnoreCase));
+
+            if (target is not null)
+            {
+                int index = container.Targets.IndexOf(target);
+
+                CurrentIndex = index + 1;
+            }
+        }
+
         public string CsvHeader
         {
             get
@@ -161,6 +188,7 @@ namespace ODExplorer.CsvControl
                 };
             }
         }
+
         public bool LoadPreviousSession()
         {
             if (!File.Exists(_previousSession))
@@ -189,6 +217,11 @@ namespace ODExplorer.CsvControl
             CurrentIndex = currentContainer is null ? 0 : currentContainer.CurrentIndex;
 
             return true;
+        }
+
+        private void SettingsInstance_SaveEvent(object sender, EventArgs e)
+        {
+            SaveState();
         }
 
         public void SaveState()

@@ -38,10 +38,11 @@ namespace ODExplorer.NavData
             _ = SaveState();
         }
 
+        private ulong estimatedScanValueMin;
+        public ulong EstimatedScanValueMin { get => estimatedScanValueMin; private set { estimatedScanValueMin = value; OnPropertyChanged(); } }
 
-        private ulong estiatedScanValue;
-
-        public ulong EstiatedScanValue { get => estiatedScanValue; private set { estiatedScanValue = value; OnPropertyChanged(); } }
+        private ulong estimatedScanValueMax;
+        public ulong EstimatedScanValueMax { get => estimatedScanValueMax; private set { estimatedScanValueMax = value; OnPropertyChanged(); } }
 
         public void UpdateMainStarValue(SystemInfo systemInfo)
         {
@@ -99,26 +100,30 @@ namespace ODExplorer.NavData
         {
             if (!ScannedSystems.Any())
             {
-                EstiatedScanValue = 0;
+                estimatedScanValueMin = 0;
+                EstimatedScanValueMax = 0;
                 return;
             }
 
             ulong val = 0;
-
+            ulong valMin = 0;
             foreach (SystemInfo system in ScannedSystems)
             {
                 foreach (SystemBody body in system.Bodies)
                 {
                     if (body.MappedByUser)
                     {
+                        valMin += body.MappedValueMin == 0 ? (ulong)MathFunctions.GetPlanetValue(body.PlanetClass, body.MassEM, !body.WasDiscovered, !body.Wasmapped, false, NavigationData.Odyssey, true, body.EffeicentMapped) : (ulong)body.MappedValueMin;
                         val += (ulong)(body.MappedValue + body.BonusValue);
                         continue;
                     }
                     val += (ulong)(body.FssValue + body.BonusValue);
+                    valMin += (ulong)(body.FssValue + body.BonusValue);
                 }
             }
 
-            EstiatedScanValue = val;
+            EstimatedScanValueMin = valMin;
+            EstimatedScanValueMax = val;
         }
 
         public void SellExplorationData(EliteJournalReader.Events.SellExplorationDataEvent.SellExplorationDataEventArgs args)
@@ -173,7 +178,8 @@ namespace ODExplorer.NavData
         {
             ScannedSystems.ClearCollection();
             _ = SaveState();
-            EstiatedScanValue = 0;
+            EstimatedScanValueMin = 0;
+            EstimatedScanValueMax = 0;
         }
 
         public bool SaveState()

@@ -14,13 +14,13 @@
         TextOptions.TextFormattingMode="Display"
         TextOptions.TextRenderingMode="ClearType"
         UseLayoutRounding="True"
-        Title=""
-        FontFamily="Eurostile"
+        FontFamily="{StaticResource Eurostile}"
         FontSize="18"
         Background="{DynamicResource PrimaryBackground}"
         MinHeight="100"
         MaxWidth="450"
-        MinWidth="250">
+        MinWidth="250"
+        x:Name="Root">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
     </WindowChrome.WindowChrome>
@@ -53,7 +53,7 @@
                            Margin="2"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                    <TextBlock Text="CONFIRMATION"
+                    <TextBlock Text="{Binding ElementName=Root, Path=Title}"
                                Margin="5,0,0,0"
                                VerticalAlignment="Center"
                                FontSize="16"

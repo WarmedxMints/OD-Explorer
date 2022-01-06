@@ -1,7 +1,9 @@
-﻿using ODExplorer.CustomMessageBox;
+﻿using Microsoft.Win32;
+using ODExplorer.CustomMessageBox;
 using ODExplorer.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -169,6 +171,31 @@ namespace ODExplorer.OrganicData
             if (result == MessageBoxResult.Yes)
             {
                 ScannedBioData.ResetData();
+            }
+        }
+
+        private void ExportCSV_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new()
+            {
+                Title = "Save CSV File",
+
+                DefaultExt = "csv",
+                Filter = "csv files (*.csv)|*.csv",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    File.WriteAllText(saveFileDialog.FileName, ScannedBioData.GenerateCSV());
+                }
+                catch(Exception ex)
+                {
+                    _ = ODMessageBox.Show(this, $"{ex.Message}", "ERROR SAVING CSV");
+                }
             }
         }
     }

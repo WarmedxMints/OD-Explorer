@@ -65,10 +65,10 @@ namespace ODExplorer.Utils
         public static int GetPlanetValue(PlanetClass planetClass, double mass, bool isFirstDiscoverer, bool isFirstMapped, bool terraformable, bool isOdyssey, bool isMapped, bool withEfficientBonus)
         {
             //If a body has been mapped before but is reported to have not been discovered,
-            //assume we are mapping a bubble planet and mark it as discovered.
-            if (isFirstMapped == false)
+            //assume we are mapping a bubble planet and don't apply the ody bonus.
+            if (!isFirstMapped && isFirstDiscoverer)
             {
-                isFirstDiscoverer = false;
+                isOdyssey = false;
             }
 
             double k;

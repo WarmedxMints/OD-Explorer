@@ -10,6 +10,11 @@ namespace ODExplorer.CustomMessageBox
     /// </summary>
     public partial class CustomMessageBoxView : Window
     {
+        internal string WindowTitle
+        {
+            get => Title;
+            set => Title = value;
+        }
         internal string Message
         {
             get => MessageText.Text;
@@ -30,10 +35,11 @@ namespace ODExplorer.CustomMessageBox
 
         public MessageBoxResult Result { get; set; }
 
-        public CustomMessageBoxView(string message, string yesButtonText, string noButtonText, MessageBoxButton messageBoxButton)
+        public CustomMessageBoxView(string message, string yesButtonText, string noButtonText, MessageBoxButton messageBoxButton, string title = "CONFIRMATION")
         {
             InitializeComponent();
 
+            Title = title;
             Message = message;
             YesButtonText = yesButtonText;
             NoButtonText = noButtonText;
