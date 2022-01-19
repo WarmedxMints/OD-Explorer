@@ -242,6 +242,16 @@
 
                     <CheckBox Grid.Row="6"
                               Grid.Column="2"
+                              IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowWasDiscovered}"
+                              Content="Discovered State"
+                              Foreground="{DynamicResource PrimaryForeground}"
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="CheckBox_Click"
+                              Margin="{StaticResource CheckMargin}" />
+                    
+                    <CheckBox Grid.Row="7"
+                              Grid.Column="1"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowTerraformable}"
                               Content="Terraformable State"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -249,24 +259,27 @@
                               VerticalAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="{StaticResource CheckMargin}" />
+                    
                     <CheckBox Grid.Row="7"
-                              Grid.Column="1"
+                              Grid.Column="2"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowHasRings}"
                               Content="Has Rings"
                               Foreground="{DynamicResource PrimaryForeground}"
                               VerticalContentAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="{StaticResource CheckMargin}" />
-                    <CheckBox Grid.Row="7"
-                              Grid.Column="2"
+                    
+                    <CheckBox Grid.Row="8"
+                              Grid.Column="1"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowGeoSignals}"
                               Content="Geological Signals"
                               Foreground="{DynamicResource PrimaryForeground}"
                               VerticalContentAlignment="Center"
                               Click="CheckBox_Click"
                               Margin="{StaticResource CheckMargin}" />
+                    
                     <CheckBox Grid.Row="8"
-                              Grid.Column="1"
+                              Grid.Column="2"
                               IsChecked="{Binding Settings.ClonedValues.DisplaySettings.ShowBioSignals}"
                               Content="Biological Signals"
                               Foreground="{DynamicResource PrimaryForeground}"
@@ -757,6 +770,23 @@
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
 
+                                                            <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                       Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                       Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                       Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
+                                                                <Rectangle.Visibility>
+                                                                    <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                        <Binding Path="WasDiscovered"
+                                                                                 Converter="{StaticResource InvertBool}" />
+                                                                        <Binding Source="{StaticResource AppSettings}"
+                                                                                 Path="SettingsInstance.Value.DisplaySettings.ShowWasDiscovered" />
+                                                                    </MultiBinding>
+                                                                </Rectangle.Visibility>
+                                                                <Rectangle.OpacityMask>
+                                                                    <ImageBrush ImageSource="/Images/binoculars.png" />
+                                                                </Rectangle.OpacityMask>
+                                                            </Rectangle>
+                                                            
                                                             <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                        Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                        Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.ClonedValues.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"

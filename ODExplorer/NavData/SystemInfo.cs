@@ -198,7 +198,8 @@ namespace ODExplorer.NavData
             set => OnPropertyChanged();
         }
 
-        public Uri EDSMUrl { get; set; }
+        private Uri edsmUrl;
+        public Uri EDSMUrl { get => edsmUrl; set { contextMenu = null; edsmUrl = value; OnPropertyChanged("ContextMenu"); } }
 
         //Context Menu for the datagrid
         private ContextMenu contextMenu;
@@ -211,7 +212,7 @@ namespace ODExplorer.NavData
                 {
                     contextMenu = new();
 
-                    var menuStyle = Application.Current.FindResource("ContextMenuItem") as Style;
+                    Style menuStyle = Application.Current.FindResource("ContextMenuItem") as Style;
 
                     MenuItem menuItem = new();
                     menuItem.Style = menuStyle;
@@ -285,7 +286,7 @@ namespace ODExplorer.NavData
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show($"Erroe sending System Name to Clipboard\nError : {ex.Message}");
+                _ = MessageBox.Show($"Error sending System Name to Clipboard\nError : {ex.Message}");
             }
         }
 

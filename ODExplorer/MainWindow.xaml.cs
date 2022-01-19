@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using EliteJournalReader.Events;
+using Microsoft.Win32;
 using ODExplorer.AppSettings;
 using ODExplorer.CsvControl;
 using ODExplorer.CustomMessageBox;
@@ -17,6 +18,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -131,14 +133,17 @@ namespace ODExplorer
 
             UpdateLabel();
 
-            TimerDisplay.Text = "00 : 00";
-
             NavData.OnCurrentSystemChanged += NavData_OnCurrentSystemChanged;
+
+            _journalData.GetEvent<CarrierJumpRequestEvent>()?.AddHandler(CarrierJumpRequest);
+
+            CountDownTimer.CountDownFinishedEvent += CountDownTimer_CountDownFinishedEvent;
         }
+
 
         private void NavData_OnCurrentSystemChanged(SystemInfo systemInfo)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Dispatcher.Invoke(() =>
             {
                 if (AppSettings.Value.AutoSelectNextCsvSystem)
                 {
@@ -149,6 +154,7 @@ namespace ODExplorer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            CountDownTimer.Stop();
             if (NavData.ScanValue.SaveState() == false)
             {
                 _ = ODMessageBox.Show(this,
@@ -503,58 +509,61 @@ namespace ODExplorer
             CopySystemToClipboard(CsvController.CurrentTarget);
         }
 
-        private DispatcherTimer _fleetCarrierJumpTimer;
-        private const int _timerCount = 1200;
-
-        private void StartTimer_Click(object sender, RoutedEventArgs e)
+        private void CountDownTimer_CountDownFinishedEvent(object sender, EventArgs e)
         {
-            if (_fleetCarrierJumpTimer is null)
+            Dispatcher.Invoke(() =>
             {
-                _fleetCarrierJumpTimer = new()
-                {
-                    Interval = TimeSpan.FromSeconds(1)
-                };
+                TimerStartBtn.Content = "Start Jump Timer";
+                SystemSounds.Beep.Play();
 
-                int count = _timerCount;
+                taskBarItem.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
+                _ = Task.Run(async() =>
+                  {
+                      await Task.Delay(6000);
+                      Dispatcher.Invoke(() =>
+                      {
+                          taskBarItem.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
+                      });
+                  });
+            });
+        }
 
-                _fleetCarrierJumpTimer.Tick += (_, a) =>
-                {
-                    if (count-- <= 0)
-                    {
-                        EndTimer();
-                    }
-                    else
-                    {
-                        UpdateTime(count);
-                    }
-                };
-
-                UpdateTime(count);
-                TimerStartBtn.Content = "Cancel Timer";
-                _fleetCarrierJumpTimer.Start();
+        private void CarrierJumpRequest(object sender, CarrierJumpRequestEvent.CarrierJumpRequestEventArgs e)
+        {
+            if (_journalData.WatcherLive == false || AppSettings.Value.AutoStartFleetCarrierTimer == false)
+            {
                 return;
             }
 
-            EndTimer();
+            Dispatcher.Invoke(() =>
+            {
+                StartTimer();
+                CarrierJumpSystem = e.SystemName;
+            });
         }
 
-        private void UpdateTime(int count)
+        private void StartTimer_Click(object sender, RoutedEventArgs e)
         {
-            TimerDisplay.Text = SecondsToString(count);
+            if (CountDownTimer.TimerRunning)
+            {
+                CountDownTimer.Stop();
+                TimerStartBtn.Content = "Start Jump Timer";
+                return;
+            }
+
+            StartTimer();
         }
 
-        private void EndTimer()
-        {
-            _fleetCarrierJumpTimer.Stop();
-            SystemSounds.Beep.Play();
-            _fleetCarrierJumpTimer = null;
-            TimerStartBtn.Content = "Start Jump Timer";
-            TimerDisplay.Text = "00 : 00";
-        }
+        private string carrierJumpSystem;
+        public string CarrierJumpSystem { get => carrierJumpSystem; set { carrierJumpSystem = value; OnPropertyChanged(); } }
 
-        private static string SecondsToString(int pTime)
+        private Countdown countDownTimer = new(new TimeSpan(0, 20, 0));
+        public Countdown CountDownTimer { get => countDownTimer; set { countDownTimer = value; OnPropertyChanged(); } }
+
+        private void StartTimer()
         {
-            return $"{pTime / 60:00} : {pTime % 60:00}";
+            CountDownTimer.Start();
+            TimerStartBtn.Content = "Cancel Timer";
         }
         #endregion
 

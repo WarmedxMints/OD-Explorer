@@ -47,6 +47,7 @@ namespace ODExplorer.AppSettings
                 BodyNameLocal = "UNDISCOVERED",
                 PlanetClass = EliteJournalReader.PlanetClass.IcyBody,
                 Wasmapped = false,
+                WasDiscovered = false,
                 Landable = true,
                 BiologicalSignals = 9,
                 GeologicalSignals = 3,

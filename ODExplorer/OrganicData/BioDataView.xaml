@@ -237,9 +237,26 @@
                                 </MultiBinding>
                             </DataGridTextColumn.Binding>
                         </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="RANGE"
+                                            Width="80"
+                                            HeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyleCenter}"
+                                            Binding="{Binding Path=BioInfo.ColonyRange, StringFormat={}{0:N0}m}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        
+                        
                         <DataGridTextColumn Header="VALUE"
                                             Width="70"
-                                            Binding="{Binding Path=Value, StringFormat={}{0:N0}}">
+                                            HeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyleCenter}"
+                                            Binding="{Binding Path=BioInfo.Value, StringFormat={}{0:N0}}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="VerticalAlignment"

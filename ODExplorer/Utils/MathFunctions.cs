@@ -140,7 +140,7 @@ namespace ODExplorer.Utils
                 }
             }
 
-            double value = Math.Max(k + (k * Math.Pow(mass, 0.2) * q), 500) * mappingMultiplier;
+            double value = Math.Max((k + k * q * Math.Pow(mass, 0.2)) * mappingMultiplier, 500);
 
             if (isMapped)
             {

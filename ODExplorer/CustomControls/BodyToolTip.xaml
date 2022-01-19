@@ -77,6 +77,10 @@
 
                 <TextBlock Text="{Binding BodyName}" />
                 <TextBlock Text="{Binding BodyDescription, Converter={StaticResource StringToUpperFirst}}" />
+                <TextBlock Text="{Binding OrbitalPeriod, StringFormat={}Orbital Period : {0:N1} d}"
+                            />
+                <TextBlock Text="{Binding RotationPeriod, StringFormat={}Rotation Period : {0:N1} d}"
+                            />
                 <TextBlock Text="{Binding TidalLock, Converter={StaticResource BoolToTidal}}"
                            Visibility="{Binding TidalLock, Converter={StaticResource BoolToVis}}" />
                 <TextBlock Text="{Binding Volcanism , Converter={StaticResource StringToUpperFirst}}"
@@ -105,7 +109,8 @@
                            Text="Planet Composition :"
                            Visibility="{Binding HasComposition, Converter={StaticResource BoolToVis}}" />
                 <StackPanel Grid.Column="0"
-                            Grid.Row="1">
+                            Grid.Row="1"
+                            Visibility="{Binding HasComposition, Converter={StaticResource BoolToVis}}">
                     <TextBlock Text="Ice"
                                Visibility="{Binding Composition.Ice, Converter={StaticResource DoubleToVis}, ConverterParameter=Collapsed}"
                                Margin="5,0,10,0" />
@@ -118,7 +123,8 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
-                            Grid.Row="1">
+                            Grid.Row="1"
+                            Visibility="{Binding HasComposition, Converter={StaticResource BoolToVis}}">
                     <TextBlock Text="{Binding Composition.Ice, Converter={StaticResource DoubleMutplication}, ConverterParameter=100, StringFormat={}{0:N2} %}"
                                Visibility="{Binding Composition.Ice, Converter={StaticResource DoubleToVis}, ConverterParameter=Collapsed}" />
                     <TextBlock  Text="{Binding Composition.Rock, Converter={StaticResource DoubleMutplication}, ConverterParameter=100, StringFormat={}{0:N2} %}"
@@ -137,9 +143,9 @@
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}"/>
                 <TextBlock Text="Landable"
                            Margin="0,0,0,10"
-                           Visibility="{Binding IsPlanet, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}" />
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
                 <TextBlock Text="Distance From Arrival" />
-                <TextBlock Text="Atmoshpere Type"
+                <TextBlock Text="Atmosphere Type"
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
                 <TextBlock Text="Description"
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
@@ -154,7 +160,7 @@
                 <TextBlock Text="{Binding Terraformable, Converter={StaticResource BoolToYesNo}}"
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
                 <TextBlock Text="{Binding Landable, Converter={StaticResource BoolToYesNo}}"
-                           Visibility="{Binding IsPlanet, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}"
                            Margin="0,0,0,10" />
                 <TextBlock Text="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls}" />
                 <TextBlock Text="{Binding AtmosphereType, Converter={StaticResource EnumCamelCaseConvertor}}"

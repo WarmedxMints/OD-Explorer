@@ -39,12 +39,12 @@ namespace ODExplorer.OrganicData
         private string variant;
         public string Variant { get => variant; set { variant = value; OnPropertyChanged(); } }
 
-        private int value;
-        public int Value { get => value; set { this.value = value; OnPropertyChanged(); } }
+        private BiologicalInfo bioInfo;
+        public BiologicalInfo BioInfo { get => bioInfo; set { bioInfo = value; OnPropertyChanged(); } }
 
         public int GetValueToCommander()
         {
-            return status == "ANALYSED" ? value : 0;
+            return status == "ANALYSED" ? BioInfo.Value : 0;
         }
     }
 }

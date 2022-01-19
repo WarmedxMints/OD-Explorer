@@ -16,7 +16,7 @@
         Height="495"
         ResizeMode="NoResize">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="34" />
+        <WindowChrome CaptionHeight="34" />       
     </WindowChrome.WindowChrome>
 
     <!--Title bar button commands-->
@@ -28,7 +28,7 @@
 
     <Border x:Name="MainWindowBorder"
             BorderBrush="{DynamicResource PrimaryBorder}"
-            BorderThickness="0">
+            BorderThickness="0" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -397,6 +397,26 @@
                         </Hyperlink>
                         </TextBlock>
                     </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Height="18"
+                                   Width="18"
+                                   Margin="10,5,20,0"
+                                   Fill="White">
+                            <Rectangle.OpacityMask>
+                                <ImageBrush ImageSource="/Images/binoculars.png" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+
+                        <TextBlock VerticalAlignment="Center">
+                        <Hyperlink NavigateUri="https://www.flaticon.com/authors/justicon"
+                                   RequestNavigate="Hyperlink_RequestNavigate"
+                                   Foreground="{DynamicResource PrimaryForeground}">
+                            justicon on wwww.flaticon.com
+                        </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                    
                 </StackPanel>
 
                 <TextBlock Grid.Row="1"
@@ -456,6 +476,16 @@
 
                 <StackPanel Grid.Row="5"
                             Grid.Column="3">
+
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="20,0,0,5">
+                        <Hyperlink NavigateUri="https://forums.frontier.co.uk/threads/od-explorer.597084/"
+                                   RequestNavigate="Hyperlink_RequestNavigate"
+                                   Foreground="{DynamicResource PrimaryForeground}">
+                            OD Explorer Forum Thread
+                        </Hyperlink>
+                    </TextBlock>
+                    
                     <TextBlock VerticalAlignment="Center"
                                Margin="20,0,0,5">
                         <Hyperlink NavigateUri="https://github.com/joncage/ed-scout"

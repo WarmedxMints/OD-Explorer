@@ -34,5 +34,6 @@
     <converters:KelvinToCelsiusFahrenheitConverter x:Key="KelvinToCF" />
     <converters:PaToAtmConverter x:Key="PaToAtm" />
     <converters:FlagsIntConverter x:Key="FlagsToInt" />
+    <converters:CarrierJumpsToTime x:Key="JumpsToTime" />
     <!--#endregion-->
 </ResourceDictionary>

@@ -25,6 +25,9 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" />
     </WindowChrome.WindowChrome>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItem" />
+    </Window.TaskbarItemInfo>
 
     <Window.Resources>
         <Storyboard x:Key="FadeOut">
@@ -220,7 +223,7 @@
                                                     Value="{DynamicResource PrimaryBackground}" />
                                             <Style.Triggers>
                                                 <Trigger Property="Text"
-                                                             Value="WAITING FOR DATA">
+                                                         Value="WAITING FOR DATA">
                                                     <Setter Property="Background"
                                                             Value="{DynamicResource PrimaryBackground}" />
                                                     <Setter Property="Foreground"
@@ -429,7 +432,7 @@
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                                    Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Margin="0,0,3,0">
+                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
                                                                             <Rectangle.Visibility>
                                                                                 <MultiBinding Converter="{StaticResource TwoBoolToVis}">
                                                                                     <Binding Path="Wasmapped"
@@ -443,6 +446,23 @@
                                                                             </Rectangle.OpacityMask>
                                                                         </Rectangle>
 
+                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
+                                                                            <Rectangle.Visibility>
+                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                    <Binding Path="WasDiscovered"
+                                                                                             Converter="{StaticResource InvertBool}" />
+                                                                                    <Binding Source="{StaticResource AppSettings}"
+                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowWasDiscovered" />
+                                                                                </MultiBinding>
+                                                                            </Rectangle.Visibility>
+                                                                            <Rectangle.OpacityMask>
+                                                                                <ImageBrush ImageSource="/Images/binoculars.png" />
+                                                                            </Rectangle.OpacityMask>
+                                                                        </Rectangle>
+                                                                        
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                                    Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
@@ -828,9 +848,9 @@
 
                             <!--#region Fleet Carrier Route Info-->
                             <StackPanel Visibility="{Binding CsvController.CurrentCsvType, Converter={StaticResource CsvTypeToVis}, ConverterParameter=FleetCarrier}"
-                                        Margin="0,10,0,0">
+                                        Margin="20,5,0,0">
                                 <StackPanel Orientation="Horizontal"
-                                            Margin="0,0,0,10">
+                                            Margin="0,0,0,5">
                                     <TextBlock Text="Jump Distance"
                                                HorizontalAlignment="Left"
                                                Width="180" />
@@ -846,7 +866,7 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal"
-                                            Margin="0,5,0,5">
+                                            Margin="0,0,0,5">
                                     <TextBlock Text="Icy Ring"
                                                HorizontalAlignment="Left"
                                                Width="180" />
@@ -854,7 +874,7 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal"
-                                            Margin="0,5,0,0">
+                                            Margin="0,0,0,5">
                                     <Button Content="Start Jump Timer"
                                             x:Name="TimerStartBtn"
                                             Click="StartTimer_Click"
@@ -865,8 +885,24 @@
                                     <TextBlock x:Name="TimerDisplay"
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
-                                               FontSize="20" />
+                                               FontSize="20"
+                                               Text="{Binding CountDownTimer.CurrentTimeString}" />
+                                    <CheckBox Content="Auto Start"
+                                              Margin="40,0,0,0"
+                                              IsChecked="{Binding AppSettings.Value.AutoStartFleetCarrierTimer}"
+                                              VerticalAlignment="Center"/>
                                 </StackPanel>
+
+                                <TextBlock Margin="0,0,0,5">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource JumpsToTime}">
+                                            <Binding Path="CsvController.CurrentTarget.SystemName" />
+                                            <Binding Path="CsvController.RemainingCount" />
+                                            <Binding Path="CountDownTimer.SecondsRemaining" />
+                                            <Binding Path="CarrierJumpSystem" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </StackPanel>
                             <!--#endregion-->
 
@@ -1033,7 +1069,7 @@
                        FontSize="16"
                        Foreground="{DynamicResource MenuBarForeground}"
                        VerticalAlignment="Center" />
-                
+
                 <TextBlock HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource MenuBarForeground}"

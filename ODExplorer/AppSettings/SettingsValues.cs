@@ -24,6 +24,8 @@ namespace ODExplorer.AppSettings
         private double uiScale = 1;
         private bool showAdditionWindowsInTaskBar;
         private bool excludeStarsFromSorting = true;
+        private bool autoStartFleetCarrierTimer = true;
+
         public SortCategory SortCategory { get => sortCategory; set { sortCategory = value; OnPropertyChanged(); } }
         public ListSortDirection SortDirection { get => sortDirection; set { sortDirection = value; OnPropertyChanged(); } }
         public int WorthMappingValue { get => worthMappingValue; set { worthMappingValue = value; OnPropertyChanged(); } }
@@ -36,6 +38,7 @@ namespace ODExplorer.AppSettings
         public double UiScale { get => uiScale; set { uiScale = value; OnPropertyChanged(); } }
         public bool ShowAdditionalWindowsInTaskBar { get => showAdditionWindowsInTaskBar; set { showAdditionWindowsInTaskBar = value; OnPropertyChanged(); } }
         public bool ExcludeStarsFromSorting { get => excludeStarsFromSorting; set { excludeStarsFromSorting = value; OnPropertyChanged(); } }
+        public bool AutoStartFleetCarrierTimer {  get => autoStartFleetCarrierTimer; set { autoStartFleetCarrierTimer = value; OnPropertyChanged(); } }
         public Theme CurrentTheme { get => Settings.CurrentTheme; set { Settings.CurrentTheme = value; OnPropertyChanged(); } }
 
         public void Reset()

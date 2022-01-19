@@ -62,6 +62,13 @@ namespace ODExplorer.NavData
             _watcher.GetEvent<CodexEntryEvent>()?.AddHandler(CodexEntry);
         }
 
+        public bool WatcherLive => _watcher.IsLive;
+
+        public TJournalEvent GetEvent<TJournalEvent>() where TJournalEvent : JournalEvent
+        {
+            return _watcher.GetEvent<TJournalEvent>();
+        }
+
         private void CodexEntry(object sender, CodexEntryEvent.CodexEntryEventArgs e)
         {
             if (_watcher.IsLive == false)

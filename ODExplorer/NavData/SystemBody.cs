@@ -57,6 +57,8 @@ namespace ODExplorer.NavData
             Materials = e.Materials ?? Array.Empty<ScanItemComponent>(); ;
             Volcanism = string.IsNullOrEmpty(e.Volcanism) ? "No Volcanism" : e.Volcanism;
             TidalLock = e.TidalLock ?? false;
+            OrbitalPeriod = e.OrbitalPeriod / 86400 ?? 0;
+            RotationPeriod = e.RotationPeriod / 86400 ?? 0;
             Radius = e.Radius ?? 0;
             Rings = e.Rings ?? Array.Empty<PlanetRing>();
             if (e.Rings is not null && IsPlanet)
@@ -97,7 +99,16 @@ namespace ODExplorer.NavData
         private TerraformState terraformState;
         private ScanItemComponent[] materials = Array.Empty<ScanItemComponent>();
         private Composition composition;
+        private ToolTip toolTip;
+        private double stellarMass;
+        private double massEM;
+        private int bonusValue;
+        private string bodyNameLocal;
+        private double rotationPeriod;
+        private double orbitalPeriod;
 
+        public double OrbitalPeriod { get => orbitalPeriod; set { orbitalPeriod = value; OnPropertyChanged(); } }
+        public double RotationPeriod { get => rotationPeriod; set { rotationPeriod = value; OnPropertyChanged(); } }
         public PlanetRing[] Rings { get => rings; set { rings = value; OnPropertyChanged(); } }
         public double Radius { get => radius; set { radius = value; OnPropertyChanged(); } }
         public bool TidalLock { get => tidalLock; set { tidalLock = value; OnPropertyChanged(); } }
@@ -179,21 +190,13 @@ namespace ODExplorer.NavData
         }
         public string SurfaceTempString
         {
-            get
+            get => Settings.SettingsInstance.Value.TemperatureUnit switch
             {
-                //if (Landable == false)
-                //{
-                //    return "";
-                //}
-
-                return Settings.SettingsInstance.Value.TemperatureUnit switch
-                {
-                    Temperature.Kelvin => $"{_surfaceTemp:N0} K",
-                    Temperature.Celsius => $"{_surfaceTemp - 273.15:N0} °C",
-                    Temperature.Fahrenheit => $"{(_surfaceTemp - 273.15) * 9 / 5 + 32:N0} °F",
-                    _ => "",
-                };
-            }
+                Temperature.Kelvin => $"{_surfaceTemp:N0} K",
+                Temperature.Celsius => $"{_surfaceTemp - 273.15:N0} °C",
+                Temperature.Fahrenheit => $"{(_surfaceTemp - 273.15) * 9 / 5 + 32:N0} °F",
+                _ => "",
+            };
             set => OnPropertyChanged();
         }
         public int MappedValueMin
@@ -225,10 +228,12 @@ namespace ODExplorer.NavData
             set { }
         }
         public TerraformState TerraformState { get => terraformState; set { terraformState = value; OnPropertyChanged("Terraformable"); } }
-        public string SystemName { get; set; }
+        private string systemName;
+        public string SystemName { get => systemName; set { systemName = value?.ToUpperInvariant(); OnPropertyChanged(); } }
 
         public long SystemAddress { get; set; }
-        public string BodyName { get; set; }
+        private string bodyName;
+        public string BodyName { get => bodyName; set => bodyName = value?.ToUpperInvariant(); }
         public string BodyNameLocal { get => bodyNameLocal; set { bodyNameLocal = value; OnPropertyChanged(); } }
 
         private long _bodyID;
@@ -259,12 +264,13 @@ namespace ODExplorer.NavData
             set { _landabe = value; OnPropertyChanged(); }
         }
 
-        public bool WasDiscovered { get; set; } = true;
+        private bool wasDiscovered = true;
+        public bool WasDiscovered { get => wasDiscovered; set { wasDiscovered = value; OnPropertyChanged(); } }
 
         private bool _wasMapped = true;
         public bool Wasmapped
         {
-            get { return !IsPlanet || _wasMapped; }
+            get => !IsPlanet || _wasMapped;
             set { _wasMapped = value; OnPropertyChanged(); }
         }
 
@@ -312,12 +318,6 @@ namespace ODExplorer.NavData
 
         private ReserveLevel _ringReserves;
         public ReserveLevel RingReserves { get => _ringReserves; set { _ringReserves = value; OnPropertyChanged(); } }
-
-        private ToolTip toolTip;
-        private double stellarMass;
-        private double massEM;
-        private int bonusValue;
-        private string bodyNameLocal;
 
         [IgnoreDataMember]
         public ToolTip ToolTip
@@ -378,6 +378,8 @@ namespace ODExplorer.NavData
                 Materials = e.Materials;
                 Volcanism = e.Volcanism;
                 TidalLock = e.TidalLock;
+                OrbitalPeriod = e.OrbitalPeriod;
+                RotationPeriod = e.RotationPeriod;
                 Radius = e.Radius;
                 Rings = e.Rings;
                 if (e.Rings is not null && IsPlanet)
@@ -441,7 +443,7 @@ namespace ODExplorer.NavData
                 return;
             }
 
-            if(Settings.SettingsInstance.Value.NotableSettings.IsNoteable(this))
+            if (Settings.SettingsInstance.Value.NotableSettings.IsNoteable(this))
             {
                 Status = DiscoveryStatus.Noteable;
                 return;

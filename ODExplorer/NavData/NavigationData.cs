@@ -778,6 +778,11 @@ namespace ODExplorer.NavData
 
                 string starClass = (string)starinfo["type"];
 
+                if(string.IsNullOrEmpty(starClass))
+                {
+                    return "?";
+                }
+
                 string[] sClass = starClass.Split(' ');
 
                 return sClass[0].ToUpperInvariant();
@@ -851,14 +856,14 @@ namespace ODExplorer.NavData
                     if ((int)body["bodyId"] == bodyID)
                     {
                         ret.BodyID = body["bodyId"].ToObject<int>();
-                        ret.BodyName = body["name"].ToObject<string>().ToUpperInvariant();
+                        ret.BodyName = body["name"]?.ToObject<string>().ToUpperInvariant();
                         ret.SetBodyNameLocal();
-                        ret.PlanetClass = EnumHelpers.ToEnum(body["subType"].ToObject<string>(), PlanetClass.Unknown);
-                        ret.AtmosphereDescrtiption = body["atmosphereType"].ToObject<string>();
-                        ret.Volcanism = body["volcanismType"].ToObject<string>();
-                        ret.SurfacePressure = body["surfacePressure"].ToObject<double>();
-                        ret.SurfaceGravity = body["gravity"].ToObject<double>();
-                        ret.SurfaceTemp = body["surfaceTemperature"].ToObject<int>();
+                        ret.PlanetClass = EnumHelpers.ToEnum(body["subType"]?.ToObject<string>(), PlanetClass.Unknown);
+                        ret.AtmosphereDescrtiption = body["atmosphereType"]?.ToObject<string>();
+                        ret.Volcanism = body["volcanismType"]?.ToObject<string>();
+                        ret.SurfacePressure = body["surfacePressure"] == null ? 0 : body["surfacePressure"].ToObject<double>();
+                        ret.SurfaceGravity = body["gravity"] == null ? 0 : body["gravity"].ToObject<double>();
+                        ret.SurfaceTemp = body["surfaceTemperature"] == null ? 0 : body["surfaceTemperature"].ToObject<int>();
 
                         return ret;
                     }

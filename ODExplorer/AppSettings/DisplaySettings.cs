@@ -94,6 +94,13 @@ namespace ODExplorer.AppSettings
             set { _showUnmapped = value; OnPropertyChanged(); }
         }
 
+        private bool _showWasDiscovered = true;
+        public bool ShowWasDiscovered
+        {
+            get => _showWasDiscovered;
+            set { _showWasDiscovered = value; OnPropertyChanged(); }
+        }
+
         private bool _showTerraformable = true;
         public bool ShowTerraformable
         {

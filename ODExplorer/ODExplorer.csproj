@@ -16,6 +16,7 @@
     <None Remove="Images\asteroid.png" />
     <None Remove="Images\astronaut.ico" />
     <None Remove="Images\astronaut.png" />
+    <None Remove="Images\binoculars.png" />
     <None Remove="Images\cooling-tower.png" />
     <None Remove="Images\copy.png" />
     <None Remove="Images\DNA.png" />
@@ -47,6 +48,7 @@
     <Resource Include="Images\asteroid.png" />
     <Resource Include="Images\astronaut.ico" />
     <Resource Include="Images\astronaut.png" />
+    <Resource Include="Images\binoculars.png" />
     <Resource Include="Images\cooling-tower.png" />
     <Resource Include="Images\copy.png" />
     <Resource Include="Images\DNA.png" />
