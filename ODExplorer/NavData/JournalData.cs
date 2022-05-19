@@ -1,5 +1,6 @@
 ﻿using EliteJournalReader;
 using EliteJournalReader.Events;
+using ODExplorer.AppSettings;
 using ODExplorer.Utils;
 using System;
 using System.IO;
@@ -10,19 +11,16 @@ namespace ODExplorer.NavData
     {
         private readonly JournalWatcher _watcher;
 
-        private readonly string journalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            "Saved Games",
-            "Frontier Developments",
-            "Elite Dangerous");
-
         private NavigationData _navData;
 
         private DateTime NavJsonLastWriteTime = new(DateTime.MinValue.Ticks);
 
-        public JournalData()
+        private Settings _appSettings;
+        public JournalData(Settings settings)
         {
+            _appSettings = settings;
             //create watcher
-            _watcher = new JournalWatcher(journalPath);
+            _watcher = new JournalWatcher(_appSettings.Value.JournalPath);
 
             //Subscribe to events
             _watcher.GetEvent<FSDJumpEvent>()?.AddHandler(FSDJump);//
@@ -105,7 +103,7 @@ namespace ODExplorer.NavData
             //Start watcher
             _ = _watcher.StartWatching().ConfigureAwait(false);
 #if DEBUG
-            //ReadNavRouteJson();
+            ReadNavRouteJson();
 #endif
         }
 
@@ -207,7 +205,7 @@ namespace ODExplorer.NavData
         /// </summary>
         private void ReadNavRouteJson()
         {
-            string path = Path.Combine(journalPath, "NavRoute.json");
+            string path = Path.Combine(_appSettings.Value.JournalPath, "NavRoute.json");
 
             if (!File.Exists(path))
             {

@@ -10,7 +10,7 @@ namespace ODExplorer.NavData
 {
     public class EstimatedScanValue : PropertyChangeNotify
     {
-        private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "ScanValue.json");
+        private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "ScanValue.json");
 
         public ObservableCollection<SystemInfo> ScannedSystems { get; set; } = new();
 
@@ -113,7 +113,7 @@ namespace ODExplorer.NavData
                 {
                     if (body.MappedByUser)
                     {
-                        valMin += body.MappedValueMin == 0 ? (ulong)MathFunctions.GetPlanetValue(body.PlanetClass, body.MassEM, !body.WasDiscovered, !body.Wasmapped, false, NavigationData.Odyssey, true, body.EffeicentMapped) : (ulong)body.MappedValueMin;
+                        valMin += (ulong)MathFunctions.GetPlanetValue(body.PlanetClass, body.MassEM, !body.WasDiscovered, !body.Wasmapped, false, NavigationData.Odyssey, true, body.EffeicentMapped);
                         val += (ulong)(body.MappedValue + body.BonusValue);
                         continue;
                     }

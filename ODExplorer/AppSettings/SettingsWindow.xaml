@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ODExplorer.AppSettings"
         xmlns:Utils="clr-namespace:ODExplorer.Utils"
+        xmlns:customcontrols="clr-namespace:ODExplorer.CustomControls"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:SystemCM="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.TypeConverter"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -43,6 +44,15 @@
                 <x:Type TypeName="SystemCM:ListSortDirection"></x:Type>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <Style TargetType="{x:Type customcontrols:ClickSelectTextBox}">
+            <Setter Property="Background"
+                    Value="{DynamicResource PrimaryControlBackground}" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource PrimaryControlBorder}" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource PrimaryControlForeground}" />
+        </Style>
     </Window.Resources>
     <Border BorderBrush="{DynamicResource PrimaryBorder}"
             BorderThickness="2">
@@ -294,6 +304,8 @@
                         <RowDefinition Height="10" /> 
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
                     </Grid.RowDefinitions>
 
                     <StackPanel Orientation="Horizontal"
@@ -355,7 +367,7 @@
                               Foreground="{DynamicResource PrimaryForeground}"
                               FontSize="14"
                               VerticalAlignment="Center"
-                              IsChecked="{Binding AppSettings.ClonedValues.AutoCopyCsvSystemToClipboard}" />
+                              IsChecked="{Binding AppSettings.ClonedValues.AutoSelectNextCsvSystem}" />
                     <TextBlock  Grid.Row="6"
                                 Grid.Column="1"
                                 Foreground="{DynamicResource PrimaryForeground}"
@@ -442,6 +454,34 @@
                                 Text="Clear Geological Scan Data"
                                 VerticalAlignment="Center"
                                 TextWrapping="WrapWithOverflow" />
+
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="18"
+                            Grid.Column="0">
+                        <TextBlock Text="Custom Journal Path"
+                                    FontSize="14"
+                               VerticalAlignment="Center"/>
+                        <customcontrols:ClickSelectTextBox IsReadOnly="True"
+                                                       Width="110"
+                                                       Margin="10,0"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding AppSettings.Value.CustomJournalPath}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="18"
+                                Grid.Column="1">
+                        <Button Content="Select Folder"
+                                x:Name="BrowseJournalFolder"
+                                Width="80"
+                                Click="BrowseJournalFolder_Click"
+                                Margin="0,0,20,0"/>
+                        <Button Content="Clear"
+                                Width="50"
+                                VerticalContentAlignment="Center"
+                                x:Name="ClearJournalFolder"
+                                Click="ClearJournalFolder_Click" />
+                    </StackPanel>
                 </Grid>
             </GroupBox>
 

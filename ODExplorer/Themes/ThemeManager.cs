@@ -9,7 +9,7 @@ namespace ODExplorer.Themes
 {
     public class ThemeManager : ResourceDictionary
     {
-        private static readonly string saveFile = Path.Combine(Directory.GetCurrentDirectory(), "CustomTheme.json");
+        private static readonly string saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "CustomTheme.json");
 
         private static ResourceDictionary customTheme = new() { Source = new Uri(EnumDescriptionConverter.GetEnumDescription(Theme.Custom), UriKind.Absolute) };
 

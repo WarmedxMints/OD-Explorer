@@ -13,6 +13,8 @@
         Title="OD EXPLORER - EXPLORATION DATA"
         Height="600"
         Width="980"
+        WindowStyle="SingleBorderWindow" 
+        WindowStartupLocation="CenterOwner"
         ShowInTaskbar="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.ShowAdditionalWindowsInTaskBar}"
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded">

@@ -11,7 +11,7 @@ namespace ODExplorer.CsvControl
 {
     public class CsvController : PropertyChangeNotify
     {
-        private readonly string _previousSession = Path.Combine(Directory.GetCurrentDirectory(), "CSVSessions.json");
+        private readonly string _previousSession = Path.Combine(Directory.GetCurrentDirectory(), "Data", "CSVSessions.json");
 
         public CsvController()
         {
@@ -172,18 +172,22 @@ namespace ODExplorer.CsvControl
             {
                 int index = container.Targets.IndexOf(target);
 
-                CurrentIndex = index + 1;
+                if (index >= CurrentIndex)
+                {
+                    CurrentIndex = index + 1;
+                }
             }
         }
 
-        public string CsvHeader
+        public string[] CsvHeader
         {
             get
             {
                 return CurrentCsvType switch
                 {
-                    CsvType.RoadToRiches => "VALUE",
-                    CsvType.WorldTypeRoute => "JUMPS",
+                    CsvType.RoadToRiches => new string[] { "DISTANCE", "VALUE" },
+                    CsvType.WorldTypeRoute => new string[] { "DISTANCE", "JUMPS" },
+                    CsvType.Exobiology => new string[] {"GENUS", "VALUE"},
                     _ => null,
                 };
             }
@@ -203,7 +207,10 @@ namespace ODExplorer.CsvControl
                 return false;
             }
 
-            CsvContainers = new ObservableCollection<CsvContainer>(prevSession.Containers);
+            for (int i = 0; i < prevSession.Containers.Count; i++)
+            {
+                CsvContainers[i] = prevSession.Containers[i];
+            }
 
             foreach (CsvContainer container in CsvContainers)
             {

@@ -56,7 +56,7 @@ namespace ODExplorer.AppSettings
 
     public class Settings : PropertyChangeNotify
     {
-        private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Settings.json");
+        private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "Settings.json");
 
         private static Theme _currentTheme = Theme.ODExplorer;
 
@@ -79,13 +79,14 @@ namespace ODExplorer.AppSettings
                 return;
             }
 
-            SettingsInstance = this;
+            SettingsInstance = this;            
 
             Value = LoadSave.LoadJson<SettingsValues>(_saveFile);
 
             if (Value is null)
             {
                 Value = new();
+                ResetWindowPosition();
             }
         }
 
@@ -114,6 +115,29 @@ namespace ODExplorer.AppSettings
             ClonedValues = null;
 
             _ = SaveSettings();
+        }
+
+        public void ResetWindowPosition()
+        {
+            Value.LastWindowPos.Width = 1440;
+            Value.LastWindowPos.Height = 450;
+
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = Value.LastWindowPos.Width;
+            double windowHeight = Value.LastWindowPos.Height;
+            Value.LastWindowPos.Left = (screenWidth / 2) - (windowWidth / 2);
+            Value.LastWindowPos.Top = (screenHeight / 2) - (windowHeight / 2);
+
+            if (Value.LastWindowPos.Height > SystemParameters.VirtualScreenHeight)
+            {
+                Value.LastWindowPos.Height = SystemParameters.VirtualScreenHeight;
+            }
+
+            if (Value.LastWindowPos.Width > SystemParameters.VirtualScreenWidth)
+            {
+                Value.LastWindowPos.Width = SystemParameters.VirtualScreenWidth;
+            }
         }
 
         public void SaveAll()

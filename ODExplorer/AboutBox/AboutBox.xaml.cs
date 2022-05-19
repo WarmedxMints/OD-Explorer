@@ -35,5 +35,14 @@ namespace ODExplorer.AboutBox
             _ = Process.Start(psi);
             e.Handled = true;
         }
+
+        private void PayPalDonateButton_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessStartInfo psi = new();
+            psi.UseShellExecute = true;
+            psi.FileName = "https://www.paypal.com/donate/?business=UPEJS3PN7H4XJ&no_recurring=0&item_name=Creator+of+OD+Software.+Thank+you+for+your+donation.&currency_code=GBP";
+            _ = Process.Start(psi);
+            e.Handled = true;
+        }
     }
 }

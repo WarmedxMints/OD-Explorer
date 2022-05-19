@@ -86,6 +86,11 @@ namespace ODExplorer
         // State change
         private void MainWindowStateChangeRaised(object sender, EventArgs e)
         {
+            if (AppSettings is not null && WindowState != WindowState.Minimized)
+            {
+                AppSettings.Value.LastWindowPos.State = WindowState;
+            }
+
             if (WindowState == WindowState.Maximized)
             {
                 MainWindowBorder.BorderThickness = new Thickness(8);
@@ -101,9 +106,8 @@ namespace ODExplorer
         }
         #endregion
 
-        private readonly JournalData _journalData = new();
+        private JournalData _journalData;
         public Settings AppSettings { get; private set; } = new();
-        //public ExplorationTargets Targets { get; private set; } = new();
 
         public CsvController CsvController { get; set; } = new();
         public NavigationData NavData { get; private set; } = new();
@@ -119,6 +123,10 @@ namespace ODExplorer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            WindowState = AppSettings.Value.LastWindowPos.State;
+
+            _journalData = new(AppSettings);
+
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
             NavData.CurrentSystem.CollectionChanged += CurrentSystem_CollectionChanged;
@@ -495,7 +503,6 @@ namespace ODExplorer
             {
                 CSVParserStatus.Text = $"\'{e.SystemName}\' Copied To Clipboard";
                 Clipboard.SetDataObject(e.SystemName);
-                Clipboard.SetText(e.SystemName);
                 ((Storyboard)FindResource("FadeOut")).Begin(CSVParserStatus);
             }
             catch (Exception ex)

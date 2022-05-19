@@ -8,7 +8,7 @@ namespace ODExplorer.GeologicalData
 {
     public class ScannedGeoData
     {
-        private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "GeoData.json");
+        private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "GeoData.json");
 
         public ObservableCollection<GeoLogicalDataContainer> ScannedData { get; private set; } = new();
 

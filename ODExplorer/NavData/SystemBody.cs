@@ -495,7 +495,7 @@ namespace ODExplorer.NavData
             {
                 FssValue = MathFunctions.GetBodyValue(this, odyssey, false, false);
 
-                mappedValueMin = MathFunctions.GetPlanetValue(PlanetClass, MassEM, !WasDiscovered, !Wasmapped, Terraformable, odyssey, true, true);
+                mappedValueMin = MathFunctions.GetPlanetValue(PlanetClass, MassEM, !WasDiscovered, !Wasmapped, false, odyssey, true, true);
                 MappedValue = MathFunctions.GetPlanetValue(PlanetClass, MassEM, !WasDiscovered, !Wasmapped, Terraformable, odyssey, true, true);
 
                 WorthMapping = (MappedValue >= Settings.SettingsInstance.Value.WorthMappingValue)

@@ -1563,7 +1563,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="{StaticResource Eurostile}" />
+                Value="{DynamicResource Eurostile}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
                 Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility"

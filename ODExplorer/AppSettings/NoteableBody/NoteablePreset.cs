@@ -90,7 +90,7 @@ namespace ODExplorer.AppSettings.NoteableBody
 
             menuItem1.Click += MenuItem1_Click;
             menuItem1.PreviewMouseRightButtonUp += MenuItem1_PreviewMouseRightButtonUp;
-            CustomItem.Items.Add(menuItem1);
+            _ = CustomItem.Items.Add(menuItem1);
         }
 
         private void MenuItem1_PreviewMouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

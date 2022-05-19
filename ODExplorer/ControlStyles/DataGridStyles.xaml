@@ -42,7 +42,7 @@
         <Setter Property="SelectionUnit"
                 Value="FullRow" />
         <Setter Property="EnableRowVirtualization"
-                Value="False" />
+                Value="True" />
         <Setter Property="HorizontalGridLinesBrush"
                 Value="{DynamicResource DataGridHorizontalGridLine}" />
         <Setter Property="VerticalGridLinesBrush"
@@ -89,6 +89,11 @@
             </DataTrigger>
             <DataTrigger Binding="{Binding CsvController.CurrentCsvType}"
                          Value="{x:Static CsvParser:CsvType.WorldTypeRoute}">
+                <Setter Property="Visibility"
+                        Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CsvController.CurrentCsvType}"
+                         Value="{x:Static CsvParser:CsvType.Exobiology}">
                 <Setter Property="Visibility"
                         Value="Visible" />
             </DataTrigger>
@@ -218,9 +223,6 @@
                 Value="0" />
         <Setter Property="ToolTip"
                 Value="{Binding ToolTip}">
-            <!--<Setter.Value>
-                <TextBlock Text="{Binding BodyNameLocal,  StringFormat={}{0} Work}" />
-            </Setter.Value>-->
         </Setter>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Status}"

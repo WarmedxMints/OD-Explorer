@@ -1,11 +1,18 @@
-﻿using ODExplorer.AppSettings.NoteableBody;
+﻿using Microsoft.Win32;
+using ODExplorer.AppSettings.NoteableBody;
 using ODExplorer.Utils;
+using System;
 using System.ComponentModel;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace ODExplorer.AppSettings
 {
     public class SettingsValues : PropertyChangeNotify
     {
+        private WindowPos lastWindowPos = new();
+        public WindowPos LastWindowPos { get => lastWindowPos; set { lastWindowPos = value; OnPropertyChanged(); } }
+
         private DisplaySettings displaySettings = new();
         public DisplaySettings DisplaySettings { get => displaySettings; set { displaySettings = value; OnPropertyChanged(); } }
 
@@ -40,6 +47,53 @@ namespace ODExplorer.AppSettings
         public bool ExcludeStarsFromSorting { get => excludeStarsFromSorting; set { excludeStarsFromSorting = value; OnPropertyChanged(); } }
         public bool AutoStartFleetCarrierTimer {  get => autoStartFleetCarrierTimer; set { autoStartFleetCarrierTimer = value; OnPropertyChanged(); } }
         public Theme CurrentTheme { get => Settings.CurrentTheme; set { Settings.CurrentTheme = value; OnPropertyChanged(); } }
+
+        private string defaultJournalPath = null;
+
+        private string customJournalPath;
+
+        public string CustomJournalPath { get => customJournalPath; set { customJournalPath = value; OnPropertyChanged(); } }
+
+        [IgnoreDataMember]
+        public string JournalPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CustomJournalPath))
+                {
+                    return GetJournalPath();
+                }
+
+                return CustomJournalPath;
+            }
+        }
+
+        private string GetJournalPath()
+        {
+            if (string.IsNullOrEmpty(defaultJournalPath) == false)
+            {
+                return defaultJournalPath;
+            }
+
+            var defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games");
+            var regKey = "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders";
+            var regKeyValue = "{4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4}";
+            string regValue = (string)Registry.GetValue(regKey, regKeyValue, defaultPath);
+
+            if (string.IsNullOrEmpty(regValue))
+            {
+                defaultJournalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                        "Saved Games",
+                        "Frontier Developments",
+                        "Elite Dangerous");
+
+                return defaultJournalPath;
+            }
+
+            defaultJournalPath = Path.Combine(regValue, "Frontier Developments", "Elite Dangerous");
+
+            return defaultJournalPath;
+        }
 
         public void Reset()
         {

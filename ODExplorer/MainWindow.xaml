@@ -9,8 +9,10 @@
         mc:Ignorable="d"
         Title="OD Explorer"
         x:Name="ODExplorer"
-        Height="850"
-        Width="950"
+        Top="{Binding AppSettings.Value.LastWindowPos.Top, Mode=TwoWay}"
+        Left="{Binding AppSettings.Value.LastWindowPos.Left, Mode=TwoWay}"
+        Height="{Binding AppSettings.Value.LastWindowPos.Height, Mode=TwoWay}"
+        Width="{Binding AppSettings.Value.LastWindowPos.Width, Mode=TwoWay}"
         FontFamily="{StaticResource Eurostile}"
         FontSize="18"
         Background="{DynamicResource PrimaryBackground}"
@@ -462,7 +464,7 @@
                                                                                 <ImageBrush ImageSource="/Images/binoculars.png" />
                                                                             </Rectangle.OpacityMask>
                                                                         </Rectangle>
-                                                                        
+
                                                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                                                    Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
                                                                                    Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
@@ -814,7 +816,7 @@
                                       AutoGenerateColumns="False"
                                       HeadersVisibility="Column"
                                       GridLinesVisibility="None"
-                                      IsHitTestVisible="False"
+                                      IsHitTestVisible="True"
                                       Loaded="Datagrid_Loaded"
                                       Unloaded="Datagrid_Unloaded"
                                       RowStyle="{DynamicResource CSV Row Style}"
@@ -827,19 +829,38 @@
                                                         Width="SizeToCells"
                                                         MinWidth="100"
                                                         Binding="{Binding Path=Body}" />
-                                    <DataGridTextColumn Header="DISTANCE"
-                                                        HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                    <DataGridTextColumn HeaderStyle="{DynamicResource DataGrid Header Center}"
                                                         Width="SizeToCells"
                                                         MinWidth="120"
-                                                        Binding="{Binding Path=Distance, StringFormat={}{0} ls}"
-                                                        ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
+                                                        Binding="{Binding Path=Distance}">
+                                        <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="HorizontalAlignment"
+                                                    Value="Right" />
+                                            <Setter Property="Margin"
+                                                    Value="0,0,5,0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CsvController.CurrentCsvType, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}"
+                                                                Value="{x:Static CsvParser:CsvType.Exobiology}">
+                                                        <Setter Property="HorizontalAlignment"
+                                                                Value="Left" />
+                                                        <Setter Property="Margin"
+                                                                Value="5,0,0,0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                        </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="{Binding CsvController.CsvHeader[0], RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
                                     <DataGridTextColumn HeaderStyle="{DynamicResource DataGrid Header Right}"
                                                         Width="SizeToCells"
                                                         MinWidth="130"
                                                         Binding="{Binding Path=Property1}"
                                                         ElementStyle="{DynamicResource DataGrid Element Right Margin}">
                                         <DataGridTextColumn.Header>
-                                            <TextBlock Text="{Binding CsvController.CsvHeader, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" />
+                                            <TextBlock Text="{Binding CsvController.CsvHeader[1], RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" />
                                         </DataGridTextColumn.Header>
                                     </DataGridTextColumn>
                                 </DataGrid.Columns>
@@ -981,7 +1002,6 @@
 
                             </StackPanel>
                             <!--#endregion-->
-
 
                             <!--#region Tourist Route Info-->
                             <StackPanel  Visibility="{Binding CsvController.CurrentCsvType, Converter={StaticResource CsvTypeToVis}, ConverterParameter=TouristRoute}"

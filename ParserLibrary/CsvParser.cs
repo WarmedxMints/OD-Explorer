@@ -22,6 +22,8 @@ namespace ParserLibrary
         WorldTypeRoute,
         [Description("Tourist Route")]
         TouristRoute,
+        [Description("Exobiology Route")]
+        Exobiology
     }
 
     public class CsvParser
@@ -34,6 +36,7 @@ namespace ParserLibrary
             new string[] { "System Name", "Distance", "Distance Remaining", "Fuel Left", "Fuel Used", "Refuel", "Neutron Star" }, //galaxyPlotterRoute
             new string[] { "System Name", "Body Name", "Distance To Arrival", "Jumps" }, //worldTypeRoute
             new string[] { "System Name", "Jumps" }, //touristRoute
+            new string[] { "System Name", "Body Name", "Body Subtype", "Distance To Arrival", "Landmark Type", "Value", "Jumps" } //ExoBiology
         };
 
         public static CsvParserReturn ParseCsv(string filename)
@@ -61,6 +64,7 @@ namespace ParserLibrary
                     CsvType.GalaxyPlotter => ProcessGalaxyPlotterRoute(parser),
                     CsvType.WorldTypeRoute => ProcessWorldTypeRoute(parser),
                     CsvType.TouristRoute => ProcessTouristRoute(parser),
+                    CsvType.Exobiology => ProcessExoRoute(parser),
                     _ => null,
                 };
             }
@@ -68,6 +72,51 @@ namespace ParserLibrary
             {
                 return null;
             }
+        }
+
+        private static CsvParserReturn ProcessExoRoute(TextFieldParser parser)
+        {
+            CsvParserReturn ret = new()
+            {
+                CsvType = CsvType.Exobiology,
+                Targets = new()
+            };
+
+            while (!parser.EndOfData)
+            {
+                //Process row
+                string[] fields = parser.ReadFields();
+
+                string sysname = fields[0];
+
+                ExplorationTarget target = ret.Targets.Find(x => x.SystemName.Contains(sysname, StringComparison.OrdinalIgnoreCase));
+
+                if (target == null)
+                {
+                    target = new ExplorationTarget
+                    {
+                        SystemName = sysname.ToUpperInvariant(),
+                    };
+
+                    ret.Targets.Add(target);
+                }
+
+                BodiesInfo bodyinfo = new();
+
+                bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
+                bodyinfo.Distance = fields[4].ToUpperInvariant();
+                bodyinfo.Property1 = $"{double.Parse(fields[5], new CultureInfo("en-GB")):N0}";
+
+
+                if (target.BodiesInfo == null)
+                {
+                    target.BodiesInfo = new List<BodiesInfo>();
+                }
+
+                target.BodiesInfo.Add(bodyinfo);
+            }
+
+            return ret;
         }
 
         private static CsvParserReturn ProcessTouristRoute(TextFieldParser parser)
@@ -125,7 +174,7 @@ namespace ParserLibrary
                 BodiesInfo bodyinfo = new();
 
                 bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
-                bodyinfo.Distance = $"{double.Parse(fields[2], new CultureInfo("en-GB")):N0}";
+                bodyinfo.Distance = $"{double.Parse(fields[2], new CultureInfo("en-GB")):N0} ls";
                 bodyinfo.Property1 = $"{double.Parse(fields[3], new CultureInfo("en-GB")):N0}";
                 
 
@@ -270,7 +319,7 @@ namespace ParserLibrary
                 BodiesInfo bodyinfo = new();
 
                 bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
-                bodyinfo.Distance = $"{double.Parse(fields[4], new CultureInfo("en-GB")):N0}";
+                bodyinfo.Distance = $"{double.Parse(fields[4], new CultureInfo("en-GB")):N0} ls";
                 bodyinfo.Property1 = $"{double.Parse(fields[6], new CultureInfo("en-GB")):N0}";
                 
 
@@ -302,7 +351,7 @@ namespace ParserLibrary
         {            
             if(bodyName.Length > systemName.Length)
             {
-                bodyName = bodyName.Remove(0, systemName.Length).ToUpperInvariant();
+                bodyName = bodyName.Remove(0, systemName.Length);
 
                 return bodyName;
             }

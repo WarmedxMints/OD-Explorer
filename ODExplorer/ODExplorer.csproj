@@ -17,6 +17,7 @@
     <None Remove="Images\astronaut.ico" />
     <None Remove="Images\astronaut.png" />
     <None Remove="Images\binoculars.png" />
+    <None Remove="Images\btn_donate_LG.png" />
     <None Remove="Images\cooling-tower.png" />
     <None Remove="Images\copy.png" />
     <None Remove="Images\DNA.png" />
@@ -34,6 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +51,7 @@
     <Resource Include="Images\astronaut.ico" />
     <Resource Include="Images\astronaut.png" />
     <Resource Include="Images\binoculars.png" />
+    <Resource Include="Images\btn_donate_LG.png" />
     <Resource Include="Images\cooling-tower.png" />
     <Resource Include="Images\copy.png" />
     <Resource Include="Images\DNA.png" />

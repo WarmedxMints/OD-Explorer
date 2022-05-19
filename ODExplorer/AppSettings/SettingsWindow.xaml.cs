@@ -2,6 +2,7 @@
 using ODExplorer.GeologicalData;
 using ODExplorer.NavData;
 using ODExplorer.OrganicData;
+using Ookii.Dialogs.Wpf;
 using System.Windows;
 
 namespace ODExplorer.AppSettings
@@ -87,6 +88,28 @@ namespace ODExplorer.AppSettings
             {
                 scannedGeoData.ResetData();
             }
+        }
+
+        private void BrowseJournalFolder_Click(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog folder = new()
+            {
+                Multiselect = false,
+                Description = "Select ED Journal Folder",
+                UseDescriptionForTitle = true
+            };
+
+            if (folder.ShowDialog().Value)
+            {
+                AppSettings.Value.CustomJournalPath = folder.SelectedPath;
+                ODMessageBox.Show(this, "Please restart OD Explorer to apply changes to journal files location", "Restart Required");
+            }
+        }
+
+        private void ClearJournalFolder_Click(object sender, RoutedEventArgs e)
+        {
+            AppSettings.Value.CustomJournalPath = null;
+            ODMessageBox.Show(this, "Please restart OD Explorer to apply changes to journal files location", "Restart Required");
         }
     }
 }
