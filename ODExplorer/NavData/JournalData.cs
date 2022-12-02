@@ -58,6 +58,8 @@ namespace ODExplorer.NavData
             _watcher.GetEvent<SupercruiseExitEvent>()?.AddHandler(SupercruiseExit);
 
             _watcher.GetEvent<CodexEntryEvent>()?.AddHandler(CodexEntry);
+
+            _watcher.GetEvent<SellOrganicDataEvent>().AddHandler(OnSellOrganic);
         }
 
         public bool WatcherLive => _watcher.IsLive;
@@ -109,7 +111,7 @@ namespace ODExplorer.NavData
 
         private void FileHeader(object sender, FileheaderEvent.FileheaderEventArgs e)
         {
-            NavigationData.Odyssey = e.Odyssey;
+            NavigationData.Odyssey = false;// e.Odyssey;
         }
 
         private void Location(object sender, LocationEvent.LocationEventArgs e)
@@ -298,6 +300,16 @@ namespace ODExplorer.NavData
             }
 
             _navData.ScanOrganic(e);
+        }
+
+        private void OnSellOrganic(object sender, SellOrganicDataEvent.SellOrganicDataEventArgs e)
+        {
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
+
+            _navData.SellOrganic(e);
         }
     }
 }

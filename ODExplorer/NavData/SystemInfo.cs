@@ -44,6 +44,9 @@ namespace ODExplorer.NavData
         #endregion
 
         #region Properties
+        private bool dataSold;
+        public bool DataSold { get => dataSold; set { dataSold = value; OnPropertyChanged(); } }
+
         public SystemPosition SystemPos { get; set; }
 
         private double jumpDistanceToSystem;

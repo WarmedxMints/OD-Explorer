@@ -5,6 +5,7 @@ using ODExplorer.AppSettings;
 using ODExplorer.Utils;
 using ODExplorer.Utils.Converters;
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
@@ -77,7 +78,6 @@ namespace ODExplorer.NavData
 
             SurfaceGravity = Math.Round(SurfaceGravity / 10, 2);
             SetBodyNameLocal();
-
             UpdateStatus();
         }
         #endregion
@@ -399,10 +399,45 @@ namespace ODExplorer.NavData
                 }
                 SetBodyNameLocal();
                 CalcValues(Ody);
+                PopulateNotables();
                 UpdateStatus();
             });
         }
 
+        public sealed class FoundSignals
+        {
+            public string Name { get; set; }
+            public int Value { get; set; }
+        }
+
+        private FoundSignals[] noteableItems = Array.Empty<FoundSignals>();
+        public FoundSignals[] NoteableItems { get { return noteableItems; }  set { noteableItems = value; OnPropertyChanged(); } }
+
+        private FoundSignals[] noteableItems2 = Array.Empty<FoundSignals>();
+        public FoundSignals[] NoteableItems2 { get { return noteableItems2; } set { noteableItems2 = value; OnPropertyChanged(); } }
+
+        private FoundSignals[] noteableItems3 = Array.Empty<FoundSignals>();
+        public FoundSignals[] NoteableItems3 { get { return noteableItems3; } set { noteableItems3 = value; OnPropertyChanged(); } }
+
+        public void PopulateNotables()
+        {
+            var noteAbles = Settings.SettingsInstance.Value.NotableSettings.GetPresetMatches(this).Chunk(5).ToList();
+
+            if(noteAbles.Any())
+            {
+                NoteableItems = noteAbles[0];
+            }
+
+            if(noteAbles.Count > 1)
+            {
+                NoteableItems2 = noteAbles[1];
+            }
+
+            if(noteAbles.Count > 2)
+            {
+                NoteableItems3 = noteAbles[2];
+            }
+        }
         public void SetBodyNameLocal()
         {
             if (string.IsNullOrEmpty(SystemName))

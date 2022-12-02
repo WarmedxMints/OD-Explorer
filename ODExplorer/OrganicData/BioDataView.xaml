@@ -256,7 +256,7 @@
                         
                         
                         <DataGridTextColumn Header="VALUE"
-                                            Width="70"
+                                            Width="110"
                                             HeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyleCenter}"
                                             Binding="{Binding Path=BioInfo.Value, StringFormat={}{0:N0}}">
                             <DataGridTextColumn.ElementStyle>

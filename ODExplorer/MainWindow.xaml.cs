@@ -18,7 +18,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -520,7 +519,6 @@ namespace ODExplorer
         {
             Dispatcher.Invoke(() =>
             {
-                TimerStartBtn.Content = "Start Jump Timer";
                 SystemSounds.Beep.Play();
 
                 taskBarItem.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;

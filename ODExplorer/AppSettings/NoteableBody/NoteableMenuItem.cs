@@ -15,5 +15,6 @@ namespace ODExplorer.AppSettings.NoteableBody
         public IntRange SurfacePressure { get; set; } = new(0, 10130000);
         public TerraformableStatus TerraformableEnum { get; set; }
         public int[] Signals { get; set; } = new int[] { 0, 0 };
+        public int Value { get; set; } = 0;
     }
 }

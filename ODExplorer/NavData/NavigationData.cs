@@ -204,12 +204,12 @@ namespace ODExplorer.NavData
 
             foreach (FSSSignal signal in e.Signals)
             {
-                switch (signal.Type_Localised)
+                switch (signal.Type)
                 {
-                    case "Biological":
+                    case "$SAA_SignalType_Biological;":
                         bio = signal.Count;
                         break;
-                    case "Geological":
+                    case "$SAA_SignalType_Geological;":
                         geo = signal.Count;
                         break;
                     default:
@@ -219,6 +219,7 @@ namespace ODExplorer.NavData
             //Add the detected signal count to our body
             body.BiologicalSignals = bio;
             body.GeologicalSignals = geo;
+            body.PopulateNotables();
             body.UpdateStatus();
         }
 
@@ -274,10 +275,7 @@ namespace ODExplorer.NavData
 
         public void ScanOrganic(ScanOrganicEvent.ScanOrganicEventArgs e)
         {
-            if (CurrentBody == null)
-            {
-                CurrentBody = GetSystemBodyFromEDSM(e.SystemAddress, e.Body);
-            }
+            CurrentBody ??= GetSystemBodyFromEDSM(e.SystemAddress, e.Body);
 
             ScannedBio.AddData(CurrentBody, e.Species_Localised.ToUpperInvariant(), e.ScanType, e.EliteTimeString);
         }
@@ -290,7 +288,7 @@ namespace ODExplorer.NavData
             }
 
             //Geo Scan
-            if (e.SubCategory_Localised.Contains("Geology"))
+            if (e.SubCategory.Contains("Geology"))
             {
                 ScannedGeo.AddCodexData(e.System.ToUpperInvariant(), CurrentBody.BodyName, e.Name_Localised.ToUpperInvariant(), e.VoucherAmount ?? 0);
                 return;
@@ -299,11 +297,16 @@ namespace ODExplorer.NavData
             }
 
             //Bio Scan
-            if (e.SubCategory_Localised.Contains("Organic"))
+            if (e.SubCategory.Contains("Organic"))
             {
                 ScannedBio.AddCodexData(CurrentBody, e.EliteTimeString, e.Name_Localised.ToUpperInvariant());
                 return;
             }
+        }
+
+        internal void SellOrganic(SellOrganicDataEvent.SellOrganicDataEventArgs e)
+        {
+            ScannedBio.SellOrganic(e);
         }
         #endregion
 
@@ -673,11 +676,7 @@ namespace ODExplorer.NavData
 
             SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
 
-            if (body is null)
-            {
-                //We don't know about the body but the user may have scanned it previously so no body data has been sent
-                body = GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
-            }
+            body ??= GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
 
             CurrentBody = body;
         }
@@ -694,11 +693,7 @@ namespace ODExplorer.NavData
 
             SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
 
-            if (body is null)
-            {
-
-                body = GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
-            }
+            body ??= GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
 
             CurrentBody = body;
         }
@@ -851,7 +846,7 @@ namespace ODExplorer.NavData
 
                 JArray Bodies = msg["bodies"] as JArray;
 
-                foreach (JObject body in Bodies)
+                foreach (JObject body in Bodies.Cast<JObject>())
                 {
                     if ((int)body["bodyId"] == bodyID)
                     {
@@ -881,7 +876,7 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="ret"></param>
         /// <returns></returns>
-        private void GetSystemValue(SystemInfo ret)
+        private static void GetSystemValue(SystemInfo ret)
         {
             //var ret = new SystemInfo(system);
             //We already have a value
@@ -928,15 +923,16 @@ namespace ODExplorer.NavData
                         continue;
                     }
 
-                    SystemBody planet = new();
-
-                    planet.BodyID = body.BodyId;
-                    planet.BodyName = body.BodyName;
-                    planet.BodyNameLocal = body.BodyName.ToUpperInvariant();
-                    planet.DistanceFromArrivalLs = (int)body.Distance;
-                    planet.MappedValue = (int)body.ValueMax;
-                    planet.WasDiscovered = true;
-                    planet.PlanetClass = PlanetClass.EdsmValuableBody;
+                    SystemBody planet = new()
+                    {
+                        BodyID = body.BodyId,
+                        BodyName = body.BodyName,
+                        BodyNameLocal = body.BodyName.ToUpperInvariant(),
+                        DistanceFromArrivalLs = (int)body.Distance,
+                        MappedValue = (int)body.ValueMax,
+                        WasDiscovered = true,
+                        PlanetClass = PlanetClass.EdsmValuableBody
+                    };
 
                     if (planet.BodyNameLocal.StartsWith(ret.SystemName, StringComparison.OrdinalIgnoreCase))
                     {

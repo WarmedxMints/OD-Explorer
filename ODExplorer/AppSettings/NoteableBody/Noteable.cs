@@ -1,8 +1,12 @@
-﻿using ODExplorer.NavData;
+﻿using Newtonsoft.Json.Linq;
+using ODExplorer.NavData;
+using ODExplorer.OrganicData;
+using ODExplorer.Preset;
 using ODExplorer.Utils;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Windows;
+using static ODExplorer.NavData.SystemBody;
 
 namespace ODExplorer.AppSettings.NoteableBody
 {
@@ -34,7 +38,7 @@ namespace ODExplorer.AppSettings.NoteableBody
             HighlightNoteable = true;
         }
 
-        
+
         public NoteablePreset NoteablePresets { get; set; } = new();
 
         private NoteablePlanetClass planetClass = NoteablePlanetClass.Any;
@@ -142,22 +146,159 @@ namespace ODExplorer.AppSettings.NoteableBody
             return !ret.Contains(false);
         }
 
+        public FoundSignals[] GetPresetMatches(SystemBody body)
+        {
+            if (body.IsPlanet == false || body.PlanetClass == EliteJournalReader.PlanetClass.EdsmValuableBody)
+            {
+                return Array.Empty<FoundSignals>();
+            }
+
+            List<FoundSignals> Items = new();
+
+            foreach (var preset in NoteablePresets.ODPresetGroups)
+            {
+                foreach (var pset in preset.MenuItems)
+                {
+
+                    var p = ((JObject)pset).ToObject<ODPresetSubMenuItem>();
+
+                    if (p is null)
+                    {
+                        continue;
+                    }
+
+                    var menuItem = p as ODPresetSubMenuItem;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        foreach (var qas in menuItem.MenuItems)
+                        {
+                            var q = ((JObject)qas).ToObject<NoteableMenuItem>();
+
+                            if (q is null)
+                            {
+                                continue;
+                            }
+
+                            List<bool> ret = CheckMenuItemMatch(body, q);
+
+                            if (!ret.Contains(false))
+                            {
+                                var name = $"{menuItem.MenuTitle} {q.Header}".ToUpperInvariant();
+
+                                if (ScannedBioData.bioValues.ContainsKey(name))
+                                {
+                                    q.Value = ScannedBioData.bioValues[name].Value;
+                                }
+                                Items.Add(new FoundSignals() { Name = name, Value = q.Value});
+                            }
+                        }
+                    });
+                }
+            }
+
+            foreach (var preset in NoteablePresets.CustomPresets)
+            {
+                if (preset is null)
+                {
+                    continue;
+                }
+
+                List<bool> ret = CheckMenuItemMatch(body, preset);
+
+                if (!ret.Contains(false))
+                {
+                    if (ScannedBioData.bioValues.ContainsKey(preset.Header.ToUpperInvariant()))
+                    {
+                        preset.Value = ScannedBioData.bioValues[preset.Header.ToUpperInvariant()].Value;
+                    }
+
+                    //Items.Add(new FoundSignals();
+                }
+            }
+
+            return Items.ToArray();
+        }
+
+        private List<bool> CheckMenuItemMatch(SystemBody body, NoteableMenuItem menuItem)
+        {
+            List<bool> ret = new();
+
+            if ((int)PlanetClass > 0)
+            {
+                NoteablePlanetClass pClass = (NoteablePlanetClass)Enum.Parse(typeof(NoteablePlanetClass), body.PlanetClass.ToString());
+                ret.Add(menuItem.PlanetClass.HasFlag(pClass));
+            }
+
+            ret.Add(menuItem.Atmospheres.StringoInfoSelected(body.AtmosphereDescrtiption));
+
+            ret.Add(menuItem.Volcanism.StringoInfoSelected(body.Volcanism));
+
+            //MassEM
+            menuItem.EarthMasses.CheckInRange(ret, body.MassEM);
+
+            //Distance
+            menuItem.DistanceFromArrival.CheckInRange(ret, body.DistanceFromArrivalLs);
+
+            //Gravity
+            menuItem.Gravity.CheckInRange(ret, body.SurfaceGravity);
+
+            //Is Landable
+            switch (menuItem.LandableStatusEnum)
+            {
+                case LandableStatus.Any:
+                    break;
+                case LandableStatus.Landable:
+                    ret.Add(body.Landable);
+                    break;
+                case LandableStatus.NotLandable:
+                    ret.Add(body.Landable == false);
+                    break;
+            }
+
+            //Surface Temp
+            menuItem.SurfaceTemp.CheckInRange(ret, body.SurfaceTemp);
+
+            //Surface Pressure
+            menuItem.SurfacePressure.CheckInRange(ret, (int)body.SurfacePressure);
+
+            //Terraformable
+            switch (menuItem.TerraformableEnum)
+            {
+                case TerraformableStatus.Any:
+                    break;
+                case TerraformableStatus.Terraformable:
+                    ret.Add(body.Terraformable);
+                    break;
+                case TerraformableStatus.NotTerraformable:
+                    ret.Add(body.Terraformable == false);
+                    break;
+            }
+
+            //signals
+            //geo
+            ret.Add(body.GeologicalSignals >= menuItem.Signals[0]);
+            //bio
+            ret.Add(body.BiologicalSignals >= menuItem.Signals[1]);
+            return ret;
+        }
+
         internal void AddCustomPreset(string inputText)
         {
-            NoteableMenuItem menuItem = new();
-
-            menuItem.Header = inputText;
-            menuItem.PlanetClass = planetClass;
-            menuItem.Atmospheres = new() { Indexes = atmospheres.Indexes };
-            menuItem.Volcanism = new() { Indexes = volcanism.Indexes };
-            menuItem.EarthMasses = new(0, 10000) { Minimun = earthMasses.Minimun, Maximum = earthMasses.Maximum, IsActive = earthMasses.IsActive };
-            menuItem.DistanceFromArrival = distanceFromArrival = new(0, 2000000) { Minimun = distanceFromArrival.Minimun, Maximum = distanceFromArrival.Maximum, IsActive = distanceFromArrival.IsActive };
-            menuItem.Gravity = gravity = new(0, 100) { Minimun = gravity.Minimun, Maximum = gravity.Maximum, IsActive = gravity.IsActive };
-            menuItem.LandableStatusEnum = landableStatusEnum;
-            menuItem.SurfaceTemp = surfaceTemp = new(0, 1000) { Minimun = surfaceTemp.Minimun, Maximum = surfaceTemp.Maximum, IsActive = surfaceTemp.IsActive };
-            menuItem.SurfacePressure = surfacePressure = new(0, 10130000) { Minimun = surfacePressure.Minimun, Maximum = surfacePressure.Maximum, IsActive = surfacePressure.IsActive }; ;
-            menuItem.TerraformableEnum = terraformableEnum;
-            menuItem.Signals = new int[] { signals[0], signals[1] };            
+            NoteableMenuItem menuItem = new()
+            {
+                Header = inputText,
+                PlanetClass = planetClass,
+                Atmospheres = new() { Indexes = atmospheres.Indexes },
+                Volcanism = new() { Indexes = volcanism.Indexes },
+                EarthMasses = new(0, 10000) { Minimun = earthMasses.Minimun, Maximum = earthMasses.Maximum, IsActive = earthMasses.IsActive },
+                DistanceFromArrival = distanceFromArrival = new(0, 2000000) { Minimun = distanceFromArrival.Minimun, Maximum = distanceFromArrival.Maximum, IsActive = distanceFromArrival.IsActive },
+                Gravity = gravity = new(0, 100) { Minimun = gravity.Minimun, Maximum = gravity.Maximum, IsActive = gravity.IsActive },
+                LandableStatusEnum = landableStatusEnum,
+                SurfaceTemp = surfaceTemp = new(0, 1000) { Minimun = surfaceTemp.Minimun, Maximum = surfaceTemp.Maximum, IsActive = surfaceTemp.IsActive },
+                SurfacePressure = surfacePressure = new(0, 10130000) { Minimun = surfacePressure.Minimun, Maximum = surfacePressure.Maximum, IsActive = surfacePressure.IsActive },
+                TerraformableEnum = terraformableEnum,
+                Signals = new int[] { signals[0], signals[1] }
+            };
 
             NoteablePresets.AddCustom(menuItem);
         }

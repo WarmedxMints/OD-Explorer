@@ -5,6 +5,7 @@
                     xmlns:CsvParser="clr-namespace:ParserLibrary;assembly=ParserLibrary">
 
     <converters:IntToVisibilityConverter x:Key="intToVis" />
+    <converters:BoolToRowVisibilty x:Key="BoolToRowVis" />
 
     <!--#region DataGrid settings-->
     <Style x:Key="DataGrid Settings"
@@ -157,6 +158,67 @@
         <Setter Property="Foreground"
                 Value="{DynamicResource DataGridColumnHeaderForeground}" />
     </Style>
+
+    <Style x:Key="GridSyte Bodies"
+           TargetType="{x:Type DataGrid}"
+           BasedOn="{StaticResource DataGrid Settings}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="IsManipulationEnabled"
+                Value="False" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.Discovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowKnownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.UnDiscovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUnknownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.WorthMapping}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowHighValueBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.MappedByUser}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUserMappedBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.Noteable}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowNoteableBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
+            </DataTrigger>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{x:Null}" />
+                <Setter Property="BorderBrush"
+                        Value="{x:Null}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <!--#endregion-->
 
     <!--#region Row Styles-->
@@ -222,8 +284,9 @@
         <Setter Property="Margin"
                 Value="0" />
         <Setter Property="ToolTip"
-                Value="{Binding ToolTip}">
-        </Setter>
+                Value="{Binding ToolTip}" />
+        <!--<Setter Property="DetailsVisibility"
+                Value="{Binding NoteableItems.Length, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}" />-->
         <Style.Triggers>
             <DataTrigger Binding="{Binding Status}"
                          Value="{x:Static ndata:DiscoveryStatus.Discovered}">

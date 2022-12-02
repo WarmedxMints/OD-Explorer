@@ -109,6 +109,11 @@ namespace ODExplorer.NavData
             ulong valMin = 0;
             foreach (SystemInfo system in ScannedSystems)
             {
+                if(system.DataSold)
+                {
+                    continue;
+                }
+
                 foreach (SystemBody body in system.Bodies)
                 {
                     if (body.MappedByUser)
@@ -141,10 +146,7 @@ namespace ODExplorer.NavData
                 }
             }
 
-            foreach (SystemInfo sysToRemove in systemsToRemove)
-            {
-                ScannedSystems.RemoveFromCollection(sysToRemove);
-            }
+            RemoveSystems(systemsToRemove, AppSettings.Settings.SettingsInstance.Value.DeleteSystemDataOnsale);
 
             _ = SaveState();
             UpdatesEstimatedScanValue();
@@ -165,14 +167,25 @@ namespace ODExplorer.NavData
                 }
             }
 
-            foreach (SystemInfo sysToRemove in systemsToRemove)
-            {
-                ScannedSystems.RemoveFromCollection(sysToRemove);
-            }
+            RemoveSystems(systemsToRemove, AppSettings.Settings.SettingsInstance.Value.DeleteSystemDataOnsale);
 
             _ = SaveState();
             UpdatesEstimatedScanValue();
         }
+
+        private void RemoveSystems(List<SystemInfo> systemsToRemove, bool deleteSystemDataOnsale)
+        {
+            foreach (SystemInfo sysToRemove in systemsToRemove)
+            {
+                sysToRemove.DataSold = true;
+
+                if (deleteSystemDataOnsale)
+                {
+                    ScannedSystems.RemoveFromCollection(sysToRemove);
+                }
+            }
+        }
+
 
         public void Reset()
         {

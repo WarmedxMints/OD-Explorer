@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
@@ -23,7 +22,9 @@ namespace ParserLibrary
         [Description("Tourist Route")]
         TouristRoute,
         [Description("Exobiology Route")]
-        Exobiology
+        Exobiology,
+        [Description("Exobiology Route (Old Format)")]
+        ExobiologyOld,
     }
 
     public class CsvParser
@@ -36,7 +37,8 @@ namespace ParserLibrary
             new string[] { "System Name", "Distance", "Distance Remaining", "Fuel Left", "Fuel Used", "Refuel", "Neutron Star" }, //galaxyPlotterRoute
             new string[] { "System Name", "Body Name", "Distance To Arrival", "Jumps" }, //worldTypeRoute
             new string[] { "System Name", "Jumps" }, //touristRoute
-            new string[] { "System Name", "Body Name", "Body Subtype", "Distance To Arrival", "Landmark Type", "Value", "Jumps" } //ExoBiology
+            new string[] { "System Name","Body Name","Body Subtype","Distance To Arrival","Landmark Subtype","Value","Count","Jumps" }, //ExoBiology    
+            new string[] { "System Name", "Body Name", "Body Subtype", "Distance To Arrival", "Landmark Type", "Value", "Jumps" } //ExoBiologyold
         };
 
         public static CsvParserReturn ParseCsv(string filename)
@@ -64,7 +66,8 @@ namespace ParserLibrary
                     CsvType.GalaxyPlotter => ProcessGalaxyPlotterRoute(parser),
                     CsvType.WorldTypeRoute => ProcessWorldTypeRoute(parser),
                     CsvType.TouristRoute => ProcessTouristRoute(parser),
-                    CsvType.Exobiology => ProcessExoRoute(parser),
+                    CsvType.ExobiologyOld => ProcessExoRoute(parser, CsvType.ExobiologyOld),
+                    CsvType.Exobiology => ProcessExoRoute(parser, CsvType.Exobiology),
                     _ => null,
                 };
             }
@@ -74,11 +77,11 @@ namespace ParserLibrary
             }
         }
 
-        private static CsvParserReturn ProcessExoRoute(TextFieldParser parser)
+        private static CsvParserReturn ProcessExoRoute(TextFieldParser parser, CsvType csvType)
         {
             CsvParserReturn ret = new()
             {
-                CsvType = CsvType.Exobiology,
+                CsvType = csvType,
                 Targets = new()
             };
 
@@ -101,11 +104,12 @@ namespace ParserLibrary
                     ret.Targets.Add(target);
                 }
 
-                BodiesInfo bodyinfo = new();
-
-                bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
-                bodyinfo.Distance = fields[4].ToUpperInvariant();
-                bodyinfo.Property1 = $"{double.Parse(fields[5], new CultureInfo("en-GB")):N0}";
+                BodiesInfo bodyinfo = new()
+                {
+                    Body = GetBodyName(fields[1], target.SystemName),
+                    Distance = fields[4].ToUpperInvariant(),
+                    Property1 = $"{double.Parse(fields[5], new CultureInfo("en-GB")):N0}"
+                };
 
 
                 if (target.BodiesInfo == null)
@@ -114,8 +118,10 @@ namespace ParserLibrary
                 }
 
                 target.BodiesInfo.Add(bodyinfo);
+                target.BodiesInfo.Sort((x, y) => x.Body.CompareTo(y.Body));
             }
 
+           
             return ret;
         }
 
@@ -176,7 +182,7 @@ namespace ParserLibrary
                 bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
                 bodyinfo.Distance = $"{double.Parse(fields[2], new CultureInfo("en-GB")):N0} ls";
                 bodyinfo.Property1 = $"{double.Parse(fields[3], new CultureInfo("en-GB")):N0}";
-                
+
 
                 if (target.BodiesInfo == null)
                 {
@@ -321,7 +327,7 @@ namespace ParserLibrary
                 bodyinfo.Body = GetBodyName(fields[1], target.SystemName);
                 bodyinfo.Distance = $"{double.Parse(fields[4], new CultureInfo("en-GB")):N0} ls";
                 bodyinfo.Property1 = $"{double.Parse(fields[6], new CultureInfo("en-GB")):N0}";
-                
+
 
                 if (target.BodiesInfo == null)
                 {
@@ -348,8 +354,8 @@ namespace ParserLibrary
         }
 
         private static string GetBodyName(string bodyName, string systemName)
-        {            
-            if(bodyName.Length > systemName.Length)
+        {
+            if (bodyName.Length > systemName.Length)
             {
                 bodyName = bodyName.Remove(0, systemName.Length);
 

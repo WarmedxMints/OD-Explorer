@@ -9,12 +9,19 @@ namespace ODExplorer.Utils.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            bool bool1 = (bool)values[0];
-            bool bool2 = (bool)values[1];
+            if(values.Length < 0)
+            {
+                return Visibility.Collapsed;
+            }
 
-            Visibility visibleType = bool2 ? Visibility.Hidden : Visibility.Collapsed;
+            if (values[0] is bool bool1 && values[1] is bool bool2)
+            {
+                Visibility visibleType = bool2 ? Visibility.Hidden : Visibility.Collapsed;
 
-            return bool1 && bool2 ? Visibility.Visible : visibleType;
+                return bool1 && bool2 ? Visibility.Visible : visibleType;
+            }
+
+            return Visibility.Collapsed;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

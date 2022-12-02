@@ -1,5 +1,5 @@
-﻿using LoadSaveSystem;
-using Newtonsoft.Json;
+﻿using EliteJournalReader.Events;
+using LoadSaveSystem;
 using ODExplorer.NavData;
 using ODExplorer.Utils;
 using System;
@@ -15,12 +15,126 @@ namespace ODExplorer.OrganicData
     {
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "BioData.json");
 
-        //private const string bioValuesData = "{\n  \"ALEOIDA ARCUS\": 379300,\n  \"ALEOIDA CORONAMUS\": 339100,\n  \"ALEOIDA GRAVIS\": 596500,\n  \"ALEOIDA LAMINIAE\": 208900,\n  \"ALEOIDA SPICA\": 208900,\n  \"BACTERIUM ACIES\": 50000,\n  \"BACTERIUM ALCYONEUM\": 119500,\n  \"BACTERIUM AURASUS\": 78500,\n  \"BACTERIUM BULLARIS\": 89900,\n  \"BACTERIUM CERBRUS\": 121300,\n  \"BACTERIUM INFORMEM\": 426200,\n  \"BACTERIUM NEBULUS\": 296300,\n  \"BACTERIUM OMENTUM\": 267400,\n  \"BACTERIUM SCOPULUM\": 280600,\n  \"BACTERIUM TELA\": 135600,\n  \"BACTERIUM VERRATA\": 233300,\n  \"BACTERIUM VESICULA\": 56100,\n  \"BACTERIUM VOLU\": 400500,\n  \"CACTOIDA CORTEXUM\": 222500,\n  \"CACTOIDA LAPIS\": 164000,\n  \"CACTOIDA PEPERATIS\": 184000,\n  \"CACTOIDA PULLULANTA\": 222500,\n  \"CACTOIDA VERMIS\": 711500,\n  \"CLYPEUS LACRIMAM\": 426200,\n  \"CLYPEUS MARGARITUS\": 557800,\n  \"CLYPEUS SPECULUMI\": 711500,\n  \"CONCHA AUREOLAS\": 400500,\n  \"CONCHA BICONCAVIS\": 806300,\n  \"CONCHA LABIATA\": 157100,\n  \"CONCHA RENIBUS\": 264300,\n  \"ELECTRICAE PLUMA\": 339100,\n  \"ELECTRICAE RADIALEM\": 339100,\n  \"FONTICULUA CAMPESTRIS\": 63600,\n  \"FONTICULUA DIGITOS\": 127700,\n  \"FONTICULUA FLUCTUS\": 900000,\n  \"FONTICULUA LAPIDA\": 195600,\n  \"FONTICULUA SEGMENTATUS\": 806300,\n  \"FONTICULUA UPUPAM\": 315300,\n  \"FRUTEXA ACUS\": 400500,\n  \"FRUTEXA COLLUM\": 118500,\n  \"FRUTEXA FERA\": 118100,\n  \"FRUTEXA FLABELLUM\": 127900,\n  \"FRUTEXA FLAMMASIS\": 500100,\n  \"FRUTEXA METALLICUM\": 118100,\n  \"FRUTEXA SPONSAE\": 326500,\n  \"FUMEROLA AQUATIS\": 339100,\n  \"FUMEROLA CARBOSIS\": 339100,\n  \"FUMEROLA EXTREMUS\": 711500,\n  \"FUMEROLA NITRIS\": 389400,\n  \"FUNGOIDA BULLARUM\": 224100,\n  \"FUNGOIDA GELATA\": 206300,\n  \"FUNGOIDA SETISIS\": 120200,\n  \"FUNGOIDA STABITIS\": 174000,\n  \"OSSEUS CORNIBUS\": 109500,\n  \"OSSEUS DISCUS\": 596500,\n  \"OSSEUS FRACTUS\": 239400,\n  \"OSSEUS PELLEBANTUS\": 477700,\n  \"OSSEUS PUMICE\": 197800,\n  \"OSSEUS SPIRALIS\": 159900,\n  \"RECEPTA CONDITIVUS\": 645700,\n  \"RECEPTA DELTAHEDRONIX\": 711500,\n  \"RECEPTA UMBRUX\": 596500,\n  \"STRATUM ARANEAMUS\": 162200,\n  \"STRATUM CUCUMISIS\": 711500,\n  \"STRATUM EXCUTITUS\": 162200,\n  \"STRATUM FRIGUS\": 171900,\n  \"STRATUM LAMINAMUS\": 179500,\n  \"STRATUM LIMAXUS\": 102500,\n  \"STRATUM PALEAS\": 102500,\n  \"STRATUM TECTONICAS\": 806300,\n  \"TUBUS CAVAS\": 171900,\n  \"TUBUS COMPAGIBUS\": 102700,\n  \"TUBUS CONIFER\": 315300,\n  \"TUBUS ROSARIUM\": 400500,\n  \"TUBUS SORORIBUS\": 557800,\n  \"TUSSOCK ALBATA\": 202500,\n  \"TUSSOCK CAPILLUM\": 370000,\n  \"TUSSOCK CAPUTUS\": 213100,\n  \"TUSSOCK CATENA\": 125600,\n  \"TUSSOCK CULTRO\": 125600,\n  \"TUSSOCK DIVISA\": 125600,\n  \"TUSSOCK IGNIS\": 130100,\n  \"TUSSOCK PENNATA\": 320700,\n  \"TUSSOCK PENNATIS\": 59600,\n  \"TUSSOCK PROPAGITO\": 71300,\n  \"TUSSOCK SERRATI\": 258700,\n  \"TUSSOCK STIGMASIS\": 806300,\n  \"TUSSOCK TRITICUM\": 400500,\n  \"TUSSOCK VENTUSA\": 201300,\n  \"TUSSOCK VIRGAM\": 645700\n}";
-        private const string bioData = "{\n  \"ALEOIDA ARCUS\": {\n    \"Value\": 379300,\n    \"ColonyRange\": 150\n  },\n  \"ALEOIDA CORONAMUS\": {\n    \"Value\": 339100,\n    \"ColonyRange\": 150\n  },\n  \"ALEOIDA GRAVIS\": {\n    \"Value\": 596500,\n    \"ColonyRange\": 150\n  },\n  \"ALEOIDA LAMINIAE\": {\n    \"Value\": 208900,\n    \"ColonyRange\": 150\n  },\n  \"ALEOIDA SPICA\": {\n    \"Value\": 208900,\n    \"ColonyRange\": 150\n  },\n  \"BACTERIUM ACIES\": {\n    \"Value\": 50000,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM ALCYONEUM\": {\n    \"Value\": 119500,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM AURASUS\": {\n    \"Value\": 78500,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM BULLARIS\": {\n    \"Value\": 89900,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM CERBRUS\": {\n    \"Value\": 121300,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM INFORMEM\": {\n    \"Value\": 426200,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM NEBULUS\": {\n    \"Value\": 296300,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM OMENTUM\": {\n    \"Value\": 267400,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM SCOPULUM\": {\n    \"Value\": 280600,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM TELA\": {\n    \"Value\": 135600,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM VERRATA\": {\n    \"Value\": 233300,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM VESICULA\": {\n    \"Value\": 56100,\n    \"ColonyRange\": 500\n  },\n  \"BACTERIUM VOLU\": {\n    \"Value\": 400500,\n    \"ColonyRange\": 500\n  },\n  \"CACTOIDA CORTEXUM\": {\n    \"Value\": 222500,\n    \"ColonyRange\": 300\n  },\n  \"CACTOIDA LAPIS\": {\n    \"Value\": 164000,\n    \"ColonyRange\": 300\n  },\n  \"CACTOIDA PEPERATIS\": {\n    \"Value\": 184000,\n    \"ColonyRange\": 300\n  },\n  \"CACTOIDA PULLULANTA\": {\n    \"Value\": 222500,\n    \"ColonyRange\": 300\n  },\n  \"CACTOIDA VERMIS\": {\n    \"Value\": 711500,\n    \"ColonyRange\": 300\n  },\n  \"CLYPEUS LACRIMAM\": {\n    \"Value\": 426200,\n    \"ColonyRange\": 150\n  },\n  \"CLYPEUS MARGARITUS\": {\n    \"Value\": 557800,\n    \"ColonyRange\": 150\n  },\n  \"CLYPEUS SPECULUMI\": {\n    \"Value\": 711500,\n    \"ColonyRange\": 150\n  },\n  \"CONCHA AUREOLAS\": {\n    \"Value\": 400500,\n    \"ColonyRange\": 150\n  },\n  \"CONCHA BICONCAVIS\": {\n    \"Value\": 806300,\n    \"ColonyRange\": 150\n  },\n  \"CONCHA LABIATA\": {\n    \"Value\": 157100,\n    \"ColonyRange\": 150\n  },\n  \"CONCHA RENIBUS\": {\n    \"Value\": 264300,\n    \"ColonyRange\": 150\n  },\n  \"ELECTRICAE PLUMA\": {\n    \"Value\": 339100,\n    \"ColonyRange\": 1000\n  },\n  \"ELECTRICAE RADIALEM\": {\n    \"Value\": 339100,\n    \"ColonyRange\": 1000\n  },\n  \"FONTICULUA CAMPESTRIS\": {\n    \"Value\": 63600,\n    \"ColonyRange\": 500\n  },\n  \"FONTICULUA DIGITOS\": {\n    \"Value\": 127700,\n    \"ColonyRange\": 500\n  },\n  \"FONTICULUA FLUCTUS\": {\n    \"Value\": 900000,\n    \"ColonyRange\": 500\n  },\n  \"FONTICULUA LAPIDA\": {\n    \"Value\": 195600,\n    \"ColonyRange\": 500\n  },\n  \"FONTICULUA SEGMENTATUS\": {\n    \"Value\": 806300,\n    \"ColonyRange\": 500\n  },\n  \"FONTICULUA UPUPAM\": {\n    \"Value\": 315300,\n    \"ColonyRange\": 500\n  },\n  \"FRUTEXA ACUS\": {\n    \"Value\": 400500,\n    \"ColonyRange\": 150\n  },\n  \"FRUTEXA COLLUM\": {\n    \"Value\": 118500,\n    \"ColonyRange\": 150\n  },\n  \"FRUTEXA FERA\": {\n    \"Value\": 118100,\n    \"ColonyRange\": 150\n  },\n  \"FRUTEXA FLABELLUM\": {\n    \"Value\": 127900,\n    \"ColonyRange\": 150\n  },\n  \"FRUTEXA FLAMMASIS\": {\n    \"Value\": 500100,\n    \"ColonyRange\": 150\n  },\n  \"FRUTEXA METALLICUM\": {\n    \"Value\": 118100,\n    \"ColonyRange\": 150\n  },\n  \"FRUTEXA SPONSAE\": {\n    \"Value\": 326500,\n    \"ColonyRange\": 150\n  },\n  \"FUMEROLA AQUATIS\": {\n    \"Value\": 339100,\n    \"ColonyRange\": 100\n  },\n  \"FUMEROLA CARBOSIS\": {\n    \"Value\": 339100,\n    \"ColonyRange\": 100\n  },\n  \"FUMEROLA EXTREMUS\": {\n    \"Value\": 711500,\n    \"ColonyRange\": 100\n  },\n  \"FUMEROLA NITRIS\": {\n    \"Value\": 389400,\n    \"ColonyRange\": 100\n  },\n  \"FUNGOIDA BULLARUM\": {\n    \"Value\": 224100,\n    \"ColonyRange\": 300\n  },\n  \"FUNGOIDA GELATA\": {\n    \"Value\": 206300,\n    \"ColonyRange\": 300\n  },\n  \"FUNGOIDA SETISIS\": {\n    \"Value\": 120200,\n    \"ColonyRange\": 300\n  },\n  \"FUNGOIDA STABITIS\": {\n    \"Value\": 174000,\n    \"ColonyRange\": 300\n  },\n  \"OSSEUS CORNIBUS\": {\n    \"Value\": 109500,\n    \"ColonyRange\": 800\n  },\n  \"OSSEUS DISCUS\": {\n    \"Value\": 596500,\n    \"ColonyRange\": 800\n  },\n  \"OSSEUS FRACTUS\": {\n    \"Value\": 239400,\n    \"ColonyRange\": 800\n  },\n  \"OSSEUS PELLEBANTUS\": {\n    \"Value\": 477700,\n    \"ColonyRange\": 800\n  },\n  \"OSSEUS PUMICE\": {\n    \"Value\": 197800,\n    \"ColonyRange\": 800\n  },\n  \"OSSEUS SPIRALIS\": {\n    \"Value\": 159900,\n    \"ColonyRange\": 800\n  },\n  \"RECEPTA CONDITIVUS\": {\n    \"Value\": 645700,\n    \"ColonyRange\": 150\n  },\n  \"RECEPTA DELTAHEDRONIX\": {\n    \"Value\": 711500,\n    \"ColonyRange\": 150\n  },\n  \"RECEPTA UMBRUX\": {\n    \"Value\": 596500,\n    \"ColonyRange\": 150\n  },\n  \"STRATUM ARANEAMUS\": {\n    \"Value\": 162200,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM CUCUMISIS\": {\n    \"Value\": 711500,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM EXCUTITUS\": {\n    \"Value\": 162200,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM FRIGUS\": {\n    \"Value\": 171900,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM LAMINAMUS\": {\n    \"Value\": 179500,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM LIMAXUS\": {\n    \"Value\": 102500,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM PALEAS\": {\n    \"Value\": 102500,\n    \"ColonyRange\": 500\n  },\n  \"STRATUM TECTONICAS\": {\n    \"Value\": 806300,\n    \"ColonyRange\": 500\n  },\n  \"TUBUS CAVAS\": {\n    \"Value\": 171900,\n    \"ColonyRange\": 800\n  },\n  \"TUBUS COMPAGIBUS\": {\n    \"Value\": 102700,\n    \"ColonyRange\": 800\n  },\n  \"TUBUS CONIFER\": {\n    \"Value\": 315300,\n    \"ColonyRange\": 800\n  },\n  \"TUBUS ROSARIUM\": {\n    \"Value\": 400500,\n    \"ColonyRange\": 800\n  },\n  \"TUBUS SORORIBUS\": {\n    \"Value\": 557800,\n    \"ColonyRange\": 800\n  },\n  \"TUSSOCK ALBATA\": {\n    \"Value\": 202500,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK CAPILLUM\": {\n    \"Value\": 370000,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK CAPUTUS\": {\n    \"Value\": 213100,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK CATENA\": {\n    \"Value\": 125600,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK CULTRO\": {\n    \"Value\": 125600,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK DIVISA\": {\n    \"Value\": 125600,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK IGNIS\": {\n    \"Value\": 130100,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK PENNATA\": {\n    \"Value\": 320700,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK PENNATIS\": {\n    \"Value\": 59600,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK PROPAGITO\": {\n    \"Value\": 71300,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK SERRATI\": {\n    \"Value\": 258700,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK STIGMASIS\": {\n    \"Value\": 806300,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK TRITICUM\": {\n    \"Value\": 400500,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK VENTUSA\": {\n    \"Value\": 201300,\n    \"ColonyRange\": 200\n  },\n  \"TUSSOCK VIRGAM\": {\n    \"Value\": 645700,\n    \"ColonyRange\": 200\n  }\n}";
-
         public ObservableCollection<BiologicalData> ScannedData { get; private set; } = new();
 
-        private readonly Dictionary<string, BiologicalInfo> bioValues = new();
+        public static Dictionary<string, BiologicalInfo> bioValues = new(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "ALBIDUM SINUOUS TUBERS", new BiologicalInfo { Value = 111300, ColonyRange = 0   } },
+
+            { "ALEOIDA ARCUS",          new BiologicalInfo { Value = 11670300, ColonyRange = 150 } },
+            { "ALEOIDA CORONAMUS",      new BiologicalInfo { Value = 10432700, ColonyRange = 150 } },
+            { "ALEOIDA GRAVIS",         new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+            { "ALEOIDA LAMINIAE",       new BiologicalInfo { Value = 6428600, ColonyRange = 150 } },
+            { "ALEOIDA SPICA",          new BiologicalInfo { Value = 6428600, ColonyRange = 150 } },
+
+            { "AMPHORA PLANT",          new BiologicalInfo { Value = 117900, ColonyRange = 0   } },
+
+            { "AUREUM BRAIN TREE",      new BiologicalInfo { Value = 115900, ColonyRange = 0   } },
+
+            { "BACTERIUM ACIES",        new BiologicalInfo { Value = 1500000, ColonyRange = 500 } },
+            { "BACTERIUM ALCYONEUM",    new BiologicalInfo { Value = 3678100, ColonyRange = 500 } },
+            { "BACTERIUM AURASUS",      new BiologicalInfo { Value = 2414700, ColonyRange = 500 } },
+            { "BACTERIUM BULLARIS",     new BiologicalInfo { Value = 2766300, ColonyRange = 500 } },
+            { "BACTERIUM CERBRUS",      new BiologicalInfo { Value = 3732200, ColonyRange = 500 } },
+            { "BACTERIUM INFORMEM",     new BiologicalInfo { Value = 13114000, ColonyRange = 500 } },
+            { "BACTERIUM NEBULUS",      new BiologicalInfo { Value = 9116600, ColonyRange = 500 } },
+            { "BACTERIUM OMENTUM",      new BiologicalInfo { Value = 8226200, ColonyRange = 500 } },
+            { "BACTERIUM SCOPULUM",     new BiologicalInfo { Value = 8633800, ColonyRange = 500 } },
+            { "BACTERIUM TELA",         new BiologicalInfo { Value = 4173100, ColonyRange = 500 } },
+            { "BACTERIUM VERRATA",      new BiologicalInfo { Value = 7177500, ColonyRange = 500 } },
+            { "BACTERIUM VESICULA",     new BiologicalInfo { Value = 1725400, ColonyRange = 500 } },
+            { "BACTERIUM VOLU",         new BiologicalInfo { Value = 12323000, ColonyRange = 500 } },
+
+            { "BARK MOUNDS",            new BiologicalInfo { Value = 108900, ColonyRange = 0   } },
+
+            { "BLATTEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 110500, ColonyRange = 0   } },
+            { "BLATTEUM SINUOUS TUBERS",new BiologicalInfo { Value = 111750, ColonyRange = 200 } },
+
+            { "CACTOIDA CORTEXUM",      new BiologicalInfo { Value = 6844700, ColonyRange = 300 } },
+            { "CACTOIDA LAPIS",         new BiologicalInfo { Value = 5044900, ColonyRange = 300 } },
+            { "CACTOIDA PEPERATIS",     new BiologicalInfo { Value = 5044900, ColonyRange = 300 } },
+            { "CACTOIDA PULLULANTA",    new BiologicalInfo { Value = 6844700, ColonyRange = 300 } },
+            { "CACTOIDA VERMIS",        new BiologicalInfo { Value = 16777215, ColonyRange = 300 } },
+
+            { "CLYPEUS LACRIMAM",       new BiologicalInfo { Value = 13114000, ColonyRange = 150 } },
+            { "CLYPEUS MARGARITUS",     new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+            { "CLYPEUS SPECULUMI",      new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+
+            { "CONCHA AUREOLAS",        new BiologicalInfo { Value = 12323000, ColonyRange = 150 } },
+            { "CONCHA BICONCAVIS",      new BiologicalInfo { Value = 806300, ColonyRange = 150 } },
+            { "CONCHA LABIATA",         new BiologicalInfo { Value = 4835200, ColonyRange = 150 } },
+            { "CONCHA RENIBUS",         new BiologicalInfo { Value = 8133800, ColonyRange = 150 } },
+
+            { "ELECTRICAE PLUMA",       new BiologicalInfo { Value = 10432700, ColonyRange = 100 } },
+            { "ELECTRICAE RADIALEM",    new BiologicalInfo { Value = 10432700, ColonyRange = 100 } },
+
+            { "FONTICULUA CAMPESTRIS",  new BiologicalInfo { Value = 1956100, ColonyRange = 500 } },
+            { "FONTICULUA DIGITOS",     new BiologicalInfo { Value = 3928300, ColonyRange = 500 } },
+            { "FONTICULUA FLUCTUS",     new BiologicalInfo { Value = 16777215, ColonyRange = 500 } },
+            { "FONTICULUA LAPIDA",      new BiologicalInfo { Value = 6017400, ColonyRange = 500 } },
+            { "FONTICULUA SEGMENTATUS", new BiologicalInfo { Value = 806300, ColonyRange = 500 } },
+            { "FONTICULUA UPUPAM",      new BiologicalInfo { Value = 9701800, ColonyRange = 500 } },
+
+            { "FRUTEXA ACUS",           new BiologicalInfo { Value = 12323000, ColonyRange = 150 } },
+            { "FRUTEXA COLLUM",         new BiologicalInfo { Value = 3645500, ColonyRange = 150 } },
+            { "FRUTEXA FERA",           new BiologicalInfo { Value = 3632700, ColonyRange = 150 } },
+            { "FRUTEXA FLABELLUM",      new BiologicalInfo { Value = 3936600, ColonyRange = 150 } },
+            { "FRUTEXA FLAMMASIS",      new BiologicalInfo { Value = 15387600, ColonyRange = 150 } },
+            { "FRUTEXA METALLICUM",     new BiologicalInfo { Value = 3632700, ColonyRange = 150 } },
+            { "FRUTEXA SPONSAE",        new BiologicalInfo { Value = 10045400, ColonyRange = 150 } },
+
+            { "FUMEROLA AQUATIS",       new BiologicalInfo { Value = 10432700, ColonyRange = 100 } },
+            { "FUMEROLA CARBOSIS",      new BiologicalInfo { Value = 10432700, ColonyRange = 100 } },
+            { "FUMEROLA EXTREMUS",      new BiologicalInfo { Value = 16777215, ColonyRange = 100 } },
+            { "FUMEROLA NITRIS",        new BiologicalInfo { Value = 11982000, ColonyRange = 100 } },
+
+            { "FUNGOIDA BULLARUM",      new BiologicalInfo { Value = 6896600, ColonyRange = 300 } },
+            { "FUNGOIDA GELATA",        new BiologicalInfo { Value = 6346900, ColonyRange = 300 } },
+            { "FUNGOIDA SETISIS",       new BiologicalInfo { Value = 3698100, ColonyRange = 300 } },
+            { "FUNGOIDA STABITIS",      new BiologicalInfo { Value = 5355000, ColonyRange = 300 } },
+
+            { "OSSEUS CORNIBUS",        new BiologicalInfo { Value = 3369700, ColonyRange = 800 } },
+            { "OSSEUS DISCUS",          new BiologicalInfo { Value = 16777215, ColonyRange = 800 } },
+            { "OSSEUS FRACTUS",         new BiologicalInfo { Value = 7365300, ColonyRange = 800 } },
+            { "OSSEUS PELLEBANTUS",     new BiologicalInfo { Value = 14698600, ColonyRange = 800 } },
+            { "OSSEUS PUMICE",          new BiologicalInfo { Value = 6085800, ColonyRange = 800 } },
+            { "OSSEUS SPIRALIS",        new BiologicalInfo { Value = 4919000, ColonyRange = 800 } },
+
+            { "RECEPTA CONDITIVUS",     new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+            { "RECEPTA DELTAHEDRONIX",  new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+            { "RECEPTA UMBRUX",         new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+
+            { "STRATUM ARANEAMUS",      new BiologicalInfo { Value = 4989600, ColonyRange = 500 } },
+            { "STRATUM CUCUMISIS",      new BiologicalInfo { Value = 16777215, ColonyRange = 500 } },
+            { "STRATUM EXCUTITUS",      new BiologicalInfo { Value = 4989600, ColonyRange = 500 } },
+            { "STRATUM FRIGUS",         new BiologicalInfo { Value = 5287900, ColonyRange = 500 } },
+            { "STRATUM LAMINAMUS",      new BiologicalInfo { Value = 5523100, ColonyRange = 500 } },
+            { "STRATUM LIMAXUS",        new BiologicalInfo { Value = 3152500, ColonyRange = 500 } },
+            { "STRATUM PALEAS",         new BiologicalInfo { Value = 3152500, ColonyRange = 500 } },
+            { "STRATUM TECTONICAS",     new BiologicalInfo { Value = 16777215, ColonyRange = 500 } },
+
+            { "TUBUS CAVAS",            new BiologicalInfo { Value = 16777215, ColonyRange = 800 } },
+            { "TUBUS COMPAGIBUS",       new BiologicalInfo { Value = 12323000, ColonyRange = 800 } },
+            { "TUBUS CONIFER",          new BiologicalInfo { Value = 4936300, ColonyRange = 800 } },
+            { "TUBUS ROSARIUM",         new BiologicalInfo { Value = 5287900, ColonyRange = 800 } },
+            { "TUBUS SORORIBUS",        new BiologicalInfo { Value = 9701800, ColonyRange = 800 } },
+
+            { "TUSSOCK ALBATA",         new BiologicalInfo { Value = 6230500, ColonyRange = 200 } },
+            { "TUSSOCK CAPILLUM",       new BiologicalInfo { Value = 11383900, ColonyRange = 200 } },
+            { "TUSSOCK CAPUTUS",        new BiologicalInfo { Value = 6557900, ColonyRange = 200 } },
+            { "TUSSOCK CATENA",         new BiologicalInfo { Value = 3864400, ColonyRange = 200 } },
+            { "TUSSOCK CULTRO",         new BiologicalInfo { Value = 3864400, ColonyRange = 200 } },
+            { "TUSSOCK DIVISA",         new BiologicalInfo { Value = 3864400, ColonyRange = 200 } },
+            { "TUSSOCK IGNIS",          new BiologicalInfo { Value = 4004600, ColonyRange = 200 } },
+            { "TUSSOCK PENNATA",        new BiologicalInfo { Value = 9868700, ColonyRange = 200 } },
+            { "TUSSOCK PENNATIS",       new BiologicalInfo { Value = 1832900, ColonyRange = 200 } },
+            { "TUSSOCK PROPAGITO",      new BiologicalInfo { Value = 2194200, ColonyRange = 200 } },
+            { "TUSSOCK SERRATI",        new BiologicalInfo { Value = 7958800, ColonyRange = 200 } },
+            { "TUSSOCK STIGMASIS",      new BiologicalInfo { Value = 16777215, ColonyRange = 200 } },
+            { "TUSSOCK TRITICUM",       new BiologicalInfo { Value = 12323000, ColonyRange = 200 } },
+            { "TUSSOCK VENTUSA",        new BiologicalInfo { Value = 6193300, ColonyRange = 200 } },
+            { "TUSSOCK VIRGAM",         new BiologicalInfo { Value = 16777215, ColonyRange = 200 } }
+        };
 
         private ulong totalValue;
         public ulong TotalValue { get => totalValue; set { totalValue = value; OnPropertyChanged(); } }
@@ -36,21 +150,7 @@ namespace ODExplorer.OrganicData
 
             AppSettings.Settings.SettingsInstance.SaveEvent += SettingsInstance_SaveEvent;
 
-            bioValues = JsonConvert.DeserializeObject<Dictionary<string, BiologicalInfo>>(bioData);
-
-            foreach (BiologicalData bdata in ScannedData)
-            {
-                foreach (BioData d in bdata.BodyBioData)
-                {
-                    if (d.BioInfo == null)
-                    {
-                        KeyValuePair<string, BiologicalInfo> val = bioValues.FirstOrDefault(x => x.Key.Equals(d.Species, System.StringComparison.OrdinalIgnoreCase));
-
-                        d.BioInfo = val.Value;
-                    }
-                }
-            }
-            UpdateTotalValue();
+            //UpdateTotalValue();
         }
 
         ~ScannedBioData()
@@ -89,24 +189,24 @@ namespace ODExplorer.OrganicData
             if (bioData is not null)
             {
                 bioData.Status = status;
-            }
-            else
-            {
-                bioData = new BioData
+
+                if (bioData.Status == "ANALYSED")
                 {
-                    TimeStamp = timeStamp,
-                    Species = species,
-                    Status = status,
-                    BioInfo = bioValues[species]
-                };
+                    TotalValue += (ulong)bioData.BioInfo.Value;
+                }
 
-                body.BodyBioData.AddToCollection(bioData);
+                return;
             }
 
-            if (bioData.Status == "ANALYSED")
+            bioData = new BioData
             {
-                UpdateTotalValue();
-            }
+                TimeStamp = timeStamp,
+                Species = species,
+                Status = status,
+                BioInfo = bioValues[species]
+            };
+
+            body.BodyBioData.AddToCollection(bioData);
         }
 
         public void AddCodexData(SystemBody systemBody, string timeStamp, string name)
@@ -156,6 +256,19 @@ namespace ODExplorer.OrganicData
             body.BodyBioData.AddToCollection(bioData);
         }
 
+        internal void SellOrganic(SellOrganicDataEvent.SellOrganicDataEventArgs e)
+        {
+            foreach (var item in e.BioData)
+            {
+                TotalValue -= (ulong)item.Value;
+            }
+
+            if (TotalValue < 0)
+            {
+                TotalValue = 0;
+            }
+        }
+
         public void UpdateTotalValue()
         {
             ulong v = 0;
@@ -177,7 +290,7 @@ namespace ODExplorer.OrganicData
             {
                 foreach (BioData bData in biodata.BodyBioData)
                 {
-                    _ = csvExport.AppendLine($"{bData.TimeStamp},{bData.Species},{bData.Variant.Replace(" - ","")},{biodata.SystemName},{biodata.BodyName},{biodata.BodyType},{biodata.AtmosphereType},{biodata.SurfacePressure},{biodata.SurfaceGravity},{biodata.SurfaceTemp},{biodata.Volcanism}");
+                    _ = csvExport.AppendLine($"{bData.TimeStamp},{bData.Species},{bData.Variant.Replace(" - ", "")},{biodata.SystemName},{biodata.BodyName},{biodata.BodyType},{biodata.AtmosphereType},{biodata.SurfacePressure},{biodata.SurfaceGravity},{biodata.SurfaceTemp},{biodata.Volcanism}");
                 }
             }
 
@@ -186,7 +299,8 @@ namespace ODExplorer.OrganicData
         public void ResetData()
         {
             ScannedData.ClearCollection();
-            UpdateTotalValue();
+            //UpdateTotalValue();
+            TotalValue = 0;
         }
 
         public bool SaveState()

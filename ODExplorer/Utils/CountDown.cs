@@ -46,6 +46,7 @@ namespace ODExplorer.Utils
                 OnPropertyChanged();
             }
         }
+
         public void Start()
         {
             _shouldStop = false;
