@@ -1145,6 +1145,10 @@
                             <ImageBrush ImageSource="/Images/arrow-down-sign-to-navigate.png" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
+                    <!--<TextBlock Margin="20,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding NavData.CurrentBody.BodyName, StringFormat={}Current Body : {0}}" />-->
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"

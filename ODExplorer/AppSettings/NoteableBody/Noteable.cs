@@ -185,9 +185,9 @@ namespace ODExplorer.AppSettings.NoteableBody
                             {
                                 var name = $"{menuItem.MenuTitle} {q.Header}".ToUpperInvariant();
 
-                                if (ScannedBioData.bioValues.ContainsKey(name))
+                                if (ScannedBioData.BioValues.ContainsKey(name))
                                 {
-                                    q.Value = ScannedBioData.bioValues[name].Value;
+                                    q.Value = ScannedBioData.BioValues[name].Value;
                                 }
                                 Items.Add(new FoundSignals() { Name = name, Value = q.Value});
                             }
@@ -207,9 +207,9 @@ namespace ODExplorer.AppSettings.NoteableBody
 
                 if (!ret.Contains(false))
                 {
-                    if (ScannedBioData.bioValues.ContainsKey(preset.Header.ToUpperInvariant()))
+                    if (ScannedBioData.BioValues.ContainsKey(preset.Header.ToUpperInvariant()))
                     {
-                        preset.Value = ScannedBioData.bioValues[preset.Header.ToUpperInvariant()].Value;
+                        preset.Value = ScannedBioData.BioValues[preset.Header.ToUpperInvariant()].Value;
                     }
 
                     //Items.Add(new FoundSignals();

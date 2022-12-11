@@ -17,7 +17,7 @@ namespace ODExplorer.OrganicData
 
         public ObservableCollection<BiologicalData> ScannedData { get; private set; } = new();
 
-        public static Dictionary<string, BiologicalInfo> bioValues = new(StringComparer.InvariantCultureIgnoreCase)
+        private static readonly Dictionary<string, BiologicalInfo> bioValues = new(StringComparer.InvariantCultureIgnoreCase)
         {
             { "ALBIDUM SINUOUS TUBERS", new BiologicalInfo { Value = 111300, ColonyRange = 0   } },
 
@@ -27,9 +27,9 @@ namespace ODExplorer.OrganicData
             { "ALEOIDA LAMINIAE",       new BiologicalInfo { Value = 6428600, ColonyRange = 150 } },
             { "ALEOIDA SPICA",          new BiologicalInfo { Value = 6428600, ColonyRange = 150 } },
 
-            { "AMPHORA PLANT",          new BiologicalInfo { Value = 117900, ColonyRange = 0   } },
+            { "AMPHORA PLANT",          new BiologicalInfo { Value = 3626400, ColonyRange = 0   } },
 
-            { "AUREUM BRAIN TREE",      new BiologicalInfo { Value = 115900, ColonyRange = 0   } },
+            { "AUREUM BRAIN TREE",      new BiologicalInfo { Value = 3565100, ColonyRange = 0   } },
 
             { "BACTERIUM ACIES",        new BiologicalInfo { Value = 1500000, ColonyRange = 500 } },
             { "BACTERIUM ALCYONEUM",    new BiologicalInfo { Value = 3678100, ColonyRange = 500 } },
@@ -45,10 +45,10 @@ namespace ODExplorer.OrganicData
             { "BACTERIUM VESICULA",     new BiologicalInfo { Value = 1725400, ColonyRange = 500 } },
             { "BACTERIUM VOLU",         new BiologicalInfo { Value = 12323000, ColonyRange = 500 } },
 
-            { "BARK MOUNDS",            new BiologicalInfo { Value = 108900, ColonyRange = 0   } },
+            { "BARK MOUNDS",            new BiologicalInfo { Value = 3350000, ColonyRange = 0   } },
 
-            { "BLATTEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 110500, ColonyRange = 0   } },
-            { "BLATTEUM SINUOUS TUBERS",new BiologicalInfo { Value = 111750, ColonyRange = 200 } },
+            { "BLATTEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 3399800, ColonyRange = 0   } },
+            { "BLATTEUM SINUOUS TUBERS",new BiologicalInfo { Value = 3425600, ColonyRange = 200 } },
 
             { "CACTOIDA CORTEXUM",      new BiologicalInfo { Value = 6844700, ColonyRange = 300 } },
             { "CACTOIDA LAPIS",         new BiologicalInfo { Value = 5044900, ColonyRange = 300 } },
@@ -61,18 +61,21 @@ namespace ODExplorer.OrganicData
             { "CLYPEUS SPECULUMI",      new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
 
             { "CONCHA AUREOLAS",        new BiologicalInfo { Value = 12323000, ColonyRange = 150 } },
-            { "CONCHA BICONCAVIS",      new BiologicalInfo { Value = 806300, ColonyRange = 150 } },
+            { "CONCHA BICONCAVIS",      new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
             { "CONCHA LABIATA",         new BiologicalInfo { Value = 4835200, ColonyRange = 150 } },
             { "CONCHA RENIBUS",         new BiologicalInfo { Value = 8133800, ColonyRange = 150 } },
+
+            { "CROCEUM ANEMONE",        new BiologicalInfo { Value = 3399800, ColonyRange = 0 } },
+            { "CRYSTALLINE SHARDS",     new BiologicalInfo { Value = 3626400, ColonyRange = 0 } },
 
             { "ELECTRICAE PLUMA",       new BiologicalInfo { Value = 10432700, ColonyRange = 100 } },
             { "ELECTRICAE RADIALEM",    new BiologicalInfo { Value = 10432700, ColonyRange = 100 } },
 
             { "FONTICULUA CAMPESTRIS",  new BiologicalInfo { Value = 1956100, ColonyRange = 500 } },
             { "FONTICULUA DIGITOS",     new BiologicalInfo { Value = 3928300, ColonyRange = 500 } },
-            { "FONTICULUA FLUCTUS",     new BiologicalInfo { Value = 16777215, ColonyRange = 500 } },
+            { "FONTICULUA FLUCTUS",     new BiologicalInfo { Value = 20000000, ColonyRange = 500 } },
             { "FONTICULUA LAPIDA",      new BiologicalInfo { Value = 6017400, ColonyRange = 500 } },
-            { "FONTICULUA SEGMENTATUS", new BiologicalInfo { Value = 806300, ColonyRange = 500 } },
+            { "FONTICULUA SEGMENTATUS", new BiologicalInfo { Value = 19010800, ColonyRange = 500 } },
             { "FONTICULUA UPUPAM",      new BiologicalInfo { Value = 9701800, ColonyRange = 500 } },
 
             { "FRUTEXA ACUS",           new BiologicalInfo { Value = 12323000, ColonyRange = 150 } },
@@ -93,6 +96,12 @@ namespace ODExplorer.OrganicData
             { "FUNGOIDA SETISIS",       new BiologicalInfo { Value = 3698100, ColonyRange = 300 } },
             { "FUNGOIDA STABITIS",      new BiologicalInfo { Value = 5355000, ColonyRange = 300 } },
 
+            { "GYPSEEUM BRAIN TREE",        new BiologicalInfo { Value = 3565100, ColonyRange = 0 } },
+            { "LINDIGOTICUM BRAIN TREE",    new BiologicalInfo { Value = 3565100, ColonyRange = 0 } },
+            { "LINDIGOTICUM SINUOUS TUBERS",new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
+            { "LIVIDUM BRAIN TREE",         new BiologicalInfo { Value = 3565100, ColonyRange = 0 } },
+            { "LUTEOLUM ANEMONE",           new BiologicalInfo { Value = 3399800, ColonyRange = 0 } },
+
             { "OSSEUS CORNIBUS",        new BiologicalInfo { Value = 3369700, ColonyRange = 800 } },
             { "OSSEUS DISCUS",          new BiologicalInfo { Value = 16777215, ColonyRange = 800 } },
             { "OSSEUS FRACTUS",         new BiologicalInfo { Value = 7365300, ColonyRange = 800 } },
@@ -100,9 +109,21 @@ namespace ODExplorer.OrganicData
             { "OSSEUS PUMICE",          new BiologicalInfo { Value = 6085800, ColonyRange = 800 } },
             { "OSSEUS SPIRALIS",        new BiologicalInfo { Value = 4919000, ColonyRange = 800 } },
 
+            { "OSTRINUM BRAIN TREE",            new BiologicalInfo { Value =3565100, ColonyRange = 0 } },
+            { "PRASINUM BIOLUMINESCENT ANEMONE",new BiologicalInfo { Value =3399800, ColonyRange = 0 } },
+            { "PRASINUM SINUOUS TUBERS",        new BiologicalInfo { Value =3425600, ColonyRange = 0 } },
+            { "PUNICEUM ANEMONE",               new BiologicalInfo { Value =3399800, ColonyRange = 0 } },
+            { "PUNICEUM BRAIN TREE",            new BiologicalInfo { Value =3565100, ColonyRange = 0 } },
+
             { "RECEPTA CONDITIVUS",     new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
             { "RECEPTA DELTAHEDRONIX",  new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
             { "RECEPTA UMBRUX",         new BiologicalInfo { Value = 16777215, ColonyRange = 150 } },
+
+            { "ROSEUM ANEMONE",                 new BiologicalInfo { Value = 3399800, ColonyRange = 0 } },
+            { "ROSEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 3399800, ColonyRange = 0 } },
+            { "ROSEUM BRAIN TREE",              new BiologicalInfo { Value = 3565100, ColonyRange = 0 } },
+            { "ROSEUM SINUOUS TUBERS",          new BiologicalInfo { Value = 111300, ColonyRange = 0 } },
+            { "RUBEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 3399800, ColonyRange = 0 } },
 
             { "STRATUM ARANEAMUS",      new BiologicalInfo { Value = 4989600, ColonyRange = 500 } },
             { "STRATUM CUCUMISIS",      new BiologicalInfo { Value = 16777215, ColonyRange = 500 } },
@@ -111,7 +132,7 @@ namespace ODExplorer.OrganicData
             { "STRATUM LAMINAMUS",      new BiologicalInfo { Value = 5523100, ColonyRange = 500 } },
             { "STRATUM LIMAXUS",        new BiologicalInfo { Value = 3152500, ColonyRange = 500 } },
             { "STRATUM PALEAS",         new BiologicalInfo { Value = 3152500, ColonyRange = 500 } },
-            { "STRATUM TECTONICAS",     new BiologicalInfo { Value = 16777215, ColonyRange = 500 } },
+            { "STRATUM TECTONICAS",     new BiologicalInfo { Value = 19010800, ColonyRange = 500 } },
 
             { "TUBUS CAVAS",            new BiologicalInfo { Value = 16777215, ColonyRange = 800 } },
             { "TUBUS COMPAGIBUS",       new BiologicalInfo { Value = 12323000, ColonyRange = 800 } },
@@ -130,11 +151,17 @@ namespace ODExplorer.OrganicData
             { "TUSSOCK PENNATIS",       new BiologicalInfo { Value = 1832900, ColonyRange = 200 } },
             { "TUSSOCK PROPAGITO",      new BiologicalInfo { Value = 2194200, ColonyRange = 200 } },
             { "TUSSOCK SERRATI",        new BiologicalInfo { Value = 7958800, ColonyRange = 200 } },
-            { "TUSSOCK STIGMASIS",      new BiologicalInfo { Value = 16777215, ColonyRange = 200 } },
+            { "TUSSOCK STIGMASIS",      new BiologicalInfo { Value = 19010800, ColonyRange = 200 } },
             { "TUSSOCK TRITICUM",       new BiologicalInfo { Value = 12323000, ColonyRange = 200 } },
             { "TUSSOCK VENTUSA",        new BiologicalInfo { Value = 6193300, ColonyRange = 200 } },
-            { "TUSSOCK VIRGAM",         new BiologicalInfo { Value = 16777215, ColonyRange = 200 } }
+            { "TUSSOCK VIRGAM",         new BiologicalInfo { Value = 16777215, ColonyRange = 200 } },
+
+            { "VIOLACEUM SINUOUS TUBERS",   new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
+            { "VIRIDE BRAIN TREE",          new BiologicalInfo { Value = 3565100, ColonyRange = 0 } },
+            { "VIRIDE SINUOUS TUBERS",      new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
         };
+
+        public static Dictionary<string, BiologicalInfo> BioValues { get => bioValues; }
 
         private ulong totalValue;
         public ulong TotalValue { get => totalValue; set { totalValue = value; OnPropertyChanged(); } }

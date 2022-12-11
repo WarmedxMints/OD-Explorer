@@ -10,12 +10,13 @@ using ODExplorer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
+using System.Drawing.Design;
 
 namespace ODExplorer.NavData
 {
@@ -57,7 +58,8 @@ namespace ODExplorer.NavData
         public SystemInfo LastJumpSystem { get => _lastJumpSystem; set { _lastJumpSystem = value; OnPropertyChanged("HyperSpaceText"); } }
         public string HyperSpaceText => InHyperSpace ? LastJumpSystem == null ? "HYPERSPACE" : $"JUMPING TO {LastJumpSystem.SystemName}" : "WAITING FOR DATA";
         //The body we are current on/in orbit of if any
-        public SystemBody CurrentBody { get; set; }
+        private SystemBody currentBody;
+        public SystemBody CurrentBody { get => currentBody; set { currentBody = value; OnPropertyChanged(); } }
         //Exploration Values are tweaked in Odyssey       
         public static bool Odyssey { get; set; }
         //Bool set to true when the user is jumping
@@ -273,9 +275,9 @@ namespace ODExplorer.NavData
             body.UpdateStatus();
         }
 
-        public void ScanOrganic(ScanOrganicEvent.ScanOrganicEventArgs e)
+        public async ValueTask ScanOrganic(ScanOrganicEvent.ScanOrganicEventArgs e)
         {
-            CurrentBody ??= GetSystemBodyFromEDSM(e.SystemAddress, e.Body);
+            CurrentBody ??= await GetSystemBodyFromEDSM(e.SystemAddress, e.Body);
 
             ScannedBio.AddData(CurrentBody, e.Species_Localised.ToUpperInvariant(), e.ScanType, e.EliteTimeString);
         }
@@ -312,7 +314,7 @@ namespace ODExplorer.NavData
 
         #region FSD Methods
         //Called whenever a system is auto or manually targeted
-        public void OnFsdTarget(SystemInfo sys)
+        public async ValueTask OnFsdTarget(SystemInfo sys)
         {
             //FSD Target event for the next system in route fires while in hyperspace
             //and when a route has been plotted so we ignore this event in those cases
@@ -339,15 +341,15 @@ namespace ODExplorer.NavData
             //If the system is not in our route, clear the collection
             SystemsInRoute.ClearCollection();
             //Get the scan value of the system from EDSM
-            GetSystemValue(sys);
-            sys.SystemPos = GetSystemPosition(sys.SystemName);
+            await GetSystemValue(sys);
+            sys.SystemPos = await GetSystemPosition(sys.SystemName);
             UpdateRemainingJumpDistace();
             //Add the system to our collection
             SystemsInRoute.AddToCollection(sys);
         }
 
         //Called when a hyperspace jump is started
-        public void StartJump(StartJumpEvent.StartJumpEventArgs e)
+        public async ValueTask StartJump(StartJumpEvent.StartJumpEventArgs e)
         {
             InHyperSpace = true;
 
@@ -369,7 +371,7 @@ namespace ODExplorer.NavData
                 };
             }
 
-            GetEDSMBodyCount(sys);
+            await GetEDSMBodyCount(sys);  
 
             LastJumpSystem = sys;
 
@@ -379,7 +381,7 @@ namespace ODExplorer.NavData
         }
 
         //Called when a hyperspace jump has been completed
-        public void OnFSDJump(FSDJumpEvent.FSDJumpEventArgs e)
+        public async ValueTask OnFSDJump(FSDJumpEvent.FSDJumpEventArgs e)
         {
             //Ship is no longer in hyperspace
             InHyperSpace = false;
@@ -400,7 +402,7 @@ namespace ODExplorer.NavData
                     sys.SystemPos = e.StarPos.Copy();
                 }
                 //Set the current system to the one we just jumped into
-                SetCurrentSystem(sys);
+                await SetCurrentSystem(sys);
                 UpdateBackupRoute();
                 return;
             }
@@ -425,7 +427,7 @@ namespace ODExplorer.NavData
                     sys.SystemPos = e.StarPos.Copy();
                 }
                 //Set the current system to the one we just jumped into
-                SetCurrentSystem(sys);
+                await SetCurrentSystem(sys);
 
                 //If we have any systems left in our route, add them to our current route
                 if (_backupRoute.Count > 0)
@@ -444,9 +446,9 @@ namespace ODExplorer.NavData
                 sys.SystemPos = e.StarPos.Copy();
                 LastJumpSystem = null;
 
-                GetSystemValue(sys);
+                await GetSystemValue(sys);
 
-                SetCurrentSystem(sys, false);
+                await SetCurrentSystem(sys, false);
 
                 return;
             }
@@ -458,15 +460,15 @@ namespace ODExplorer.NavData
                 SystemPos = e.StarPos.Copy()
             };
 
-            GetSystemValue(sys);
+            await GetSystemValue(sys);
 
-            SetCurrentSystem(sys);
+            await SetCurrentSystem(sys);
         }
         #endregion
 
         #region System Population
         //Called when the NavRoute event is fired and the NavRoute.json file has been read
-        public void PopulateRoute(NavigationRoute route)
+        public async ValueTask PopulateRoute(NavigationRoute route)
         {
             //Null checks
             if (route is null || route.Route is null)
@@ -492,7 +494,7 @@ namespace ODExplorer.NavData
             SystemPosition lastPos = currentSys.SystemPos;
 
             //populate the current system
-            SetCurrentSystem(currentSys);
+            await SetCurrentSystem(currentSys);
             double totaldistance = 0;
 
             //populate the systems in route and create the backup
@@ -502,7 +504,7 @@ namespace ODExplorer.NavData
                 sys.JumpDistanceToSystem = SystemPosition.Distance(lastPos, sys.SystemPos);
                 totaldistance += sys.JumpDistanceToSystem;
                 sys.JumpDistanceRemaining = (int)Math.Round(totaldistance);
-                GetSystemValue(sys);
+                await GetSystemValue(sys);
                 SystemsInRoute.AddToCollection(sys);
                 lastPos = sys.SystemPos;
             }
@@ -512,7 +514,7 @@ namespace ODExplorer.NavData
             PopulatingRoute = false;
         }
         //Method to set the current system
-        public void SetCurrentSystem(SystemInfo sys, bool getCount = true)
+        public async ValueTask SetCurrentSystem(SystemInfo sys, bool getCount = true)
         {
             //Check we aren't already in the system
             SystemInfo currentSystem = CurrentSystem.FirstOrDefault(x => x.SystemAddress == sys.SystemAddress);
@@ -531,9 +533,9 @@ namespace ODExplorer.NavData
                 knownSystem.PolledEDSMValue = false;
                 if (getCount)
                 {
-                    GetEDSMBodyCount(knownSystem);
+                    await GetEDSMBodyCount(knownSystem);
                 }
-                GetSystemValue(knownSystem);
+                await GetSystemValue(knownSystem);
                 //Make it the current system
                 CurrentSystem.ClearCollection();
                 CurrentSystem.AddToCollection(knownSystem);
@@ -560,17 +562,17 @@ namespace ODExplorer.NavData
             UpdateRemainingJumpDistace();
             if (getCount)
             {
-                GetEDSMBodyCount(sys);
+                await GetEDSMBodyCount(sys);
             }
             //If our system information is missing the main star details, get it from EDSM
             if (string.IsNullOrEmpty(sys.StarClass))
             {
-                sys.StarClass = GetSystemStarClass(sys.SystemName);
+                sys.StarClass = await GetSystemStarClass(sys.SystemName);
             }
             //If we don't have a scan value for the system, get it from EDSM
             if (!sys.PolledEDSMValue)
             {
-                GetSystemValue(sys);
+                await GetSystemValue(sys);
             }
 
             OnCurrentSystemChanged?.Invoke(sys);
@@ -665,7 +667,7 @@ namespace ODExplorer.NavData
         #endregion
 
         #region Current Body Methods
-        internal void OnSupercruiseExit(SupercruiseExitEvent.SupercruiseExitEventArgs e)
+        internal async ValueTask OnSupercruiseExit(SupercruiseExitEvent.SupercruiseExitEventArgs e)
         {
             if (!CurrentSystem.Any() || CurrentSystem[0].SystemAddress != e.SystemAddress)
             {
@@ -676,14 +678,14 @@ namespace ODExplorer.NavData
 
             SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
 
-            body ??= GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
+            body ??= await GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
 
             CurrentBody = body;
         }
 
         internal void OnSupercruiseEntry() => CurrentBody = null;
 
-        internal void SetCurrentBody(LocationEvent.LocationEventArgs e)
+        internal async ValueTask SetCurrentBody(LocationEvent.LocationEventArgs e)
         {
             if (e.BodyType != BodyType.Planet)
             {
@@ -693,7 +695,7 @@ namespace ODExplorer.NavData
 
             SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
 
-            body ??= GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
+            body ??= await GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
 
             CurrentBody = body;
         }
@@ -719,13 +721,14 @@ namespace ODExplorer.NavData
         #endregion
 
         #region EDSM Methods
-        private static SystemPosition GetSystemPosition(string systemName)
+        private static async ValueTask<SystemPosition> GetSystemPosition(string systemName)
         {
             SystemPosition ret = new();
 
-            string path = $"https://www.edsm.net/api-v1/system?systemName={HttpUtility.UrlEncode(systemName)}&showCoordinates=1";
+            string baseUrl = "https://www.edsm.net";
+            string path = $"api-v1/system?systemName={HttpUtility.UrlEncode(systemName)}&showCoordinates=1";
 
-            string json = GetEDSMJson(path);
+            string json = await GetEDSMJson(baseUrl, path);
 
             if (string.IsNullOrEmpty(json))
             {
@@ -755,11 +758,13 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="systemName"></param>
         /// <returns></returns>
-        private static string GetSystemStarClass(string systemName)
+        private static async ValueTask<string> GetSystemStarClass(string systemName)
         {
-            string path = $"https://www.edsm.net/api-v1/system?systemName={HttpUtility.UrlEncode(systemName)}&showPrimaryStar=1";
+            string baseUrl = "https://www.edsm.net";
 
-            string json = GetEDSMJson(path);
+            string path = $"api-v1/system?systemName={HttpUtility.UrlEncode(systemName)}&showPrimaryStar=1";
+
+            string json = await GetEDSMJson(baseUrl, path);
 
             if (string.IsNullOrEmpty(json))
             {
@@ -792,11 +797,13 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="system"></param>
         /// <returns></returns>
-        private static void GetEDSMBodyCount(SystemInfo system)
+        private static async ValueTask GetEDSMBodyCount(SystemInfo system)
         {
+            string baseUrl = "https://www.edsm.net";
+
             string path = $"https://www.edsm.net/api-system-v1/bodies?systemName={system.SystemName}";
 
-            string json = GetEDSMJson(path);
+            string json = await GetEDSMJson(baseUrl, path);
 
             if (string.IsNullOrEmpty(json))
             {
@@ -820,12 +827,15 @@ namespace ODExplorer.NavData
             }
         }
 
-        private static SystemBody GetSystemBodyFromEDSM(long systemId, long bodyID)
+        private static async ValueTask<SystemBody> GetSystemBodyFromEDSM(long systemId, long bodyID)
         {
             SystemBody ret = new();
-            string path = $"https://www.edsm.net/api-system-v1/bodies?systemId64={systemId}";
 
-            string json = GetEDSMJson(path);
+            string baseUrl = "https://www.edsm.net";
+
+            string path = $"api-system-v1/bodies?systemId64={systemId}";
+
+            string json = await GetEDSMJson(baseUrl, path);
 
             if (string.IsNullOrEmpty(json))
             {
@@ -876,7 +886,7 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="ret"></param>
         /// <returns></returns>
-        private static void GetSystemValue(SystemInfo ret)
+        private static async ValueTask GetSystemValue(SystemInfo ret)
         {
             //var ret = new SystemInfo(system);
             //We already have a value
@@ -885,9 +895,12 @@ namespace ODExplorer.NavData
                 return;
             }
             //var path = $"https://www.edsm.net/api-system-v1/estimated-value?systemName={ret.SystemName}";
+
+            string baseUrl = "https://www.edsm.net";
+
             string path = $"https://www.edsm.net/api-system-v1/estimated-value?systemId64={ret.SystemAddress}";
 
-            string json = GetEDSMJson(path);
+            string json = await GetEDSMJson(baseUrl, path);
 
             if (string.IsNullOrEmpty(json))
             {
@@ -949,25 +962,38 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private static string GetEDSMJson(string path)
+        private static async ValueTask<string> GetEDSMJson(string baseUrl, string url)
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(path);
-                request.Method = "GET";
-                request.ContentType = "application/json; charset=utf-8";
-                request.Headers.Add("Accept-Encoding", "gzip,deflate");
-                request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-                request.Timeout = 5000;
+                using var client = new HttpClient();
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Add("User-Agent", "C# console program");
+                client.DefaultRequestHeaders.Accept.Add(
+                        new MediaTypeWithQualityHeaderValue("application/json"));
 
-                Stream dataStream = response.GetResponseStream();
-                StreamReader reader = new(dataStream);
-                string json = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                return json;
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var resp = await response.Content.ReadAsStringAsync();
+
+                return resp;
+
+                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(path);
+                //request.Method = "GET";
+                //request.ContentType = "application/json; charset=utf-8";
+                //request.Headers.Add("Accept-Encoding", "gzip,deflate");
+                //request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                //request.Timeout = 5000;
+
+                //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                //Stream dataStream = response.GetResponseStream();
+                //StreamReader reader = new(dataStream);
+                //string json = reader.ReadToEnd();
+                //reader.Close();
+                //dataStream.Close();
+                //return json;
             }
             catch (Exception)
             {

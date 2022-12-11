@@ -4,6 +4,7 @@ using ODExplorer.AppSettings;
 using ODExplorer.Utils;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ODExplorer.NavData
 {
@@ -79,21 +80,23 @@ namespace ODExplorer.NavData
             _navData.OnCodexEntry(e);
         }
 
-        private void SupercruiseExit(object sender, SupercruiseExitEvent.SupercruiseExitEventArgs e)
+        private async void SupercruiseExit(object sender, SupercruiseExitEvent.SupercruiseExitEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
-                return;
+                //If we are just starting up and reading journals, give the location event time to work
+                await Task.Delay(5000);
             }
 
-            _navData.OnSupercruiseExit(e);
+            await _navData.OnSupercruiseExit(e);
         }
 
-        private void SupercruiseEntry(object sender, SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
+        private async void SupercruiseEntry(object sender, SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
-                return;
+                //If we are just starting up and reading journals, give the location event time to work
+                await Task.Delay(5000);
             }
 
             _navData.OnSupercruiseEntry();
@@ -104,27 +107,27 @@ namespace ODExplorer.NavData
             _navData = navData;
             //Start watcher
             _ = _watcher.StartWatching().ConfigureAwait(false);
-#if DEBUG
-            ReadNavRouteJson();
-#endif
+//#if DEBUG
+//            _ =ReadNavRouteJson();
+//#endif
         }
 
         private void FileHeader(object sender, FileheaderEvent.FileheaderEventArgs e)
         {
-            NavigationData.Odyssey = false;// e.Odyssey;
+            NavigationData.Odyssey = e.Odyssey;
         }
 
-        private void Location(object sender, LocationEvent.LocationEventArgs e)
+        private async void Location(object sender, LocationEvent.LocationEventArgs e)
         {
-            if (_watcher.IsLive == false)
-            {
-                return;
-            }
+            //if (_watcher.IsLive == false)
+            //{
+            //    return;
+            //}
 
             SystemInfo sys = new(e);
 
-            _navData.SetCurrentSystem(sys);
-            _navData.SetCurrentBody(e);
+            await _navData.SetCurrentSystem(sys);
+            await _navData.SetCurrentBody(e);
         }
 
         private void Scan(object sender, ScanEvent.ScanEventArgs e)
@@ -192,20 +195,20 @@ namespace ODExplorer.NavData
             _navData.AllBodiesFound(e);
         }
 
-        private void NavRoute(object sender, NavRouteEvent.NavRouteEventArgs e)
+        private async void NavRoute(object sender, NavRouteEvent.NavRouteEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
                 return;
             }
 
-            ReadNavRouteJson();
+            await ReadNavRouteJson();
         }
 
         /// <summary>
         /// Reads the data from NavRoute.json in the journal log directory
         /// </summary>
-        private void ReadNavRouteJson()
+        private async ValueTask ReadNavRouteJson()
         {
             string path = Path.Combine(_appSettings.Value.JournalPath, "NavRoute.json");
 
@@ -228,10 +231,10 @@ namespace ODExplorer.NavData
 
             NavigationRoute route = NavigationRoute.FromJson(json);
 
-            _navData.PopulateRoute(route);
+            await _navData.PopulateRoute(route);
         }
 
-        private void StartJump(object sender, StartJumpEvent.StartJumpEventArgs e)
+        private async void StartJump(object sender, StartJumpEvent.StartJumpEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
@@ -241,21 +244,21 @@ namespace ODExplorer.NavData
 
             if (e.JumpType == JumpType.Hyperspace)
             {
-                _navData.StartJump(e);
+                await _navData.StartJump(e);
             }
         }
 
-        private void FSDJump(object sender, FSDJumpEvent.FSDJumpEventArgs e)
+        private async void FSDJump(object sender, FSDJumpEvent.FSDJumpEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
-                return;
+                //return;
             }
 
-            _navData.OnFSDJump(e);
+            await _navData.OnFSDJump(e);
         }
 
-        private void FSDTarget(object sender, FSDTargetEvent.FSDTargetEventArgs e)
+        private async void FSDTarget(object sender, FSDTargetEvent.FSDTargetEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
@@ -269,7 +272,7 @@ namespace ODExplorer.NavData
                 StarClass = e.StarClass,
             };
 
-            _navData.OnFsdTarget(sys);
+            await _navData.OnFsdTarget(sys);
         }
 
         private void SellExplorationData(object sender, MultiSellExplorationDataEvent.MultiSellExplorationDataEventArgs e)
@@ -292,14 +295,14 @@ namespace ODExplorer.NavData
             _navData.SellExplorationData(e);
         }
 
-        private void ScanOrganic(object sender, ScanOrganicEvent.ScanOrganicEventArgs e)
+        private async void ScanOrganic(object sender, ScanOrganicEvent.ScanOrganicEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
                 return;
             }
 
-            _navData.ScanOrganic(e);
+            await _navData.ScanOrganic(e);
         }
 
         private void OnSellOrganic(object sender, SellOrganicDataEvent.SellOrganicDataEventArgs e)
