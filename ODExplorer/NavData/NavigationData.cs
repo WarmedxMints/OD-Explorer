@@ -801,7 +801,7 @@ namespace ODExplorer.NavData
         {
             string baseUrl = "https://www.edsm.net";
 
-            string path = $"https://www.edsm.net/api-system-v1/bodies?systemName={system.SystemName}";
+            string path = $"api-system-v1/bodies?systemName={system.SystemName}";
 
             string json = await GetEDSMJson(baseUrl, path);
 
@@ -898,7 +898,7 @@ namespace ODExplorer.NavData
 
             string baseUrl = "https://www.edsm.net";
 
-            string path = $"https://www.edsm.net/api-system-v1/estimated-value?systemId64={ret.SystemAddress}";
+            string path = $"api-system-v1/estimated-value?systemId64={ret.SystemAddress}";
 
             string json = await GetEDSMJson(baseUrl, path);
 
