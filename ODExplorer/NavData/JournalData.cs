@@ -85,7 +85,8 @@ namespace ODExplorer.NavData
             if (_watcher.IsLive == false)
             {
                 //If we are just starting up and reading journals, give the location event time to work
-                await Task.Delay(5000);
+                //await Task.Delay(5000);
+                return;
             }
 
             await _navData.OnSupercruiseExit(e);
@@ -96,7 +97,8 @@ namespace ODExplorer.NavData
             if (_watcher.IsLive == false)
             {
                 //If we are just starting up and reading journals, give the location event time to work
-                await Task.Delay(5000);
+                //await Task.Delay(5000);
+                return;
             }
 
             _navData.OnSupercruiseEntry();
@@ -252,7 +254,9 @@ namespace ODExplorer.NavData
         {
             if (_watcher.IsLive == false)
             {
-                //return;
+                //If we are just starting up and reading journals, give the location event time to work
+                //await Task.Delay(5000);
+                return;
             }
 
             await _navData.OnFSDJump(e);

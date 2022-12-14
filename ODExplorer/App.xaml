@@ -20,7 +20,7 @@
                 <!--<ResourceDictionary Source="/ODExplorer;component/Themes/DefaultTheme.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
             <FontFamily x:Key="Eurostile">pack://application:,,,/Fonts/#Eurostile</FontFamily>
-            <System:String x:Key="AppVersion">1.0.3</System:String>
+            <System:String x:Key="AppVersion">1.0.4</System:String>
             <settings:Settings x:Key="AppSettings" />
         </ResourceDictionary>
     </Application.Resources>

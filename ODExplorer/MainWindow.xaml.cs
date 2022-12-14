@@ -190,6 +190,10 @@ namespace ODExplorer
 
         private void CurrentSystemBodies_Loaded(object sender, RoutedEventArgs e)
         {
+            if(sender is null || sender is not DataGrid)
+            {
+                return;
+            }
             _currentSystemBodiesDataGrid = (DataGrid)sender;
             _currentSystemBodiesDataGrid.Items.IsLiveSorting = true;
 
@@ -226,6 +230,11 @@ namespace ODExplorer
         //Clear reference to Datagrid when it is unloaded
         private void CurrentSystemBodies_Unloaded(object sender, RoutedEventArgs e)
         {
+            if(_currentSystemBodiesDataGrid is null)
+            {
+                return;
+            }
+
             _currentSystemBodiesDataGrid.ItemContainerGenerator.StatusChanged -= (sender, e) => ItemContainerGenerator_StatusChanged(sender, _currentSystemBodiesDataGrid);
             _currentSystemBodiesDataGrid.ColumnReordered -= CurrentSystemBodiesDataGrid_ColumnReordered;
             _currentSystemBodiesDataGrid = null;
