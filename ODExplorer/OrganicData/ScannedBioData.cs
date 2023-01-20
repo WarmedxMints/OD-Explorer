@@ -163,7 +163,15 @@ namespace ODExplorer.OrganicData
             { "VIRIDE SINUOUS TUBERS",      new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
         };
 
-        public static Dictionary<string, BiologicalInfo> BioValues { get => bioValues; }
+        public static BiologicalInfo BioValues(string species)
+        { 
+            if(bioValues.ContainsKey(species))
+            {
+                return bioValues[species];
+            }
+
+            return new BiologicalInfo() {  Value= 0,ColonyRange = 0 };
+        }
 
         private ulong totalValue;
         public ulong TotalValue { get => totalValue; set { totalValue = value; OnPropertyChanged(); } }
@@ -232,7 +240,7 @@ namespace ODExplorer.OrganicData
                 TimeStamp = timeStamp,
                 Species = species,
                 Status = status,
-                BioInfo = bioValues[species]
+                BioInfo = BioValues(species)
             };
 
             body.BodyBioData.AddToCollection(bioData);
@@ -278,7 +286,7 @@ namespace ODExplorer.OrganicData
                 TimeStamp = timeStamp,
                 Species = speciesAndVariant[0],
                 Variant = $" - {speciesAndVariant[1]}",
-                BioInfo = bioValues[speciesAndVariant[0]],
+                BioInfo = BioValues(speciesAndVariant[0]),
                 Status = "CODEX ENTRY"
             };
 

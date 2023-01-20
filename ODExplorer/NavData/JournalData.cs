@@ -92,7 +92,7 @@ namespace ODExplorer.NavData
             await _navData.OnSupercruiseExit(e);
         }
 
-        private async void SupercruiseEntry(object sender, SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
+        private void SupercruiseEntry(object sender, SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
         {
             if (_watcher.IsLive == false)
             {
