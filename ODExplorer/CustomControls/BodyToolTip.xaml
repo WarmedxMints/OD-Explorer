@@ -88,6 +88,8 @@
                 <TextBlock Text="{Binding Radius, Converter={StaticResource DoubleMutplication}, ConverterParameter=0.001, StringFormat={}Radius : {0:N0} km}" />
                 <TextBlock Text="{Binding MassEM, StringFormat={}Earth Masses : {0:N4}}"
                            Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="{Binding SurfaceGravity, StringFormat={}Gravity : {0:N2} G}"
+                           Visibility="{Binding IsPlanet, Converter={StaticResource BoolToVis}}" />
                 <TextBlock Text="{Binding StellarMass, StringFormat={}Solar Masses : {0:N4}}"
                            Visibility="{Binding IsStar, Converter={StaticResource BoolToVis}}" />
             </StackPanel>

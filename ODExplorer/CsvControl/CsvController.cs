@@ -166,17 +166,30 @@ namespace ODExplorer.CsvControl
                 return;
             }
 
-            ExplorationTarget target = container.Targets.FirstOrDefault(x => x.SystemName.Equals(systemInfo.SystemName, StringComparison.OrdinalIgnoreCase));
-
-            if (target is not null)
+            if(container.CurrentTarget is not null && container.CurrentTarget.SystemName.Equals(systemInfo.SystemName,StringComparison.OrdinalIgnoreCase))
             {
-                int index = container.Targets.IndexOf(target);
-
-                if (index >= CurrentIndex)
+                var target = container.CurrentTarget;
+                if (target is not null)
                 {
-                    CurrentIndex = index + 1;
+                    int index = container.Targets.IndexOf(target);
+
+                    if (index >= CurrentIndex)
+                    {
+                        CurrentIndex = index + 1;
+                    }
                 }
             }
+            //ExplorationTarget target = container.Targets.FirstOrDefault(x => x.SystemName.Equals(systemInfo.SystemName, StringComparison.OrdinalIgnoreCase));
+            
+            //if (target is not null)
+            //{
+            //    int index = container.Targets.IndexOf(target);
+
+            //    if (index >= CurrentIndex)
+            //    {
+            //        CurrentIndex = index + 1;
+            //    }
+            //}
         }
 
         public string[] CsvHeader

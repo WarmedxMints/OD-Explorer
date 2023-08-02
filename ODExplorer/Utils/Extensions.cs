@@ -12,6 +12,11 @@ namespace ODExplorer.Utils
 {
     public static class Extensions
     {
+        public static string BoolToYesNo(this bool value)
+        {
+            return value ? "Yes" : "No";
+        }
+
         public static string GetDescription(this Enum value)
         {
             System.Reflection.FieldInfo fieldInfo = value.GetType().GetField(value.ToString());

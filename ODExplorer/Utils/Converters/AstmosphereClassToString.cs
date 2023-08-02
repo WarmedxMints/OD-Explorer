@@ -22,7 +22,7 @@ namespace ODExplorer.Utils.Converters
                 AtmosphereClass.None => "None",
                 AtmosphereClass.NoAtmosphere => "No Atm",
                 AtmosphereClass.SuitableForWaterBasedLife => "SWBL",
-                AtmosphereClass.AmmoniaAndOxygen => "NH\u2083 O\u2082",
+                AtmosphereClass.AmmoniaOxygen => "NH\u2083 O\u2082",
                 AtmosphereClass.Ammonia => "NH\u2083",
                 AtmosphereClass.Water => "H\u2082O",
                 AtmosphereClass.CarbonDioxide => "CO\u2082",
@@ -40,8 +40,9 @@ namespace ODExplorer.Utils.Converters
                 AtmosphereClass.ArgonRich => "Ar Rich",
                 AtmosphereClass.Neon => "Ne",
                 AtmosphereClass.Argon => "Ar",
-                AtmosphereClass.Oxygen => "O\u2082",
-                _ => "?",
+                AtmosphereClass.Oxygen => "O₂",
+                AtmosphereClass.EarthLike => "N₂ O₂",
+                _ => string.Empty,
             };
             return ret;
         }

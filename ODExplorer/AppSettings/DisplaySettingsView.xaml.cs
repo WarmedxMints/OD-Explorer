@@ -100,7 +100,7 @@ namespace ODExplorer.AppSettings
                 BiologicalSignals = 1,
                 GeologicalSignals = 0,
                 SurfaceGravity = 1,
-                AtmosphereType = EliteJournalReader.AtmosphereClass.AmmoniaAndOxygen,
+                AtmosphereType = EliteJournalReader.AtmosphereClass.AmmoniaOxygen,
                 SurfacePressure = 100000,
                 SurfaceTemp = 110,
                 DistanceFromArrivalLs = 1200,
@@ -260,8 +260,10 @@ namespace ODExplorer.AppSettings
 
         private void EditTheme_Click(object sender, RoutedEventArgs e)
         {
-            ThemeEditor editor = new();
-            editor.Owner = this;
+            ThemeEditor editor = new()
+            {
+                Owner = this
+            };
 
             if ((bool)editor.ShowDialog())
             {

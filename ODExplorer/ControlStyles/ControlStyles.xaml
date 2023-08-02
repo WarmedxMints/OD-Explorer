@@ -1220,7 +1220,6 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition x:Name="Col0"
-                                                  MinWidth="17"
                                                   Width="Auto"
                                                   SharedSizeGroup="MenuItemIconColumnGroup" />
                                 <ColumnDefinition Width="Auto"
@@ -1228,7 +1227,7 @@
                                 <ColumnDefinition Width="Auto"
                                                   SharedSizeGroup="MenuItemIGTColumnGroup" />
                                 <ColumnDefinition x:Name="Col3"
-                                                  Width="14" />
+                                                  Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <!-- ContentPresenter to show an Icon if needed -->

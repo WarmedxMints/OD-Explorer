@@ -61,6 +61,18 @@ namespace ODExplorer.NavData
             _watcher.GetEvent<CodexEntryEvent>()?.AddHandler(CodexEntry);
 
             _watcher.GetEvent<SellOrganicDataEvent>().AddHandler(OnSellOrganic);
+
+            _watcher.GetEvent<ApproachBodyEvent>()?.AddHandler(OnApproachBody);
+        }
+
+        private void OnApproachBody(object sender, ApproachBodyEvent.ApproachBodyEventArgs e)
+        {
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
+
+            _navData.OnApproachBody(e);
         }
 
         public bool WatcherLive => _watcher.IsLive;
@@ -313,7 +325,7 @@ namespace ODExplorer.NavData
         {
             if (_watcher.IsLive == false)
             {
-                return;
+                //return;
             }
 
             _navData.SellOrganic(e);

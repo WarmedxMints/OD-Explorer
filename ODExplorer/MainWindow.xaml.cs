@@ -5,6 +5,7 @@ using ODExplorer.CsvControl;
 using ODExplorer.CustomMessageBox;
 using ODExplorer.GeologicalData;
 using ODExplorer.NavData;
+using ODExplorer.Notifications;
 using ODExplorer.OrganicData;
 using ODExplorer.ScanValueView;
 using ODExplorer.Utils;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +24,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using ToastNotifications;
+using ToastNotifications.Core;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
 
 namespace ODExplorer
 {
@@ -114,9 +120,18 @@ namespace ODExplorer
         private bool showCurrentSystemTable;
         public bool ShowCurrenSystemTable { get => showCurrentSystemTable; set { showCurrentSystemTable = value; OnPropertyChanged(); } }
 
+        private Notifier notifier;
         #region Window Methods
         public MainWindow()
         {
+            notifier = new(cfg =>
+            {
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(8), MaximumNotificationCount.FromCount(15));
+                cfg.PositionProvider = new PrimaryScreenPositionProvider(Corner.BottomRight, 20, 20);
+                cfg.DisplayOptions.TopMost = true;
+                cfg.DisplayOptions.Width = 300;
+                cfg.Dispatcher = Dispatcher.CurrentDispatcher;
+            });
             InitializeComponent();
         }
 
@@ -143,11 +158,73 @@ namespace ODExplorer
             NavData.OnCurrentSystemChanged += NavData_OnCurrentSystemChanged;
 
             _journalData.GetEvent<CarrierJumpRequestEvent>()?.AddHandler(CarrierJumpRequest);
-
+            _journalData.GetEvent<ApproachBodyEvent>()?.AddHandler(OnApproachBody);
+            _journalData.GetEvent<SupercruiseEntryEvent>()?.AddHandler(OnEnterSC);
+            _journalData.GetEvent<SupercruiseExitEvent>()?.AddHandler(OnExitSC);
+            _journalData.GetEvent<FSDJumpEvent>()?.AddHandler(OnFSDJump);
             CountDownTimer.CountDownFinishedEvent += CountDownTimer_CountDownFinishedEvent;
+
+            NavigationData.OnBodyUpdated += OnBodyAdded;
         }
 
+        private void OnBodyAdded(SystemBody e, DiscoveryStatus status)
+        {
+            if (AppSettings.Value.EnableNotifications == false)
+            {
+                return;
+            }
+            if (status == DiscoveryStatus.WorthMapping)
+            {
+                notifier.ShowCustomMessageOnMainThread(e.BodyName, $"Worth Mapping\n{Extensions.GetDescription(e.PlanetClass)}\nMax Value : {e.MappedValue:N0} cr\nDiscovered : {e.WasDiscovered.BoolToYesNo()}\nMapped : {e.Wasmapped.BoolToYesNo()}\n{e.DistanceFromArrivalLs:N0} ls", null);
+            }
+            if (status == DiscoveryStatus.Noteable)
+            {
+                notifier.ShowCustomMessageOnMainThread(e.BodyName, $"Noteable Body\n{Extensions.GetDescription(e.PlanetClass)}\nGeo Signals : {e.GeologicalSignals}\nBio Signals : {e.BiologicalSignals}", null);
+            }
 
+
+        }
+
+        private string currentBodyName;
+        private long currentBodyId;
+        private void OnExitSC(object sender, SupercruiseExitEvent.SupercruiseExitEventArgs e)
+        {
+            if (currentBodyName == e.Body && currentBodyId == e.BodyID)
+            {
+                SwitchTabs(1);
+            }
+        }
+
+        private void OnFSDJump(object sender, FSDJumpEvent.FSDJumpEventArgs e)
+        {
+            SwitchTabs(0);
+        }
+
+        private void OnEnterSC(object sender, SupercruiseEntryEvent.SupercruiseEntryEventArgs e)
+        {
+            SwitchTabs(0);
+        }
+
+        private void OnApproachBody(object sender, ApproachBodyEvent.ApproachBodyEventArgs e)
+        {
+            currentBodyId = e.BodyID;
+            currentBodyName = e.Body;
+            SwitchTabs(1);
+        }
+
+        private void SwitchTabs(int index)
+        {
+            if (AppSettings.Value.AutoSelectTabs == false || _journalData.WatcherLive == false)
+            {
+                return;
+            }
+
+            Dispatcher.Invoke(() =>
+                {
+                    MainTabControl.SelectedIndex = index;
+                }
+           );
+        }
         private void NavData_OnCurrentSystemChanged(SystemInfo systemInfo)
         {
             Dispatcher.Invoke(() =>
@@ -161,6 +238,7 @@ namespace ODExplorer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            notifier.Dispose();
             CountDownTimer.Stop();
             if (NavData.ScanValue.SaveState() == false)
             {
@@ -190,7 +268,7 @@ namespace ODExplorer
 
         private void CurrentSystemBodies_Loaded(object sender, RoutedEventArgs e)
         {
-            if(sender is null || sender is not DataGrid)
+            if (sender is null || sender is not DataGrid)
             {
                 return;
             }
@@ -230,7 +308,7 @@ namespace ODExplorer
         //Clear reference to Datagrid when it is unloaded
         private void CurrentSystemBodies_Unloaded(object sender, RoutedEventArgs e)
         {
-            if(_currentSystemBodiesDataGrid is null)
+            if (_currentSystemBodiesDataGrid is null)
             {
                 return;
             }
@@ -305,8 +383,10 @@ namespace ODExplorer
         #region Top Menu Methods
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
         {
-            SettingsWindow sw = new(this);
-            sw.Owner = this;
+            SettingsWindow sw = new(this)
+            {
+                Owner = this
+            };
 
             if ((bool)sw.ShowDialog())
             {
@@ -318,8 +398,10 @@ namespace ODExplorer
 
         private void DisplaySettings_Click(object sender, RoutedEventArgs e)
         {
-            DisplaySettingsView displaySettings = new(AppSettings);
-            displaySettings.Owner = this;
+            DisplaySettingsView displaySettings = new(AppSettings)
+            {
+                Owner = this
+            };
 
             if ((bool)displaySettings.ShowDialog())
             {
@@ -391,8 +473,10 @@ namespace ODExplorer
 
         private void OpenAboutbox_Click(object sender, RoutedEventArgs e)
         {
-            AboutBox.AboutBox about = new();
-            about.Owner = this;
+            AboutBox.AboutBox about = new()
+            {
+                Owner = this
+            };
             _ = about.ShowDialog();
         }
 
@@ -531,7 +615,7 @@ namespace ODExplorer
                 SystemSounds.Beep.Play();
 
                 taskBarItem.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
-                _ = Task.Run(async() =>
+                _ = Task.Run(async () =>
                   {
                       await Task.Delay(6000);
                       Dispatcher.Invoke(() =>
@@ -588,8 +672,13 @@ namespace ODExplorer
             dataGrid.ItemContainerGenerator.StatusChanged += (sender, e) => ItemContainerGenerator_StatusChanged(sender, dataGrid);
         }
 
-        private void ItemContainerGenerator_StatusChanged(object sender, DataGrid dataGrid)
+        private static void ItemContainerGenerator_StatusChanged(object sender, DataGrid dataGrid)
         {
+            if (dataGrid is null)
+            {
+                return;
+            }
+
             ItemContainerGenerator icg = (ItemContainerGenerator)sender;
 
             if (icg.Status == System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
@@ -608,6 +697,42 @@ namespace ODExplorer
             DataGrid dataGrid = (DataGrid)sender;
 
             dataGrid.ItemContainerGenerator.StatusChanged -= (sender, e) => ItemContainerGenerator_StatusChanged(sender, dataGrid);
+        }
+
+        private void NotificationPositionSelect(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is MenuItem item)
+            {
+                Corner corner;
+                switch (item.Tag)
+                {
+                    case "BL":
+                        corner = Corner.BottomLeft;
+                        break;
+                    case "TL":
+                        corner = Corner.TopLeft;
+                        break;
+                    case "TR":
+                        corner = Corner.TopRight;
+                        break;
+                    default:
+                    case "BR":
+                        corner = Corner.BottomRight;
+                        break;
+                }
+                notifier.Dispose();
+                notifier = new(cfg =>
+                {
+                    cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(8), MaximumNotificationCount.FromCount(15));
+                    cfg.PositionProvider = new PrimaryScreenPositionProvider(corner, 20, 20);
+                    cfg.DisplayOptions.TopMost = true;
+                    cfg.DisplayOptions.Width = 300;
+                    cfg.Dispatcher = Dispatcher.CurrentDispatcher;
+                });
+            }
+
+
         }
     }
 }

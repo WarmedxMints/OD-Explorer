@@ -47,6 +47,10 @@ namespace ODExplorer.OrganicData
 
             foreach(BioData body in BodyBioData)
             {
+                if(body.Sold)
+                {
+                    continue;
+                }
                 ret += body.GetValueToCommander();
             }
 

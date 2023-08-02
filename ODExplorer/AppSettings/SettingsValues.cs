@@ -33,6 +33,8 @@ namespace ODExplorer.AppSettings
         private bool excludeStarsFromSorting = true;
         private bool autoStartFleetCarrierTimer = true;
         private bool deleteSystemDataOnsale = false;
+        private bool autoSelectTabs = true;
+        private bool enableNotifications = true;
 
         public SortCategory SortCategory { get => sortCategory; set { sortCategory = value; OnPropertyChanged(); } }
         public ListSortDirection SortDirection { get => sortDirection; set { sortDirection = value; OnPropertyChanged(); } }
@@ -48,6 +50,8 @@ namespace ODExplorer.AppSettings
         public bool ExcludeStarsFromSorting { get => excludeStarsFromSorting; set { excludeStarsFromSorting = value; OnPropertyChanged(); } }
         public bool AutoStartFleetCarrierTimer {  get => autoStartFleetCarrierTimer; set { autoStartFleetCarrierTimer = value; OnPropertyChanged(); } }
         public bool DeleteSystemDataOnsale {  get => deleteSystemDataOnsale; set { deleteSystemDataOnsale = value; OnPropertyChanged(); } }
+        public bool AutoSelectTabs {  get => autoSelectTabs; set { autoSelectTabs = value; OnPropertyChanged(); } }
+        public bool EnableNotifications {  get => enableNotifications; set { enableNotifications = value; OnPropertyChanged(); } }
         public Theme CurrentTheme { get => Settings.CurrentTheme; set { Settings.CurrentTheme = value; OnPropertyChanged(); } }
 
         private string defaultJournalPath = null;

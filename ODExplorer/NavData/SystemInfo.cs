@@ -44,6 +44,9 @@ namespace ODExplorer.NavData
         #endregion
 
         #region Properties
+
+        public DiscoveryStatus Status { get; set; }
+
         private bool dataSold;
         public bool DataSold { get => dataSold; set { dataSold = value; OnPropertyChanged(); } }
 

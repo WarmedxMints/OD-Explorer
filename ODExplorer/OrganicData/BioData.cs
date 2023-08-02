@@ -19,6 +19,9 @@ namespace ODExplorer.OrganicData
             {
                 switch (value)
                 {
+                    case "Dss":
+                        value = "REPORTED";
+                        break;
                     case "Log":
                         value = "LOGGED";
                         break;
@@ -38,6 +41,12 @@ namespace ODExplorer.OrganicData
 
         private string variant;
         public string Variant { get => variant; set { variant = value; OnPropertyChanged(); } }
+
+        private string codexVariant = string.Empty;
+        public string CodexVariant { get => codexVariant; set { codexVariant = value; OnPropertyChanged(); } }
+
+        private bool sold;
+        public bool Sold { get => sold; set => sold = value; }
 
         private BiologicalInfo bioInfo;
         public BiologicalInfo BioInfo { get => bioInfo; set { bioInfo = value; OnPropertyChanged(); } }

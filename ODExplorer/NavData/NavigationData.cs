@@ -26,6 +26,14 @@ namespace ODExplorer.NavData
         public delegate void OnCurrentSystemChange(SystemInfo systemInfo);
 
         public event OnCurrentSystemChange OnCurrentSystemChanged;
+
+        public delegate void OnBodyUpdate(SystemBody body, DiscoveryStatus status);
+        public static event OnBodyUpdate OnBodyUpdated;
+
+        public static void BodyUpdated(SystemBody body, DiscoveryStatus status)
+        {
+            OnBodyUpdated?.Invoke(body, status);
+        }
         #endregion
         #region Properties
         public Settings AppSettings { get; set; }
@@ -257,12 +265,13 @@ namespace ODExplorer.NavData
 
             foreach (SAASignal signal in e.Signals)
             {
-                switch (signal.Type_Localised)
+                switch (signal.Type)
                 {
-                    case "Biological":
+                    case "$SAA_SignalType_Biological;":
                         bio = signal.Count;
+                        ScannedBio.AddDSSData(body, e);
                         break;
-                    case "Geological":
+                    case "$SAA_SignalType_Geological;":
                         geo = signal.Count;
                         break;
                     default:
@@ -279,7 +288,8 @@ namespace ODExplorer.NavData
         {
             CurrentBody ??= await GetSystemBodyFromEDSM(e.SystemAddress, e.Body);
 
-            ScannedBio.AddData(CurrentBody, e.Species_Localised.ToUpperInvariant(), e.ScanType, e.EliteTimeString);
+            ScannedBio.AddData(CurrentBody, e.EliteTimeString, e);
+            //ScannedBio.AddData(CurrentBody, e);
         }
 
         internal void OnCodexEntry(CodexEntryEvent.CodexEntryEventArgs e)
@@ -301,7 +311,7 @@ namespace ODExplorer.NavData
             //Bio Scan
             if (e.SubCategory.Contains("Organic"))
             {
-                ScannedBio.AddCodexData(CurrentBody, e.EliteTimeString, e.Name_Localised.ToUpperInvariant());
+                ScannedBio.AddCodexData(CurrentBody, e.EliteTimeString, e.Name_Localised.ToUpperInvariant(), e.Name);
                 return;
             }
         }
@@ -609,6 +619,7 @@ namespace ODExplorer.NavData
                 }
             });
         }
+    
         //Adds a body to the current system
         public SystemBody AddBodyToCurrentSystem(bool fromDetailedScan, bool fromEDSM, SystemBody bodyToAdd)
         {
@@ -629,6 +640,7 @@ namespace ODExplorer.NavData
             if (bodyknown == default)
             {
                 CurrentSystem[0].Bodies.AddToCollection(bodyToAdd);
+                bodyToAdd.UpdateStatus();
                 //Abirtary value just to call the OnpropertyChaned event for this proprety 
                 CurrentSystem[0].PercentageScanned = 0;
                 return bodyToAdd;
@@ -637,14 +649,18 @@ namespace ODExplorer.NavData
             if (fromDetailedScan)
             {
                 bodyknown.UpdateFromDetailedScan(bodyToAdd, Odyssey);
+                return bodyknown;
             }
 
             if (fromEDSM)
             {
                 bodyknown.UpdateFromEDSM(bodyToAdd);
+            }           
+            if (bodyknown.MappedByUser == false)
+            {
+                bodyknown.UpdateStatus();
             }
-
-            return bodyToAdd;
+            return bodyknown;
         }
 
         private void UpdateBackupRoute()
@@ -692,8 +708,12 @@ namespace ODExplorer.NavData
                 CurrentBody = null;
                 return;
             }
+            SystemBody body = null;
 
-            SystemBody body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
+            if (CurrentSystem.Any() && CurrentSystem[0].Bodies.Any())
+            {
+                body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
+            }
 
             body ??= await GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
 
@@ -999,6 +1019,11 @@ namespace ODExplorer.NavData
             {
                 return string.Empty;
             }
+        }
+
+        internal void OnApproachBody(ApproachBodyEvent.ApproachBodyEventArgs e)
+        {
+            ScannedBio.OnApproachBody(e);
         }
         #endregion
     }

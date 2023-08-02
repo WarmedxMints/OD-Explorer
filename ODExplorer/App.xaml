@@ -16,11 +16,12 @@
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/DataGridStyles.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/ControlStyles.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ControlStyles/SecondaryWindowStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/Notifications/ToastTheme.xaml" />
 
                 <!--<ResourceDictionary Source="/ODExplorer;component/Themes/DefaultTheme.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
             <FontFamily x:Key="Eurostile">pack://application:,,,/Fonts/#Eurostile</FontFamily>
-            <System:String x:Key="AppVersion">1.0.5</System:String>
+            <System:String x:Key="AppVersion">1.0.6</System:String>
             <settings:Settings x:Key="AppSettings" />
         </ResourceDictionary>
     </Application.Resources>

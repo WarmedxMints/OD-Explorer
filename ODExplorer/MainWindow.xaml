@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ODExplorer"
         xmlns:CsvParser="clr-namespace:ParserLibrary;assembly=ParserLibrary"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:biodata="clr-namespace:ODExplorer.OrganicData"
         mc:Ignorable="d"
         Title="OD Explorer"
         x:Name="ODExplorer"
@@ -56,6 +57,51 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground"
                     Value="{DynamicResource PrimaryForeground}" />
+        </Style>
+
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Background"
+                    Value="{DynamicResource PrimaryBackground}" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource PrimaryForeground}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border"
+                                BorderThickness="1"
+                                BorderBrush="Transparent"
+                                CornerRadius="2"
+                                Margin="2,0">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              Margin="10,2" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="Border"
+                                        Value="{DynamicResource TitleBarBackGround}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver"
+                                     SourceName="ContentSite"
+                                     Value="True">
+                                <Setter TargetName="Border"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource PrimaryForeground}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver"
+                                     Value="False">
+                                <Setter TargetName="Border"
+                                        Property="BorderBrush"
+                                        Value="Transparent" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -176,171 +222,213 @@
                               Header="_About"
                               Click="OpenAboutbox_Click" />
                 </MenuItem>
+                <MenuItem Header="Auto Switch Tabs"
+                          IsCheckable="True"
+                          ToolTip="When enabled OD Explorer with switch to the Bio Data tab when you approach a body"
+                          IsChecked="{Binding AppSettings.Value.AutoSelectTabs}" />
+                <MenuItem Header="Enable Notifications"
+                          IsCheckable="True"
+                          Margin="-30,0,0,0"
+                          ToolTip="When enabled notifications will be display is a body of note or is worth mapping is scanned"
+                          IsChecked="{Binding AppSettings.Value.EnableNotifications}" />
+                <MenuItem Header="Notification Position">
+                    <MenuItem Header="Bottom Left"
+                              Tag="BL"
+                              Click="NotificationPositionSelect"/>
+                    <MenuItem Header="Bottom Right"
+                              Tag="BR"
+                              Click="NotificationPositionSelect" />
+                    <MenuItem Header="Top Left"
+                              Tag="TL"
+                              Click="NotificationPositionSelect" />
+                    <MenuItem Header="Top Right"
+                              Tag="TR"
+                              Click="NotificationPositionSelect" />
+                </MenuItem>
             </Menu>
 
             <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="114*" />
+                    <ColumnDefinition Width="54*" />
+                    <ColumnDefinition Width="671*" />
+                </Grid.ColumnDefinitions>
                 <Grid.LayoutTransform>
                     <ScaleTransform ScaleX="{Binding AppSettings.Value.UiScale}"
                                     ScaleY="{Binding AppSettings.Value.UiScale}" />
                 </Grid.LayoutTransform>
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                              x:Name="MainScrollBar"
-                              VerticalScrollBarVisibility="Auto"
-                              Grid.Row="2">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="20" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="20" />
-                        </Grid.RowDefinitions>
-
-                        <!--#region Current System -->
-                        <GroupBox Style="{DynamicResource SystemBorder}"
-                                  x:Name="as"
-                                  Grid.Row="1"
-                                  Grid.Column="1"
-                                  Header="CURRENT SYSTEM"
-                                  MinHeight="77"
-                                  Margin="0,0,0,5"
-                                  Padding="5,5,5,5">
+                <TabControl BorderThickness="0"
+                            Background="Transparent"
+                            FontWeight="Normal"
+                            x:Name="MainTabControl"
+                            ScrollViewer.CanContentScroll="True"
+                            Grid.ColumnSpan="3">
+                    <TabItem x:Name="Exploration">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Explorer"
+                                           Background="Transparent"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </TabItem.Header>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      x:Name="MainScrollBar"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Grid.Row="2">
                             <Grid>
-                                <TextBlock Text="{Binding NavData.HyperSpaceText}"
-                                           FontWeight="Normal"
-                                           TextAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           TextWrapping="Wrap"
-                                           Visibility="{Binding ShowCurrenSystemTable, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Background"
-                                                    Value="{DynamicResource PrimaryForeground}" />
-                                            <Setter Property="Foreground"
-                                                    Value="{DynamicResource PrimaryBackground}" />
-                                            <Style.Triggers>
-                                                <Trigger Property="Text"
-                                                         Value="WAITING FOR DATA">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="20" />
+                                </Grid.RowDefinitions>
+
+                                <!--#region Current System -->
+                                <GroupBox Style="{DynamicResource SystemBorder}"
+                                          x:Name="as"
+                                          Grid.Row="1"
+                                          Grid.Column="1"
+                                          Header="CURRENT SYSTEM"
+                                          MinHeight="77"
+                                          Margin="0,0,0,5"
+                                          Padding="5,5,5,5">
+                                    <Grid>
+                                        <TextBlock Text="{Binding NavData.HyperSpaceText}"
+                                                   FontWeight="Normal"
+                                                   TextAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   Visibility="{Binding ShowCurrenSystemTable, Converter={StaticResource InvBoolToVis}, ConverterParameter=Inverted}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
                                                     <Setter Property="Background"
-                                                            Value="{DynamicResource PrimaryBackground}" />
-                                                    <Setter Property="Foreground"
                                                             Value="{DynamicResource PrimaryForeground}" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-
-                                <DataGrid ItemsSource="{Binding NavData.CurrentSystem}"
-                                          Style="{DynamicResource DataGrid Settings}"
-                                          RowDetailsVisibilityMode="Visible"
-                                          RowStyle="{DynamicResource System RowStyle}"
-                                          CellStyle="{DynamicResource RouteCells}"
-                                          PreviewMouseWheel="DataGrid_PreviewMouseWheel"
-                                          Loaded="Datagrid_Loaded"
-                                          Unloaded="Datagrid_Unloaded"
-                                          Visibility="{Binding ShowCurrenSystemTable, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
-                                          x:Name="CurrentSystemGrid">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Width="70">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal"
-                                                                HorizontalAlignment="Left">
-                                                        <Border Style="{DynamicResource DataGridScoopable}"
-                                                                Width="5" />
-                                                        <TextBlock Text="{Binding Path=StarClass}"
-                                                                   Margin="10,0,0,0"
-                                                                   Style="{DynamicResource DataGridFont}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-
-                                        <DataGridTemplateColumn Header="NAME"
-                                                                Width="*"
-                                                                HeaderStyle="{DynamicResource Name Header}">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Border>
-                                                        <Grid>
-                                                            <ProgressBar Value="{Binding PercentageScanned}"
-                                                                         Minimum="0"
-                                                                         Maximum="100"
-                                                                         BorderThickness="0"
-                                                                         Margin="0,0,0,0"
-                                                                         Foreground="{DynamicResource ProgressBarColour}"
-                                                                         Background="Transparent"
-                                                                         Height="2"
-                                                                         VerticalAlignment="Bottom" />
-                                                            <TextBlock Text="{Binding Path=SystemName}"
-                                                                       HorizontalAlignment="Left"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="5,0,0,0"
-                                                                       Style="{DynamicResource DataGridFont}" />
-                                                        </Grid>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-
-                                        <DataGridTextColumn Header="DB"
-                                                            Width="Auto"
-                                                            MinWidth="40"
-                                                            Binding="{Binding Path=DiscoveredBodiesCount}"
-                                                            ElementStyle="{DynamicResource DataGrid Element DB}">
-                                            <DataGridTextColumn.HeaderStyle>
-                                                <Style TargetType="{x:Type DataGridColumnHeader}"
-                                                       BasedOn="{StaticResource DataGrid Header Center}">
-                                                    <Setter Property="ToolTip"
-                                                            Value="The Number of Bodies detected by the Discovery Scanner" />
+                                                    <Setter Property="Foreground"
+                                                            Value="{DynamicResource PrimaryBackground}" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text"
+                                                                 Value="WAITING FOR DATA">
+                                                            <Setter Property="Background"
+                                                                    Value="{DynamicResource PrimaryBackground}" />
+                                                            <Setter Property="Foreground"
+                                                                    Value="{DynamicResource PrimaryForeground}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
                                                 </Style>
-                                            </DataGridTextColumn.HeaderStyle>
-                                        </DataGridTextColumn>
+                                            </TextBlock.Style>
+                                        </TextBlock>
 
-                                        <DataGridTextColumn Header="KB"
-                                                            Width="Auto"
-                                                            MinWidth="40"
-                                                            Binding="{Binding Path=KnownBodies}"
-                                                            ElementStyle="{DynamicResource DataGrid Element KB}">
-                                            <DataGridTextColumn.HeaderStyle>
-                                                <Style TargetType="{x:Type DataGridColumnHeader}"
-                                                       BasedOn="{StaticResource DataGrid Header Center}">
-                                                    <Setter Property="ToolTip"
-                                                            Value="The Number of Bodies reported to EDSM" />
-                                                </Style>
-                                            </DataGridTextColumn.HeaderStyle>
-                                        </DataGridTextColumn>
+                                        <DataGrid ItemsSource="{Binding NavData.CurrentSystem}"
+                                                  Style="{DynamicResource DataGrid Settings}"
+                                                  RowDetailsVisibilityMode="Visible"
+                                                  RowStyle="{DynamicResource System RowStyle}"
+                                                  CellStyle="{DynamicResource RouteCells}"
+                                                  PreviewMouseWheel="DataGrid_PreviewMouseWheel"
+                                                  Loaded="Datagrid_Loaded"
+                                                  Unloaded="Datagrid_Unloaded"
+                                                  Visibility="{Binding ShowCurrenSystemTable, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
+                                                  x:Name="CurrentSystemGrid">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Width="70">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal"
+                                                                        HorizontalAlignment="Left">
+                                                                <Border Style="{DynamicResource DataGridScoopable}"
+                                                                        Width="5" />
+                                                                <TextBlock Text="{Binding Path=StarClass}"
+                                                                           Margin="10,0,0,0"
+                                                                           Style="{DynamicResource DataGridFont}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
 
-                                        <DataGridTextColumn Header="VALUE"
-                                                            Width="110"
-                                                            Binding="{Binding Path=SystemValue}"
-                                                            HeaderStyle="{DynamicResource DataGrid Header Center}"
-                                                            ElementStyle="{DynamicResource DataGrid Element Right Margin}">
-                                        </DataGridTextColumn>
-                                    </DataGrid.Columns>
-                                    <DataGrid.RowDetailsTemplate>
-                                        <DataTemplate>
-                                            <DataGrid ItemsSource="{Binding Bodies}"
-                                                      x:Name="CurrentSystemBodies"
-                                                      Margin="30,5,0,0"
-                                                      HeadersVisibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowCSBHeaders, Converter={StaticResource BoolToHeaderVis}, ConverterParameter=Column}"
-                                                      Style="{DynamicResource GridSyte Bodies}"
-                                                      CellStyle="{DynamicResource BodyGrid Cell}"
-                                                      RowStyle="{DynamicResource RowStyle Bodies}"
-                                                      ColumnHeaderStyle="{DynamicResource DataGrid Header Left}"
-                                                      GridLinesVisibility="All"
-                                                      CanUserReorderColumns="True"
-                                                      RowDetailsVisibilityMode="Collapsed"
-                                                      Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
-                                                      Loaded="CurrentSystemBodies_Loaded"
-                                                      Unloaded="CurrentSystemBodies_Unloaded">
-                                                <!--<DataGrid.RowDetailsTemplate>
+                                                <DataGridTemplateColumn Header="NAME"
+                                                                        Width="*"
+                                                                        HeaderStyle="{DynamicResource Name Header}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border>
+                                                                <Grid>
+                                                                    <ProgressBar Value="{Binding PercentageScanned}"
+                                                                                 Minimum="0"
+                                                                                 Maximum="100"
+                                                                                 BorderThickness="0"
+                                                                                 Margin="0,0,0,0"
+                                                                                 Foreground="{DynamicResource ProgressBarColour}"
+                                                                                 Background="Transparent"
+                                                                                 Height="2"
+                                                                                 VerticalAlignment="Bottom" />
+                                                                    <TextBlock Text="{Binding Path=SystemName}"
+                                                                               HorizontalAlignment="Left"
+                                                                               VerticalAlignment="Center"
+                                                                               Margin="5,0,0,0"
+                                                                               Style="{DynamicResource DataGridFont}" />
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+
+                                                <DataGridTextColumn Header="DB"
+                                                                    Width="Auto"
+                                                                    MinWidth="40"
+                                                                    Binding="{Binding Path=DiscoveredBodiesCount}"
+                                                                    ElementStyle="{DynamicResource DataGrid Element DB}">
+                                                    <DataGridTextColumn.HeaderStyle>
+                                                        <Style TargetType="{x:Type DataGridColumnHeader}"
+                                                               BasedOn="{StaticResource DataGrid Header Center}">
+                                                            <Setter Property="ToolTip"
+                                                                    Value="The Number of Bodies detected by the Discovery Scanner" />
+                                                        </Style>
+                                                    </DataGridTextColumn.HeaderStyle>
+                                                </DataGridTextColumn>
+
+                                                <DataGridTextColumn Header="KB"
+                                                                    Width="Auto"
+                                                                    MinWidth="40"
+                                                                    Binding="{Binding Path=KnownBodies}"
+                                                                    ElementStyle="{DynamicResource DataGrid Element KB}">
+                                                    <DataGridTextColumn.HeaderStyle>
+                                                        <Style TargetType="{x:Type DataGridColumnHeader}"
+                                                               BasedOn="{StaticResource DataGrid Header Center}">
+                                                            <Setter Property="ToolTip"
+                                                                    Value="The Number of Bodies reported to EDSM" />
+                                                        </Style>
+                                                    </DataGridTextColumn.HeaderStyle>
+                                                </DataGridTextColumn>
+
+                                                <DataGridTextColumn Header="VALUE"
+                                                                    Width="110"
+                                                                    Binding="{Binding Path=SystemValue}"
+                                                                    HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                                                    ElementStyle="{DynamicResource DataGrid Element Right Margin}">
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                            <DataGrid.RowDetailsTemplate>
+                                                <DataTemplate>
+                                                    <DataGrid ItemsSource="{Binding Bodies}"
+                                                              x:Name="CurrentSystemBodies"
+                                                              Margin="30,5,0,0"
+                                                              HeadersVisibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowCSBHeaders, Converter={StaticResource BoolToHeaderVis}, ConverterParameter=Column}"
+                                                              Style="{DynamicResource GridSyte Bodies}"
+                                                              CellStyle="{DynamicResource BodyGrid Cell}"
+                                                              RowStyle="{DynamicResource RowStyle Bodies}"
+                                                              ColumnHeaderStyle="{DynamicResource DataGrid Header Left}"
+                                                              GridLinesVisibility="All"
+                                                              CanUserReorderColumns="True"
+                                                              RowDetailsVisibilityMode="Collapsed"
+                                                              Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
+                                                              Loaded="CurrentSystemBodies_Loaded"
+                                                              Unloaded="CurrentSystemBodies_Unloaded">
+                                                        <!--<DataGrid.RowDetailsTemplate>
                                                     <DataTemplate>
                                                         <Grid Background="{DynamicResource PrimaryBackground}">
                                                             <Border Padding="5"
@@ -428,359 +516,372 @@
                                                         </Grid>
                                                     </DataTemplate>
                                                 </DataGrid.RowDetailsTemplate>-->
-                                                <DataGrid.Columns>
-                                                    <DataGridTemplateColumn Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToDGColumnWidth}}"
-                                                                            Header="NAME"
-                                                                            MinWidth="60">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <Grid>
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <Rectangle Style="{DynamicResource BodyRectangle}"
-                                                                                   Height="18"
-                                                                                   Width="18"
-                                                                                   Margin="5,0,5,0" />
-                                                                        <TextBlock Text="{Binding BodyNameLocal}"
+                                                        <DataGrid.Columns>
+                                                            <DataGridTemplateColumn Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToDGColumnWidth}}"
+                                                                                    Header="NAME"
+                                                                                    MinWidth="60">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid>
+                                                                            <StackPanel Orientation="Horizontal">
+                                                                                <Rectangle Style="{DynamicResource BodyRectangle}"
+                                                                                           Height="18"
+                                                                                           Width="18"
+                                                                                           Margin="5,0,5,0" />
+                                                                                <TextBlock Text="{Binding BodyNameLocal}"
+                                                                                           VerticalAlignment="Center"
+                                                                                           HorizontalAlignment="Left"
+                                                                                           Margin="0,0,5,0" />
+                                                                            </StackPanel>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
+
+                                                            <DataGridTemplateColumn Width="*"
+                                                                                    Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToVis}}"
+                                                                                    Header="TYPE">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding BodyDescription}"
                                                                                    VerticalAlignment="Center"
                                                                                    HorizontalAlignment="Left"
-                                                                                   Margin="0,0,5,0" />
-                                                                    </StackPanel>
-                                                                </Grid>
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
+                                                                                   Margin="5,0,0,0" />
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
 
-                                                    <DataGridTemplateColumn Width="*"
-                                                                            Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTypeColumn, Converter={StaticResource BoolToVis}}"
-                                                                            Header="TYPE">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding BodyDescription}"
-                                                                           VerticalAlignment="Center"
-                                                                           HorizontalAlignment="Left"
-                                                                           Margin="5,0,0,0" />
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
+                                                            <DataGridTemplateColumn Width="SizeToCells"
+                                                                                    MinWidth="50"
+                                                                                    Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowInfoColumn, Converter={StaticResource BoolToVis}}"
+                                                                                    Header="INFO">
+                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid>
+                                                                            <StackPanel Orientation="Horizontal"
+                                                                                        HorizontalAlignment="Right"
+                                                                                        Margin="2,0,2,0"
+                                                                                        VerticalAlignment="Center">
 
-                                                    <DataGridTemplateColumn Width="SizeToCells"
-                                                                            MinWidth="50"
-                                                                            Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowInfoColumn, Converter={StaticResource BoolToVis}}"
-                                                                            Header="INFO">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <Grid>
-                                                                    <StackPanel Orientation="Horizontal"
-                                                                                HorizontalAlignment="Right"
-                                                                                Margin="2,0,2,0"
-                                                                                VerticalAlignment="Center">
+                                                                                <TextBlock Text="{Binding AtmosphereType, Converter={StaticResource AtmoshpereTypeToString}}"
+                                                                                           VerticalAlignment="Center"
+                                                                                           TextAlignment="Left"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToDouble}, ConverterParameter=70}"
+                                                                                           Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                           FontSize="17">
+                                                                                    <TextBlock.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="HasAtmosphere" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowAtmosphereType" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Visibility>
+                                                                                </TextBlock>
 
-                                                                        <TextBlock Text="{Binding AtmosphereType, Converter={StaticResource AtmoshpereTypeToString}}"
-                                                                                   VerticalAlignment="Center"
-                                                                                   TextAlignment="Left"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToDouble}, ConverterParameter=70}"
-                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowAtmosphereType, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
-                                                                                   FontSize="17">
-                                                                            <TextBlock.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="HasAtmosphere" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowAtmosphereType" />
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Visibility>
-                                                                        </TextBlock>
+                                                                                <TextBlock Text="{Binding SurfaceTempString}"
+                                                                                           VerticalAlignment="Center"
+                                                                                           TextAlignment="Center"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp, Converter={StaticResource BoolToDouble}, ConverterParameter=60}"
+                                                                                           Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                           FontSize="14">
+                                                                                    <TextBlock.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="Landable" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Visibility>
+                                                                                </TextBlock>
 
-                                                                        <TextBlock Text="{Binding SurfaceTempString}"
-                                                                                   VerticalAlignment="Center"
-                                                                                   TextAlignment="Center"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp, Converter={StaticResource BoolToDouble}, ConverterParameter=60}"
-                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
-                                                                                   FontSize="14">
-                                                                            <TextBlock.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="Landable" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowSurfaceTemp" />
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Visibility>
-                                                                        </TextBlock>
+                                                                                <TextBlock Text="{Binding SurfacePressureString}"
+                                                                                           VerticalAlignment="Center"
+                                                                                           TextAlignment="Right"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfacePressure, Converter={StaticResource BoolToDouble}, ConverterParameter=65}"
+                                                                                           Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfacePressure, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                           FontSize="14">
+                                                                                    <TextBlock.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="Landable" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowSurfacePressure" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Visibility>
+                                                                                </TextBlock>
 
-                                                                        <TextBlock Text="{Binding SurfacePressureString}"
-                                                                                   VerticalAlignment="Center"
-                                                                                   TextAlignment="Right"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfacePressure, Converter={StaticResource BoolToDouble}, ConverterParameter=65}"
-                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfacePressure, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
-                                                                                   FontSize="14">
-                                                                            <TextBlock.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="Landable" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowSurfacePressure" />
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Visibility>
-                                                                        </TextBlock>
+                                                                                <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                           Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
+                                                                                    <Rectangle.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="Wasmapped"
+                                                                                                     Converter="{StaticResource InvertBool}" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowUnmapped" />
+                                                                                        </MultiBinding>
+                                                                                    </Rectangle.Visibility>
+                                                                                    <Rectangle.OpacityMask>
+                                                                                        <ImageBrush ImageSource="/Images/moon-landing.png" />
+                                                                                    </Rectangle.OpacityMask>
+                                                                                </Rectangle>
 
-                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowUnmapped, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
-                                                                            <Rectangle.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="Wasmapped"
-                                                                                             Converter="{StaticResource InvertBool}" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowUnmapped" />
-                                                                                </MultiBinding>
-                                                                            </Rectangle.Visibility>
-                                                                            <Rectangle.OpacityMask>
-                                                                                <ImageBrush ImageSource="/Images/moon-landing.png" />
-                                                                            </Rectangle.OpacityMask>
-                                                                        </Rectangle>
+                                                                                <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                           Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
+                                                                                    <Rectangle.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="WasDiscovered"
+                                                                                                     Converter="{StaticResource InvertBool}" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowWasDiscovered" />
+                                                                                        </MultiBinding>
+                                                                                    </Rectangle.Visibility>
+                                                                                    <Rectangle.OpacityMask>
+                                                                                        <ImageBrush ImageSource="/Images/binoculars.png" />
+                                                                                    </Rectangle.OpacityMask>
+                                                                                </Rectangle>
 
-                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowWasDiscovered, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}">
-                                                                            <Rectangle.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="WasDiscovered"
-                                                                                             Converter="{StaticResource InvertBool}" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowWasDiscovered" />
-                                                                                </MultiBinding>
-                                                                            </Rectangle.Visibility>
-                                                                            <Rectangle.OpacityMask>
-                                                                                <ImageBrush ImageSource="/Images/binoculars.png" />
-                                                                            </Rectangle.OpacityMask>
-                                                                        </Rectangle>
+                                                                                <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                           Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Margin="0,0,3,0">
+                                                                                    <Rectangle.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="Terraformable" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowTerraformable" />
+                                                                                        </MultiBinding>
+                                                                                    </Rectangle.Visibility>
+                                                                                    <Rectangle.OpacityMask>
+                                                                                        <ImageBrush ImageSource="/Images/cooling-tower.png" />
+                                                                                    </Rectangle.OpacityMask>
+                                                                                </Rectangle>
 
-                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowTerraformable, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Margin="0,0,3,0">
-                                                                            <Rectangle.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="Terraformable" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowTerraformable" />
-                                                                                </MultiBinding>
-                                                                            </Rectangle.Visibility>
-                                                                            <Rectangle.OpacityMask>
-                                                                                <ImageBrush ImageSource="/Images/cooling-tower.png" />
-                                                                            </Rectangle.OpacityMask>
-                                                                        </Rectangle>
+                                                                                <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                           Visibility="{Binding HasRings, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
+                                                                                           Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
+                                                                                    <Rectangle.OpacityMask>
+                                                                                        <ImageBrush ImageSource="/Images/saturn.png" />
+                                                                                    </Rectangle.OpacityMask>
+                                                                                </Rectangle>
 
-                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Visibility="{Binding HasRings, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}"
-                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowHasRings, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
-                                                                            <Rectangle.OpacityMask>
-                                                                                <ImageBrush ImageSource="/Images/saturn.png" />
-                                                                            </Rectangle.OpacityMask>
-                                                                        </Rectangle>
+                                                                                <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                           Visibility="{Binding GeologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
+                                                                                           Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
+                                                                                    <Rectangle.OpacityMask>
+                                                                                        <ImageBrush ImageSource="/Images/volcano.png" />
+                                                                                    </Rectangle.OpacityMask>
+                                                                                </Rectangle>
+                                                                                <TextBlock Text="{Binding GeologicalSignals}"
+                                                                                           VerticalAlignment="Center">
+                                                                                    <TextBlock.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="GeologicalSignals"
+                                                                                                     Converter="{StaticResource IntToBool}" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowGeoSignals" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Visibility>
+                                                                                </TextBlock>
 
-                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Visibility="{Binding GeologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
-                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowGeoSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
-                                                                            <Rectangle.OpacityMask>
-                                                                                <ImageBrush ImageSource="/Images/volcano.png" />
-                                                                            </Rectangle.OpacityMask>
-                                                                        </Rectangle>
-                                                                        <TextBlock Text="{Binding GeologicalSignals}"
-                                                                                   VerticalAlignment="Center">
-                                                                            <TextBlock.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="GeologicalSignals"
-                                                                                             Converter="{StaticResource IntToBool}" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowGeoSignals" />
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Visibility>
-                                                                        </TextBlock>
+                                                                                <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                                                           Visibility="{Binding BiologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
+                                                                                           Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowBioSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowBioSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
+                                                                                    <Rectangle.OpacityMask>
+                                                                                        <ImageBrush ImageSource="/Images/DNA.png" />
+                                                                                    </Rectangle.OpacityMask>
+                                                                                </Rectangle>
+                                                                                <TextBlock Text="{Binding BiologicalSignals}"
+                                                                                           VerticalAlignment="Center">
+                                                                                    <TextBlock.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="BiologicalSignals"
+                                                                                                     Converter="{StaticResource IntToBool}" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowBioSignals" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Visibility>
+                                                                                </TextBlock>
 
-                                                                        <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                                                   Visibility="{Binding BiologicalSignals, Converter={StaticResource intToVis}, ConverterParameter=Hidden}"
-                                                                                   Height="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowBioSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowBioSignals, Converter={StaticResource BoolToDouble}, ConverterParameter=18}">
-                                                                            <Rectangle.OpacityMask>
-                                                                                <ImageBrush ImageSource="/Images/DNA.png" />
-                                                                            </Rectangle.OpacityMask>
-                                                                        </Rectangle>
-                                                                        <TextBlock Text="{Binding BiologicalSignals}"
-                                                                                   VerticalAlignment="Center">
-                                                                            <TextBlock.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="BiologicalSignals"
-                                                                                             Converter="{StaticResource IntToBool}" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowBioSignals" />
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Visibility>
-                                                                        </TextBlock>
+                                                                                <TextBlock Text="{Binding SurfaceGravity, StringFormat=N2}"
+                                                                                           VerticalAlignment="Center"
+                                                                                           HorizontalAlignment="Right"
+                                                                                           TextAlignment="Center"
+                                                                                           Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity, Converter={StaticResource BoolToDouble}, ConverterParameter=50}"
+                                                                                           Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
+                                                                                           Style="{DynamicResource GravityTextBox}">
+                                                                                    <TextBlock.Visibility>
+                                                                                        <MultiBinding Converter="{StaticResource TwoBoolToVis}">
+                                                                                            <Binding Path="Landable" />
+                                                                                            <Binding Source="{StaticResource AppSettings}"
+                                                                                                     Path="SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Visibility>
+                                                                                </TextBlock>
 
-                                                                        <TextBlock Text="{Binding SurfaceGravity, StringFormat=N2}"
-                                                                                   VerticalAlignment="Center"
-                                                                                   HorizontalAlignment="Right"
-                                                                                   TextAlignment="Center"
-                                                                                   Width="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity, Converter={StaticResource BoolToDouble}, ConverterParameter=50}"
-                                                                                   Margin="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity, Converter={StaticResource BoolToMargin}, ConverterParameter=2|0|2|0}"
-                                                                                   Style="{DynamicResource GravityTextBox}">
-                                                                            <TextBlock.Visibility>
-                                                                                <MultiBinding Converter="{StaticResource TwoBoolToVis}">
-                                                                                    <Binding Path="Landable" />
-                                                                                    <Binding Source="{StaticResource AppSettings}"
-                                                                                             Path="SettingsInstance.Value.DisplaySettings.ShowSurfaceGravity" />
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Visibility>
-                                                                        </TextBlock>
+                                                                            </StackPanel>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn>
 
-                                                                    </StackPanel>
-                                                                </Grid>
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
-
-                                                    <DataGridTextColumn Width="SizeToCells"
-                                                                        MinWidth="90"
-                                                                        Header="DISTANCE"
-                                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowDistanceColumn, Converter={StaticResource BoolToVis}}"
-                                                                        HeaderStyle="{DynamicResource DataGrid Header Center}"
-                                                                        Binding="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls, NotifyOnTargetUpdated=True}"
-                                                                        ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
-                                                    <DataGridTextColumn Header="VALUE"
-                                                                        Width="110"
-                                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowValueColumn, Converter={StaticResource BoolToVis}}"
-                                                                        HeaderStyle="{DynamicResource DataGrid Header Center}"
-                                                                        Binding="{Binding MappedValue, StringFormat=N0, NotifyOnTargetUpdated=True}"
-                                                                        ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
-                                                </DataGrid.Columns>
-                                            </DataGrid>
-                                        </DataTemplate>
-                                    </DataGrid.RowDetailsTemplate>
-                                </DataGrid>
-                            </Grid>
-                        </GroupBox>
-                        <!--#endregion-->
-
-                        <!--#region Systems in Route-->
-                        <GroupBox Style="{DynamicResource SystemBorder}"
-                                  Grid.Row="2"
-                                  Grid.Column="1"
-                                  Header="SYSTEMS IN ROUTE"
-                                  Margin="0,5,0,5"
-                                  Padding="5,0,5,5">
-                            <DataGrid ItemsSource="{Binding NavData.SystemsInRoute}"
-                                      Style="{DynamicResource DataGrid Settings}"
-                                      RowStyle="{DynamicResource Systems In Route RowStyle}"
-                                      CellStyle="{DynamicResource RouteCells}"
-                                      GridLinesVisibility="Vertical"
-                                      Loaded="Datagrid_Loaded"
-                                      Unloaded="Datagrid_Unloaded"
-                                      PreviewMouseWheel="DataGrid_PreviewMouseWheel"
-                                      RowDetailsVisibilityMode="{Binding AppSettings.Value.DisplaySettings.ShowVaulableBodies, Converter={StaticResource BoolToRowVis}}"
-                                      x:Name="SystemsInRouteGrid">
-                                <DataGrid.Columns>
-                                    <DataGridTemplateColumn Width="70">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border Style="{DynamicResource DataGridScoopable}"
-                                                            Width="5" />
-                                                    <TextBlock Text="{Binding Path=StarClass}"
-                                                               Margin="10,0,0,0"
-                                                               Style="{DynamicResource DataGridFont}" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTextColumn Header="NAME"
-                                                        Width="*"
-                                                        Binding="{Binding Path=SystemName}"
-                                                        HeaderStyle="{DynamicResource Name Header}"
-                                                        ElementStyle="{DynamicResource DataGrid Element Left Margin Body}" />
-
-                                    <DataGridTextColumn Width="SizeToCells"
-                                                        FontSize="15"
-                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistRemaining, Converter={StaticResource BoolToVis}}"
-                                                        Binding="{Binding Path=JumpDistanceRemaining, Converter={StaticResource JumpRangToString}, ConverterParameter=N0}">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="{x:Type TextBlock}">
-                                                <Setter Property="TextAlignment"
-                                                        Value="Right" />
-                                                <Setter Property="Margin"
-                                                        Value="5,0,5,0" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Width="SizeToCells"
-                                                        FontSize="15"
-                                                        Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistToSystem, Converter={StaticResource BoolToVis}}"
-                                                        Binding="{Binding Path=JumpDistanceToSystem, Converter={StaticResource JumpRangToString}, ConverterParameter=N2}">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="{x:Type TextBlock}">
-                                                <Setter Property="TextAlignment"
-                                                        Value="Right" />
-                                                <Setter Property="Margin"
-                                                        Value="5,0,5,0" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="VALUE"
-                                                        Width="110"
-                                                        Binding="{Binding Path=SystemValue}"
-                                                        HeaderStyle="{DynamicResource DataGrid Header Center}"
-                                                        ElementStyle="{DynamicResource DataGrid Element Right Margin}">
-                                    </DataGridTextColumn>
-                                </DataGrid.Columns>
-                                <DataGrid.RowDetailsTemplate>
-                                    <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding Bodies}"
-                                                  Style="{DynamicResource DataGrid Settings}"
-                                                  HeadersVisibility="None"
-                                                  HorizontalScrollBarVisibility="Hidden"
-                                                  IsHitTestVisible="False"
-                                                  Margin="70,3,0,0"
-                                                  GridLinesVisibility="All"
-                                                  VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
-                                                  RowStyle="{DynamicResource RowStyle Bodies}"
-                                                  Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}">
-                                            <DataGrid.Columns>
-                                                <DataGridTemplateColumn Width="*">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <Grid Margin="5,0,0,0">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <Rectangle Style="{DynamicResource BodyRectangle}"
-                                                                               Height="18"
-                                                                               Width="18"
-                                                                               Margin="0,0,5,0" />
-                                                                    <TextBlock Text="{Binding Path=BodyNameLocal}"
-                                                                               HorizontalAlignment="Left"
-                                                                               VerticalAlignment="Center" />
-                                                                </StackPanel>
-                                                                <TextBlock Text="{Binding Path=DistanceFromArrivalLs, StringFormat={}{0:N0} ls}"
-                                                                           HorizontalAlignment="Right"
-                                                                           VerticalAlignment="Center" />
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                                <DataGridTextColumn Width="110"
-                                                                    Binding="{Binding Path=MappedValue, StringFormat=N0}"
-                                                                    ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
-                                            </DataGrid.Columns>
+                                                            <DataGridTextColumn Width="SizeToCells"
+                                                                                MinWidth="90"
+                                                                                Header="DISTANCE"
+                                                                                Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowDistanceColumn, Converter={StaticResource BoolToVis}}"
+                                                                                HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                                                                Binding="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls, NotifyOnTargetUpdated=True}"
+                                                                                ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
+                                                            <DataGridTextColumn Header="VALUE"
+                                                                                Width="110"
+                                                                                Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowValueColumn, Converter={StaticResource BoolToVis}}"
+                                                                                HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                                                                Binding="{Binding MappedValue, StringFormat=N0, NotifyOnTargetUpdated=True}"
+                                                                                ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </DataTemplate>
+                                            </DataGrid.RowDetailsTemplate>
                                         </DataGrid>
-                                    </DataTemplate>
-                                </DataGrid.RowDetailsTemplate>
-                            </DataGrid>
-                        </GroupBox>
-                        <!--#endregion-->
-                    </Grid>
-                </ScrollViewer>
+                                    </Grid>
+                                </GroupBox>
+                                <!--#endregion-->
+
+                                <!--#region Systems in Route-->
+                                <GroupBox Style="{DynamicResource SystemBorder}"
+                                          Grid.Row="2"
+                                          Grid.Column="1"
+                                          Header="SYSTEMS IN ROUTE"
+                                          Margin="0,5,0,5"
+                                          Padding="5,0,5,5">
+                                    <DataGrid ItemsSource="{Binding NavData.SystemsInRoute}"
+                                              Style="{DynamicResource DataGrid Settings}"
+                                              RowStyle="{DynamicResource Systems In Route RowStyle}"
+                                              CellStyle="{DynamicResource RouteCells}"
+                                              GridLinesVisibility="Vertical"
+                                              Loaded="Datagrid_Loaded"
+                                              Unloaded="Datagrid_Unloaded"
+                                              PreviewMouseWheel="DataGrid_PreviewMouseWheel"
+                                              RowDetailsVisibilityMode="{Binding AppSettings.Value.DisplaySettings.ShowVaulableBodies, Converter={StaticResource BoolToRowVis}}"
+                                              x:Name="SystemsInRouteGrid">
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Width="70">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Border Style="{DynamicResource DataGridScoopable}"
+                                                                    Width="5" />
+                                                            <TextBlock Text="{Binding Path=StarClass}"
+                                                                       Margin="10,0,0,0"
+                                                                       Style="{DynamicResource DataGridFont}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+                                            <DataGridTextColumn Header="NAME"
+                                                                Width="*"
+                                                                Binding="{Binding Path=SystemName}"
+                                                                HeaderStyle="{DynamicResource Name Header}"
+                                                                ElementStyle="{DynamicResource DataGrid Element Left Margin Body}" />
+
+                                            <DataGridTextColumn Width="SizeToCells"
+                                                                FontSize="15"
+                                                                Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistRemaining, Converter={StaticResource BoolToVis}}"
+                                                                Binding="{Binding Path=JumpDistanceRemaining, Converter={StaticResource JumpRangToString}, ConverterParameter=N0}">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="TextAlignment"
+                                                                Value="Right" />
+                                                        <Setter Property="Margin"
+                                                                Value="5,0,5,0" />
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                            </DataGridTextColumn>
+
+                                            <DataGridTextColumn Width="SizeToCells"
+                                                                FontSize="15"
+                                                                Visibility="{Binding Source={StaticResource AppSettings}, Path=SettingsInstance.Value.DisplaySettings.ShowJumpDistToSystem, Converter={StaticResource BoolToVis}}"
+                                                                Binding="{Binding Path=JumpDistanceToSystem, Converter={StaticResource JumpRangToString}, ConverterParameter=N2}">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="TextAlignment"
+                                                                Value="Right" />
+                                                        <Setter Property="Margin"
+                                                                Value="5,0,5,0" />
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                            </DataGridTextColumn>
+
+                                            <DataGridTextColumn Header="VALUE"
+                                                                Width="110"
+                                                                Binding="{Binding Path=SystemValue}"
+                                                                HeaderStyle="{DynamicResource DataGrid Header Center}"
+                                                                ElementStyle="{DynamicResource DataGrid Element Right Margin}">
+                                            </DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                        <DataGrid.RowDetailsTemplate>
+                                            <DataTemplate>
+                                                <DataGrid ItemsSource="{Binding Bodies}"
+                                                          Style="{DynamicResource DataGrid Settings}"
+                                                          HeadersVisibility="None"
+                                                          HorizontalScrollBarVisibility="Hidden"
+                                                          IsHitTestVisible="False"
+                                                          Margin="70,3,0,0"
+                                                          GridLinesVisibility="All"
+                                                          VerticalGridLinesBrush="{DynamicResource MainWindowBackground}"
+                                                          RowStyle="{DynamicResource RowStyle Bodies}"
+                                                          Visibility="{Binding Bodies.Count, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn Width="*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid Margin="5,0,0,0">
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <Rectangle Style="{DynamicResource BodyRectangle}"
+                                                                                       Height="18"
+                                                                                       Width="18"
+                                                                                       Margin="0,0,5,0" />
+                                                                            <TextBlock Text="{Binding Path=BodyNameLocal}"
+                                                                                       HorizontalAlignment="Left"
+                                                                                       VerticalAlignment="Center" />
+                                                                        </StackPanel>
+                                                                        <TextBlock Text="{Binding Path=DistanceFromArrivalLs, StringFormat={}{0:N0} ls}"
+                                                                                   HorizontalAlignment="Right"
+                                                                                   VerticalAlignment="Center" />
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTextColumn Width="110"
+                                                                            Binding="{Binding Path=MappedValue, StringFormat=N0}"
+                                                                            ElementStyle="{DynamicResource DataGrid Element Right Margin}" />
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </DataTemplate>
+                                        </DataGrid.RowDetailsTemplate>
+                                    </DataGrid>
+                                </GroupBox>
+                                <!--#endregion-->
+                            </Grid>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem x:Name="Exo">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal"
+                                        Background="Transparent">
+                                <TextBlock Text="Bio Data"
+                                           Background="Transparent"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </TabItem.Header>
+                        <biodata:BioDataTable BioDataInstance="{Binding NavData.ScannedBio}" />
+                    </TabItem>
+                </TabControl>
             </Grid>
 
             <Grid Grid.Row="3"
@@ -1177,28 +1278,65 @@
                            FontSize="16"
                            Visibility="{Binding NavData.PopulatingRoute, Converter={StaticResource InvBoolToVis}, ConverterParameter=Normal}" />
 
-                <Label Content="Estimated Scan Value |"
-                       Grid.Column="2"
-                       FontSize="16"
-                       Foreground="{DynamicResource MenuBarForeground}"
-                       VerticalAlignment="Center" />
+                <Grid  Grid.Column="2"
+                       Grid.ColumnSpan="1"
+                       HorizontalAlignment="Stretch"
+                       ToolTip="Minimum estimated value is with a 0% terraformable bonus while maximum is with a 100% bonus">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center"
+
+                    <Label Content="Estimated Scan Value |"
+                           BorderBrush="{DynamicResource MenuBarForeground}"  
+                           FontSize="16"
+                           Grid.RowSpan="2"
                            Foreground="{DynamicResource MenuBarForeground}"
-                           Grid.Column="3"
-                           FontSize="14"
-                           TextWrapping="Wrap"
-                           Margin="0,0,5,0"
-                           MinWidth="130"
-                           TextAlignment="Right">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="{}Min  : {0:N0} CR&#x0a;Max : {1:N0} CR">
-                            <Binding Path="NavData.ScanValue.EstimatedScanValueMin" />
-                            <Binding Path="NavData.ScanValue.EstimatedScanValueMax" />
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
+                           VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="Min"
+                               Foreground="{DynamicResource MenuBarForeground}"
+                               FontSize="14" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="Max"
+                               Foreground="{DynamicResource MenuBarForeground}"
+                               FontSize="14" />
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="2"
+                               Text=":"
+                               Foreground="{DynamicResource MenuBarForeground}"
+                               FontSize="14"
+                               Margin="5,0"/>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="2"
+                               Text=":"
+                               Foreground="{DynamicResource MenuBarForeground}"
+                               FontSize="14" 
+                               Margin="5,0"/>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="3"
+                               Foreground="{DynamicResource MenuBarForeground}"
+                               Text="{Binding NavData.ScanValue.EstimatedScanValueMin, StringFormat={}{0:N0} CR}"
+                               FontSize="14"
+                               HorizontalAlignment="Right"
+                               Margin="5,0" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="3"
+                               Foreground="{DynamicResource MenuBarForeground}"
+                               Text="{Binding NavData.ScanValue.EstimatedScanValueMax, StringFormat={}{0:N0} CR}"
+                               HorizontalAlignment="Right"
+                               FontSize="14"
+                               Margin="5,0" />
+                </Grid>
             </Grid>
 
         </Grid>

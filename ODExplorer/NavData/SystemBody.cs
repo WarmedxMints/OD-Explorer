@@ -5,6 +5,7 @@ using ODExplorer.AppSettings;
 using ODExplorer.Utils;
 using ODExplorer.Utils.Converters;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
@@ -53,8 +54,8 @@ namespace ODExplorer.NavData
             SurfaceTemp = (int)Math.Round(e.SurfaceTemperature ?? 0);
             WasDiscovered = e.WasDiscovered ?? false;
             Composition = e.Composition;
-            AtmosphericComposition = e.AtmosphereComposition ?? Array.Empty<ScanItemComponent>(); ;
-            AtmosphereDescrtiption = Settings.SettingsInstance.Value.NotableSettings.Atmospheres.GetInfoString(e.Atmosphere ?? "");
+            AtmosphericComposition = e.AtmosphereComposition ?? Array.Empty<ScanItemComponent>(); 
+            AtmosphereDescrtiption = e.PlanetClass == PlanetClass.EarthlikeBody ? "Earth Like" : Settings.SettingsInstance.Value.NotableSettings.Atmospheres.GetInfoString(e.Atmosphere ?? "");
             Materials = e.Materials ?? Array.Empty<ScanItemComponent>(); ;
             Volcanism = string.IsNullOrEmpty(e.Volcanism) ? "No Volcanism" : e.Volcanism;
             TidalLock = e.TidalLock ?? false;
@@ -78,7 +79,7 @@ namespace ODExplorer.NavData
 
             SurfaceGravity = Math.Round(SurfaceGravity / 10, 2);
             SetBodyNameLocal();
-            UpdateStatus();
+            //UpdateStatus();
         }
         #endregion
 
@@ -253,7 +254,15 @@ namespace ODExplorer.NavData
         public DiscoveryStatus Status
         {
             get { return _status; }
-            set { _status = value; OnPropertyChanged(); }
+            set 
+            {
+                if (_status == value)
+                    return;
+                _status = value;
+                //Debug.WriteLine($"{bodyName} - {value}");
+                OnPropertyChanged();
+                NavigationData.BodyUpdated(this, value);
+            }
         }
 
         private bool _landabe;
@@ -400,7 +409,7 @@ namespace ODExplorer.NavData
                 SetBodyNameLocal();
                 CalcValues(Ody);
                 PopulateNotables();
-                UpdateStatus();
+                //UpdateStatus();
             });
         }
 

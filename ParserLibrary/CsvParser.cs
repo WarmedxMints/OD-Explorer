@@ -49,8 +49,8 @@ namespace ParserLibrary
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
 
-                string[] firstline = parser.ReadFields();
 
+                string[] firstline = parser.ReadFields();
                 Tuple<CsvType, bool> csvType = CheckCsvType(firstline);
 
                 if (csvType.Item2 == false)

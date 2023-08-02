@@ -24,41 +24,13 @@ namespace ODExplorer.Utils
 
         public static int GetStarValue(StarType starType, double stellarMass)
         {
-            double k;
-            switch (starType)
+            var k = starType switch
             {
-                case StarType.D:
-                case StarType.DA:
-                case StarType.DAB:
-                case StarType.DAO:
-                case StarType.DAZ:
-                case StarType.DAV:
-                case StarType.DB:
-                case StarType.DBZ:
-                case StarType.DBV:
-                case StarType.DO:
-                case StarType.DOV:
-                case StarType.DQ:
-                case StarType.DC:
-                case StarType.DCV:
-                case StarType.DX:
-                    k = 14057;
-                    break;
-
-                case StarType.N:
-                case StarType.H:
-                    k = 22628;
-                    break;
-
-                case StarType.SupermassiveBlackHole:
-                    k = 33.5678;
-                    break;
-
-                default:
-                    k = 1200;
-                    break;
-            }
-
+                StarType.D or StarType.DA or StarType.DAB or StarType.DAO or StarType.DAZ or StarType.DAV or StarType.DB or StarType.DBZ or StarType.DBV or StarType.DO or StarType.DOV or StarType.DQ or StarType.DC or StarType.DCV or StarType.DX => 14057,
+                StarType.N or StarType.H => 22628,
+                StarType.SupermassiveBlackHole => 33.5678,
+                _ => 1200,
+            };
             return (int)(k + (stellarMass * k / 66.25));
         }
 
@@ -92,6 +64,7 @@ namespace ODExplorer.Utils
                     k = 9654;
                     break;
                 case PlanetClass.HighMetalContentBody:
+                case PlanetClass.HighMetalContentWorld:
                     k = 9654;
                     if (terraformable)
                     {
@@ -106,6 +79,7 @@ namespace ODExplorer.Utils
                     }
                     break;
                 case PlanetClass.EarthlikeBody:
+                case PlanetClass.EarthLikeWorld:
                     k = 64831 + 116295;
                     break;
                 default:
