@@ -4,13 +4,17 @@ using System.Windows;
 using System.Windows.Media;
 using ODExplorer.AppSettings;
 using ODExplorer.Utils.Converters;
+using static System.Environment;
 
 namespace ODExplorer.Themes
 {
     public class ThemeManager : ResourceDictionary
     {
+#if PORTABLE
         private static readonly string saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "CustomTheme.json");
-
+#else
+        private static readonly string saveFile = Path.Combine(GetFolderPath(SpecialFolder.CommonApplicationData), "ODExplorer", "CustomTheme.json");
+#endif
         private static ResourceDictionary customTheme = new() { Source = new Uri(EnumDescriptionConverter.GetEnumDescription(Theme.Custom), UriKind.Absolute) };
 
         private Uri _defaultSource;

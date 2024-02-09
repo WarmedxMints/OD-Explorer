@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using static System.Environment;
 
 namespace ODExplorer.AppSettings
 {
@@ -56,7 +57,11 @@ namespace ODExplorer.AppSettings
 
     public class Settings : PropertyChangeNotify
     {
+#if PORTABLE
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "Settings.json");
+#else
+        private readonly string _saveFile = Path.Combine(GetFolderPath(SpecialFolder.CommonApplicationData), "ODExplorer", "Settings.json");
+#endif
 
         private static Theme _currentTheme = Theme.ODExplorer;
 

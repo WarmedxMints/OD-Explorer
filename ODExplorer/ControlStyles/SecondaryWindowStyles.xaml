@@ -56,6 +56,19 @@
                 Value="0,0,0,10" />
     </Style>
 
+    <Style x:Key="SecondaryWindowDataGridHeaderStyle2"
+           TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource SecondaryWindowColumnHeadForeground}" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="Margin"
+                Value="0,0,0,10" />
+    </Style>
 
     <Style x:Key="SecondaryWindowDataGridHeaderStyleCenter"
            TargetType="{x:Type DataGridColumnHeader}">
@@ -65,6 +78,22 @@
                 Value="{DynamicResource SecondaryWindowColumnHeadForeground}" />
         <Setter Property="FontSize"
                 Value="20" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="Margin"
+                Value="0,0,0,10" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+    </Style>
+
+    <Style x:Key="SecondaryWindowDataGridHeaderStyleCenter2"
+           TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource SecondaryWindowColumnHeadForeground}" />
+        <Setter Property="FontSize"
+                Value="14" />
         <Setter Property="SnapsToDevicePixels"
                 Value="True" />
         <Setter Property="Margin"

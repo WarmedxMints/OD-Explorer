@@ -120,19 +120,25 @@ namespace ODExplorer
         private bool showCurrentSystemTable;
         public bool ShowCurrenSystemTable { get => showCurrentSystemTable; set { showCurrentSystemTable = value; OnPropertyChanged(); } }
 
-        private Notifier notifier;
+        public static Notifier Notifier { get; private set; }
         #region Window Methods
         public MainWindow()
         {
-            notifier = new(cfg =>
+
+            var width = SystemParameters.PrimaryScreenWidth * 0.16;
+            Notifier = new(cfg =>
             {
-                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(8), MaximumNotificationCount.FromCount(15));
-                cfg.PositionProvider = new PrimaryScreenPositionProvider(Corner.BottomRight, 20, 20);
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(10), MaximumNotificationCount.FromCount(15));
+                cfg.PositionProvider = new PrimaryScreenPositionProvider(Corner.BottomRight, 40, 40);
                 cfg.DisplayOptions.TopMost = true;
-                cfg.DisplayOptions.Width = 300;
+                cfg.DisplayOptions.Width = width;
                 cfg.Dispatcher = Dispatcher.CurrentDispatcher;
             });
             InitializeComponent();
+
+#if DEBUG
+            Notifier.ShowCustomMessageOnMainThread("Test Notification", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", null);
+#endif
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -175,11 +181,11 @@ namespace ODExplorer
             }
             if (status == DiscoveryStatus.WorthMapping)
             {
-                notifier.ShowCustomMessageOnMainThread(e.BodyName, $"Worth Mapping\n{Extensions.GetDescription(e.PlanetClass)}\nMax Value : {e.MappedValue:N0} cr\nDiscovered : {e.WasDiscovered.BoolToYesNo()}\nMapped : {e.Wasmapped.BoolToYesNo()}\n{e.DistanceFromArrivalLs:N0} ls", null);
+                Notifier.ShowCustomMessageOnMainThread(e.BodyName, $"Worth Mapping\n{Extensions.GetDescription(e.PlanetClass)}\nMax Value : {e.MappedValue:N0} cr\nDiscovered : {e.WasDiscovered.BoolToYesNo()}\nMapped : {e.Wasmapped.BoolToYesNo()}\n{e.DistanceFromArrivalLs:N0} ls", null);
             }
             if (status == DiscoveryStatus.Noteable)
             {
-                notifier.ShowCustomMessageOnMainThread(e.BodyName, $"Noteable Body\n{Extensions.GetDescription(e.PlanetClass)}\nGeo Signals : {e.GeologicalSignals}\nBio Signals : {e.BiologicalSignals}", null);
+                Notifier.ShowCustomMessageOnMainThread(e.BodyName, $"Noteable Body\n{Extensions.GetDescription(e.PlanetClass)}\nGeo Signals : {e.GeologicalSignals}\nBio Signals : {e.BiologicalSignals}", null);
             }
 
 
@@ -238,7 +244,7 @@ namespace ODExplorer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            notifier.Dispose();
+            Notifier.Dispose();
             CountDownTimer.Stop();
             if (NavData.ScanValue.SaveState() == false)
             {
@@ -721,13 +727,13 @@ namespace ODExplorer
                         corner = Corner.BottomRight;
                         break;
                 }
-                notifier.Dispose();
-                notifier = new(cfg =>
+                Notifier.Dispose();
+                Notifier = new(cfg =>
                 {
-                    cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(8), MaximumNotificationCount.FromCount(15));
-                    cfg.PositionProvider = new PrimaryScreenPositionProvider(corner, 20, 20);
+                    cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(10), MaximumNotificationCount.FromCount(15));
+                    cfg.PositionProvider = new PrimaryScreenPositionProvider(corner, 40, 30);
                     cfg.DisplayOptions.TopMost = true;
-                    cfg.DisplayOptions.Width = 300;
+                    cfg.DisplayOptions.Width = SystemParameters.PrimaryScreenWidth * 0.16; 
                     cfg.Dispatcher = Dispatcher.CurrentDispatcher;
                 });
             }

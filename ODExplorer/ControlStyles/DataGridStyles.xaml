@@ -488,6 +488,20 @@
     </Style>
 
     <Style TargetType="{x:Type DataGridCell}"
+           x:Key="BioGrid Cell">
+        <Setter Property="IsHitTestVisible"
+                Value="False" />
+        <Setter Property="BorderThickness"
+                Value="0,0,0,1" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource DataGridHorizontalGridLine}" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+    </Style>
+    
+    <Style TargetType="{x:Type DataGridCell}"
            x:Key="Gravity Cell"
            BasedOn="{StaticResource BodyGrid Cell}">
         <Style.Triggers>

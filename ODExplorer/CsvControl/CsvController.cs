@@ -6,13 +6,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using static System.Environment;
 
 namespace ODExplorer.CsvControl
 {
     public class CsvController : PropertyChangeNotify
     {
+#if PORTABLE
         private readonly string _previousSession = Path.Combine(Directory.GetCurrentDirectory(), "Data", "CSVSessions.json");
-
+#else
+        private readonly string _previousSession = Path.Combine(GetFolderPath(SpecialFolder.CommonApplicationData), "ODExplorer", "CSVSessions.json");
+#endif
         public CsvController()
         {
             int count = Enum.GetNames(typeof(CsvType)).Length;

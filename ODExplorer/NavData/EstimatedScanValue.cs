@@ -5,13 +5,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using static System.Environment;
 
 namespace ODExplorer.NavData
 {
     public class EstimatedScanValue : PropertyChangeNotify
     {
+#if PORTABLE
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "ScanValue.json");
-
+#else
+        private readonly string _saveFile = Path.Combine(GetFolderPath(SpecialFolder.CommonApplicationData), "ODExplorer", "ScanValue.json");
+#endif
         public ObservableCollection<SystemInfo> ScannedSystems { get; set; } = new();
 
         public EstimatedScanValue()

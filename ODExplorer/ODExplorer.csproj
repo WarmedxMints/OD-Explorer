@@ -7,8 +7,10 @@
     <RootNamespace>ODExplorer</RootNamespace>
     <AssemblyName>ODExplorer</AssemblyName>
     <ApplicationIcon>astronaut.ico</ApplicationIcon>
-    <Version>0.9</Version>
+    <Version>1.0.7</Version>
     <Authors>WarmedxMints</Authors>
+    <PlatformTarget>x64</PlatformTarget>
+    <Configurations>Debug;Release;Portable</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Drawing.Design;
+using ODExplorer.Utils.Converters;
 
 namespace ODExplorer.NavData
 {
@@ -637,8 +638,13 @@ namespace ODExplorer.NavData
             //Check if we already have the body in the collection
             SystemBody bodyknown = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyName.ToUpperInvariant() == bodyToAdd.BodyName.ToUpperInvariant());
 
+            if (bodyToAdd.BodyID == 0 && string.IsNullOrEmpty(CurrentSystem[0].StarClass))
+            {
+                CurrentSystem[0].StarClass = bodyToAdd.StarType.ToString().ToUpperInvariant();
+            }
             if (bodyknown == default)
             {
+
                 CurrentSystem[0].Bodies.AddToCollection(bodyToAdd);
                 bodyToAdd.UpdateStatus();
                 //Abirtary value just to call the OnpropertyChaned event for this proprety 
@@ -719,6 +725,25 @@ namespace ODExplorer.NavData
 
             CurrentBody = body;
         }
+
+        internal async ValueTask SetCurrentBody(CarrierJumpEvent.CarrierJumpEventArgs e)
+        {
+            if (e.BodyType != BodyType.Planet)
+            {
+                CurrentBody = null;
+                return;
+            }
+            SystemBody body = null;
+
+            if (CurrentSystem.Any() && CurrentSystem[0].Bodies.Any())
+            {
+                body = CurrentSystem[0].Bodies.FirstOrDefault(x => x.BodyID == e.BodyID);
+            }
+
+            body ??= await GetSystemBodyFromEDSM(e.SystemAddress, e.BodyID);
+
+            CurrentBody = body;
+        }
         #endregion
 
         #region Body Methods
@@ -778,7 +803,7 @@ namespace ODExplorer.NavData
         /// </summary>
         /// <param name="systemName"></param>
         /// <returns></returns>
-        private static async ValueTask<string> GetSystemStarClass(string systemName)
+        public static async ValueTask<string> GetSystemStarClass(string systemName)
         {
             string baseUrl = "https://www.edsm.net";
 

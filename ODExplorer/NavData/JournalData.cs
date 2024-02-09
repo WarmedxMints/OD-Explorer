@@ -16,7 +16,7 @@ namespace ODExplorer.NavData
 
         private DateTime NavJsonLastWriteTime = new(DateTime.MinValue.Ticks);
 
-        private Settings _appSettings;
+        private readonly Settings _appSettings;
         public JournalData(Settings settings)
         {
             _appSettings = settings;
@@ -31,6 +31,8 @@ namespace ODExplorer.NavData
             _watcher.GetEvent<ScanEvent>()?.AddHandler(Scan);//
 
             _watcher.GetEvent<LocationEvent>()?.AddHandler(Location);//
+
+            _watcher.GetEvent<CarrierJumpEvent>()?.AddHandler(OnCarrierJump);
 
             _watcher.GetEvent<FSSDiscoveryScanEvent>()?.AddHandler(DiscoveryScan);//
 
@@ -133,13 +135,29 @@ namespace ODExplorer.NavData
 
         private async void Location(object sender, LocationEvent.LocationEventArgs e)
         {
-            //if (_watcher.IsLive == false)
-            //{
-            //    return;
-            //}
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
 
-            SystemInfo sys = new(e);
+            SystemInfo sys = new(e)
+            {
+                StarClass = await NavigationData.GetSystemStarClass(e.StarSystem)
+            };
+            await _navData.SetCurrentSystem(sys);
+            await _navData.SetCurrentBody(e);
+        }
 
+        private async void OnCarrierJump(object sender, CarrierJumpEvent.CarrierJumpEventArgs e)
+        {
+            if (_watcher.IsLive == false)
+            {
+                return;
+            }
+            SystemInfo sys = new(e)
+            {
+                StarClass = await NavigationData.GetSystemStarClass(e.StarSystem)
+            };
             await _navData.SetCurrentSystem(sys);
             await _navData.SetCurrentBody(e);
         }

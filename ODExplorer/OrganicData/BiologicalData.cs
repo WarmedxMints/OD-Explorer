@@ -11,6 +11,9 @@ namespace ODExplorer.OrganicData
         private string bodyName = "-";
         public string BodyName { get => bodyName; set { bodyName = value; OnPropertyChanged(); } }
 
+        private string bodyNameFull = "-";
+        public string BodyNameFull { get => bodyNameFull; set { bodyNameFull = value; OnPropertyChanged(); } }
+
         private string bodyType = "?";
         public string BodyType { get => bodyType; set { bodyType = value; OnPropertyChanged(); } }
 

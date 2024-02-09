@@ -22,10 +22,10 @@
                            Foreground="{StaticResource PrimaryForeground}"
                            TextWrapping="Wrap"
                            FontWeight="SemiBold"
-                           FontSize="20"
+                           FontSize="24"
                            Margin="0,0,0,10"/>
                 <TextBlock Text="{Binding Message}"
-                           FontSize="18"
+                           FontSize="20"
                            FontFamily="{StaticResource Eurostile}"
                            FontWeight="Normal"
                            TextWrapping="Wrap"

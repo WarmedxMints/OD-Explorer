@@ -57,6 +57,13 @@ namespace LoadSaveSystem
 #endif
                 return false;
             }
+            catch (Exception e)
+            {
+#if DEBUG
+                Trace.WriteLine(e.Message);
+#endif
+                return false;
+            }
         }
     }
 }

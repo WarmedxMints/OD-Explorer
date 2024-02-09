@@ -260,7 +260,7 @@
                             Value="{Binding AppSettings.ClonedValues.UiScale}"
                             Maximum="4"
                             Minimum="0.25"
-                            TickFrequency="0.25"
+                            TickFrequency="0.05"
                             LargeChange="0.25"
                             IsSnapToTickEnabled="True" />
                     <TextBlock   Grid.Column="1"

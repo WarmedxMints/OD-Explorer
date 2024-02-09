@@ -41,6 +41,13 @@ namespace ODExplorer.NavData
             SystemAddress = e.SystemAddress;
             SystemPos = e.StarPos;
         }
+
+        public SystemInfo(CarrierJumpEvent.CarrierJumpEventArgs e)
+        {
+            systemName = e.StarSystem.ToUpperInvariant();
+            SystemAddress = e.SystemAddress;
+            SystemPos = e.StarPos;
+        }
         #endregion
 
         #region Properties
@@ -220,8 +227,10 @@ namespace ODExplorer.NavData
 
                     Style menuStyle = Application.Current.FindResource("ContextMenuItem") as Style;
 
-                    MenuItem menuItem = new();
-                    menuItem.Style = menuStyle;
+                    MenuItem menuItem = new()
+                    {
+                        Style = menuStyle
+                    };
                     if (EDSMUrl == null)
                     {
                         menuItem.Header = "System Not Known to EDSM";
@@ -238,8 +247,8 @@ namespace ODExplorer.NavData
                     menuItem = new MenuItem
                     {
                         Header = $"Copy '{SystemName}' to Clipboard",
+                        Style = menuStyle
                     };
-                    menuItem.Style = menuStyle;
                     menuItem.Click += CopySystemNameToClipboard;
 
                     _ = contextMenu.Items.Add(menuItem);
@@ -278,9 +287,11 @@ namespace ODExplorer.NavData
         //Opens the system url on EDSM
         private void OpenEDSMUrl(object sender, RoutedEventArgs e)
         {
-            ProcessStartInfo psi = new();
-            psi.UseShellExecute = true;
-            psi.FileName = EDSMUrl.AbsoluteUri;
+            ProcessStartInfo psi = new()
+            {
+                UseShellExecute = true,
+                FileName = EDSMUrl.AbsoluteUri
+            };
             _ = Process.Start(psi);
         }
         //Copies the system name to clipboard

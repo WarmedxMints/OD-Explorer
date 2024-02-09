@@ -1,15 +1,16 @@
-﻿using EliteJournalReader.Events;
+﻿using EliteJournalReader;
+using EliteJournalReader.Events;
 using LoadSaveSystem;
 using ODExplorer.NavData;
+using ODExplorer.Notifications;
 using ODExplorer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime;
 using System.Text;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Environment;
 
 namespace ODExplorer.OrganicData
 {
@@ -18,7 +19,11 @@ namespace ODExplorer.OrganicData
         public static ScannedBioData Instance { get; set; }
 
         public event EventHandler<ApproachBodyEvent.ApproachBodyEventArgs> OnApproachBodyEvent;
+#if PORTABLE
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "BioData.json");
+#else
+        private readonly string _saveFile = Path.Combine(GetFolderPath(SpecialFolder.CommonApplicationData), "ODExplorer", "BioData.json");
+#endif
 
         public ObservableCollection<BiologicalData> ScannedData { get; private set; } = new();
 
@@ -305,42 +310,42 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_TUBEEFGH_03", new BiologicalInfo { Name = "VIRIDE SINUOUS TUBERS", Value = 3425600, ColonyRange = 0 } },
         };
         public static BiologicalInfo BioValues(string species)
-        { 
-            foreach(var bio in bioValues.Values)
+        {
+            foreach (var bio in bioValues.Values)
             {
-                if(string.Equals(bio.Name, species, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(bio.Name, species, StringComparison.OrdinalIgnoreCase))
                 {
                     return bio;
                 }
             }
-            //if(bioValues.ContainsKey(species))
-            //{
-            //    return bioValues[species];
-            //}
 
-            return new BiologicalInfo() {  Value= 0,ColonyRange = 0 };
+            return new BiologicalInfo() { Value = 0, ColonyRange = 0 };
         }
 
         private BiologicalInfo BioValues(ScanOrganicEvent.ScanOrganicEventArgs e)
         {
-            foreach(var key in bioValues.Keys) 
-            { 
-                if(e.Variant.Contains(key, StringComparison.OrdinalIgnoreCase))
+            foreach (var key in bioValues.Keys)
+            {
+                if (e.Variant.Contains(key, StringComparison.OrdinalIgnoreCase))
                 {
                     return bioValues[key];
                 }
             }
 
-            return BioValues(e.Species_Localised);   
+            return BioValues(e.Species_Localised);
         }
 
         private ulong totalValue;
         public ulong TotalValue { get => totalValue; set { totalValue = value; OnPropertyChanged(); } }
 
+        StatusWatcher StatusWatcher { get; set; }
         public ScannedBioData()
         {
             Instance = this;
 
+            StatusWatcher = new StatusWatcher(AppSettings.Settings.SettingsInstance.Value.JournalPath);
+            StatusWatcher.StatusUpdated += StatusWatcher_StatusUpdated;
+            StatusWatcher.StartWatching();
             ObservableCollection<BiologicalData> biodata = LoadSave.LoadJson<ObservableCollection<BiologicalData>>(_saveFile);
 
             if (biodata is not null)
@@ -353,14 +358,131 @@ namespace ODExplorer.OrganicData
             UpdateTotalValue();
         }
 
+        private bool onPlanet;
+        private double currentLongitude;
+        private double currentLatitude;
+        private string currentBody = string.Empty;
+
+        private void StatusWatcher_StatusUpdated(object sender, StatusFileEvent e)
+        {
+            if (string.IsNullOrEmpty(e.BodyName) && (string.IsNullOrEmpty(currentBody) == false))
+            {
+                var bod = ScannedData.Where(x => string.Equals(x.BodyNameFull, currentBody, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                if (bod is not null)
+                {
+                    foreach (var biological in bod.BodyBioData)
+                    {
+                        if (biological.ScanData.Any() == false)
+                        {
+                            continue;
+                        }
+
+                        foreach (var data in biological.ScanData)
+                        {
+                            data.DistanceToScan = "-";
+                            data.FarEnoughFromScan = false;
+                        }
+                    }
+                }
+
+                currentBody = string.Empty;
+                return;
+            }
+
+            currentLatitude = e.Latitude;
+            currentLongitude = e.Longitude;
+            currentBody = e.BodyName;
+            var body = ScannedData.Where(x => string.Equals(x.BodyNameFull, e.BodyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            if (body is not null)
+            {
+                foreach (var biological in body.BodyBioData)
+                {
+                    if (biological.ScanData.Any() == false)
+                    {
+                        continue;
+                    }
+
+                    var sendNotification = false;
+
+                    foreach (var data in biological.ScanData)
+                    {
+                        var dist = DistanceTo2(data.Latitude, data.Longtitude, currentLatitude, currentLongitude, e.PlanetRadius);
+
+                        data.FarEnoughFromScan = biological.Status != "ANALYSED" && biological.BioInfo.ColonyRange < dist;
+
+                        if (data.FarEnoughFromScan == true && data.Notified == false)
+                        {
+                            sendNotification = true;
+                            data.Notified = true;
+                        }
+
+                        if (dist < 1000)
+                        {
+                            data.DistanceToScan = $"{dist:N2}  m";
+                            continue;
+                        }
+
+                        data.DistanceToScan = $"{dist / 1000:N2} Km";
+                    }
+
+                    if (sendNotification)
+                    {
+                        Notify("Minimum Distance Travelled", $"Over {biological.BioInfo.ColonyRange}m from sample of\n{biological.BioInfo.Name}");
+                    }
+
+                }
+            }
+        }
+
+        public static double DistanceTo2(double latitude, double longitude, double targetLat, double targetLong, double radius)
+        {
+            /* https://www.movable-type.co.uk/scripts/latlong.html
+             * const R = 6371e3; // metres
+             * const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+             * const φ2 = lat2 * Math.PI/180;
+             * const Δφ = (lat2-lat1) * Math.PI/180;
+             * const Δλ = (lon2-lon1) * Math.PI/180;
+             * const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+             * Math.cos(φ1) * Math.cos(φ2) *
+             * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+             * const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+             * const d = R * c; // in metres
+             */
+
+            double lat1 = Radians(latitude);
+            double lat2 = Radians(targetLat);
+            double deltaLong = Radians(targetLong - longitude);
+            double deltaLat = Radians(targetLat - latitude);
+
+            double a = (Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2)) + Math.Cos(lat1) * Math.Cos(lat2) * (Math.Sin(deltaLong / 2) * Math.Sin(deltaLong / 2));
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+            return radius * c;
+        }
+
+        public static double Radians(double value)
+        {
+            return value * (Math.PI / 180.0);
+        }
+
         ~ScannedBioData()
         {
+            StatusWatcher.StopWatching();
             AppSettings.Settings.SettingsInstance.SaveEvent -= SettingsInstance_SaveEvent;
         }
 
         private void SettingsInstance_SaveEvent(object sender, System.EventArgs e)
         {
             _ = SaveState();
+        }
+
+        private void Notify(string header, string message)
+        {
+            if (AppSettings.Settings.SettingsInstance.Value.EnableNotifications == false) { return; }
+
+            MainWindow.Notifier.ShowCustomMessageOnMainThread(header, message, null);
         }
 
         public void AddData(SystemBody systemBody, string timeStamp, ScanOrganicEvent.ScanOrganicEventArgs e)
@@ -373,6 +495,7 @@ namespace ODExplorer.OrganicData
                 {
                     SystemName = systemBody.SystemName,
                     BodyName = systemBody.BodyNameLocal,
+                    BodyNameFull = systemBody.BodyName,
                     BodyType = systemBody.AtmosphereDescrtiption,
                     AtmosphereType = systemBody.AtmosphereDescrtiption,
                     Volcanism = systemBody.Volcanism,
@@ -401,9 +524,43 @@ namespace ODExplorer.OrganicData
 
                 bioData.Status = e.ScanType;
 
+                var scandata = bioData.ScanData.FirstOrDefault(x => string.Equals(x.ScanType, bioData.Status, StringComparison.OrdinalIgnoreCase));
+
+                if (scandata is null && string.Equals(bioData.Status, "CODEX ENTRY") == false)
+                {
+                    BioScanData data = new()
+                    {
+                        Latitude = currentLatitude,
+                        Longtitude = currentLongitude,
+                        ScanType = bioData.Status,
+                        Notified = false
+                    };
+
+                    switch (bioData.Status)
+                    {
+
+                        case "REPORTED":
+                            break;
+                        case "LOGGED":
+                            Notify(bioData.BioInfo.Name, $"Sample 1 of 3\nRange : {bioData.BioInfo.ColonyRange}m");
+                            break;
+                        case "SAMPLED":
+                            Notify(bioData.BioInfo.Name, $"Sample 2 of 3\nRange : {bioData.BioInfo.ColonyRange}m");
+                            break;
+                        case "ANALYSED":
+                            data.Notified = true;
+                            Notify(bioData.BioInfo.Name, $"Sample 3 of 3");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    bioData.ScanData.AddToCollection(data);
+                }
+
                 if (bioData.Status == "ANALYSED")
                 {
-                    UpdateTotalValue();// += (ulong)bioData.BioInfo.Value;
+                    UpdateTotalValue();
                 }
 
                 return;
@@ -439,6 +596,7 @@ namespace ODExplorer.OrganicData
                 {
                     SystemName = systemBody.SystemName,
                     BodyName = systemBody.BodyNameLocal,
+                    BodyNameFull = systemBody.BodyName,
                     BodyType = systemBody.BodyDescription,
                     AtmosphereType = systemBody.AtmosphereDescrtiption,
                     Volcanism = systemBody.Volcanism,
@@ -460,6 +618,7 @@ namespace ODExplorer.OrganicData
                     bioData.Status = "CODEX ENTRY";
                     bioData.BioInfo = BioValues(speciesAndVariant[0]);
                     bioData.CodexVariant = codexName;
+                    Notify(bioData.BioInfo.Name, $"{bioData.BioInfo.Value:N0}\n{bioData.BioInfo.ColonyRange}m");
                 }
                 return;
             }
@@ -474,6 +633,7 @@ namespace ODExplorer.OrganicData
                 CodexVariant = codexName
             };
 
+            Notify(bioData.BioInfo.Name, $"{bioData.BioInfo.Value:N0}\n{bioData.BioInfo.ColonyRange}m");
             body.BodyBioData.AddToCollection(bioData);
         }
 
@@ -487,6 +647,7 @@ namespace ODExplorer.OrganicData
                 {
                     SystemName = systemBody.SystemName,
                     BodyName = systemBody.BodyNameLocal,
+                    BodyNameFull = systemBody.BodyName,
                     BodyType = systemBody.BodyDescription,
                     AtmosphereType = systemBody.AtmosphereDescrtiption,
                     Volcanism = systemBody.Volcanism,
@@ -516,33 +677,33 @@ namespace ODExplorer.OrganicData
 
                 body.BodyBioData.AddToCollection(bioData);
             }
-            
+
         }
         internal void SellOrganic(SellOrganicDataEvent.SellOrganicDataEventArgs e)
         {
             foreach (var item in e.BioData)
             {
-                foreach(var system in ScannedData)
+                foreach (var system in ScannedData)
                 {
-                    foreach(var bioItem in system.BodyBioData)
+                    foreach (var bioItem in system.BodyBioData)
                     {
-                        if(bioItem.Sold || bioItem.Status != "ANALYSED")
+                        if (bioItem.Sold || bioItem.Status != "ANALYSED")
                         {
                             continue;
                         }
 
                         var codexEntry = bioItem.CodexVariant;
 
-                        if(string.IsNullOrEmpty(bioItem.Variant))
+                        if (string.IsNullOrEmpty(bioItem.Variant))
                         {
-                            foreach(var keypair in ScannedBioData.bioValues)
+                            foreach (var keypair in ScannedBioData.bioValues)
                             {
-                                if(bioItem.Species.StartsWith(keypair.Value.Name, StringComparison.OrdinalIgnoreCase))
+                                if (bioItem.Species.StartsWith(keypair.Value.Name, StringComparison.OrdinalIgnoreCase))
                                 {
                                     codexEntry = keypair.Key;
                                     break;
                                 }
-                            }       
+                            }
                         }
 
                         if (item.Variant.Contains(codexEntry))
@@ -576,18 +737,18 @@ namespace ODExplorer.OrganicData
 
             foreach (BiologicalData biodata in ScannedData)
             {
-                if(biodata is null)
+                if (biodata is null)
                 {
                     continue;
                 }
                 foreach (BioData bData in biodata.BodyBioData)
                 {
-                    if(bData is null)
+                    if (bData is null)
                     {
                         continue;
                     }
 
-                    if(string.IsNullOrEmpty(bData.Variant))
+                    if (string.IsNullOrEmpty(bData.Variant))
                     {
                         continue;
                     }
@@ -596,7 +757,7 @@ namespace ODExplorer.OrganicData
                         _ = csvExport.AppendLine($"{bData.TimeStamp},{bData.Species},{bData.Variant.Replace(" - ", "")},{biodata.SystemName},{biodata.BodyName},{biodata.BodyType},{biodata.AtmosphereType},{biodata.SurfacePressure},{biodata.SurfaceGravity},{biodata.SurfaceTemp},{biodata.Volcanism}");
                     }
                     catch (Exception e)
-                    { 
+                    {
                         Console.WriteLine(e);
                     }
                 }

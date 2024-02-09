@@ -24,6 +24,10 @@
                     Value="Transparent" />
             <Setter Property="Foreground"
                     Value="{DynamicResource SecondaryWindowForeground}" />
+            <Setter Property="BorderThickness"
+                    Value="0" />
+            <Setter Property="Margin"
+                    Value="0,0,0,5" />
             <Setter Property="IsHitTestVisible"
                     Value="False" />
             <Style.Triggers>
@@ -40,6 +44,32 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="BioDataGridRowStyle2"
+               TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource SecondaryWindowForeground}" />
+            <Setter Property="BorderThickness"
+                    Value="0" />
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="IsHitTestVisible"
+                    Value="False" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding FarEnoughFromScan}"
+                             Value="FALSE">
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource SecondaryWindowForeground}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding FarEnoughFromScan}"
+                             Value="TRUE">
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource ProgressBarColour}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
         <CollectionViewSource x:Key="ListCVS"
                               Source="{Binding ElementName=BioDataGrid, Path=SelectedItem.BodyBioData}"
                               IsLiveSortingRequested="True">
@@ -131,7 +161,7 @@
         <DataGrid Grid.Column="2"
                   Grid.Row="1"
                   x:Name="SystemDetails"
-                  ItemsSource="{Binding Source={StaticResource ListCVS}}"
+                  ItemsSource="{Binding ElementName=BioDataGrid, Path=SelectedItem.BodyBioData}"
                   IsSynchronizedWithCurrentItem="False"
                   HeadersVisibility="Column"
                   Style="{DynamicResource DataGrid Settings}"
@@ -142,10 +172,12 @@
                   GridLinesVisibility="Horizontal"
                   AutoGenerateColumns="False"
                   Margin="20,0,0,0"
+                  BorderThickness="0"
+                  RowDetailsVisibilityMode="Visible"
                   LoadingRow="SystemDetails_LoadingRow">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
-                                    Width="30" />
+                                    Width="30"/>
                 <DataGridTextColumn Header="GENUS &amp; SPECIES"
                                     SortDirection="Ascending"
                                     Width="*">
@@ -218,6 +250,44 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <DataGrid ItemsSource="{Binding ScanData}"
+                              Margin="30,5,0,5"
+                              Background="Transparent"
+                              IsSynchronizedWithCurrentItem="False"
+                              HeadersVisibility="Column"
+                              Style="{DynamicResource DataGrid Settings}"
+                              ColumnHeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyle2}"
+                              BorderThickness="0"
+                              HorizontalGridLinesBrush="{DynamicResource SecondaryWindowHorizontalGridLine}"
+                              RowStyle="{DynamicResource BioDataGridRowStyle2}"
+                              GridLinesVisibility="None"
+                              AutoGenerateColumns="False"
+                              Visibility="{Binding ScanData.Count, Converter={StaticResource intToVis}, ConverterParameter=Collapsed}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="SCANTYPE"
+                                                Binding="{Binding ScanType}" 
+                                                Width="85"/>
+                            <DataGridTextColumn Header="LONG"
+                                                HeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyleCenter2}"
+                                                ElementStyle="{DynamicResource DataGrid Element Center}"
+                                                Binding="{Binding Longtitude, StringFormat={}{0:N2}}" 
+                                                Width="90"/>
+                            <DataGridTextColumn Header="LAT"
+                                                HeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyleCenter2}"
+                                                ElementStyle="{DynamicResource  DataGrid Element Center}"
+                                                Binding="{Binding Latitude, StringFormat={}{0:N2}}"
+                                                Width="90"/>
+                            <DataGridTextColumn Header="DISTANCE"
+                                                HeaderStyle="{DynamicResource SecondaryWindowDataGridHeaderStyleCenter2}"
+                                                ElementStyle="{DynamicResource DataGrid Element Right Margin}"
+                                                Binding="{Binding DistanceToScan}"
+                                                Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
 
         <Grid Grid.Row="3"

@@ -1,4 +1,5 @@
 ﻿using ODExplorer.Utils;
+using System.Collections.ObjectModel;
 
 namespace ODExplorer.OrganicData
 {
@@ -11,6 +12,14 @@ namespace ODExplorer.OrganicData
         public string Species { get => species; set { species = value; OnPropertyChanged(); } }
 
         private string status;
+
+        private ObservableCollection<BioScanData> scanData = new();
+
+        public ObservableCollection<BioScanData> ScanData
+        {
+            get { return scanData; }
+            set { scanData = value; OnPropertyChanged(); }
+        }
 
         public string Status
         {

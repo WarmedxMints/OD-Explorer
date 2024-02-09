@@ -3,13 +3,17 @@ using ODExplorer.Utils;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using static System.Environment;
 
 namespace ODExplorer.GeologicalData
 {
     public class ScannedGeoData
     {
+#if PORTABLE
         private readonly string _saveFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "GeoData.json");
-
+#else
+        private readonly string _saveFile = Path.Combine(GetFolderPath(SpecialFolder.CommonApplicationData), "ODExplorer", "GeoData.json");
+#endif
         public ObservableCollection<GeoLogicalDataContainer> ScannedData { get; private set; } = new();
 
         public ScannedGeoData()
