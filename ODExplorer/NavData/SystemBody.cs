@@ -35,8 +35,9 @@ namespace ODExplorer.NavData
     {
         #region Contructors
         public SystemBody() { }
-        public SystemBody(ScanEvent.ScanEventArgs e, bool Ody)
+        public SystemBody(ScanEvent.ScanEventArgs e, bool Ody, SystemInfo system)
         {
+            starSystem = system;
             SystemName = e.StarSystem;
             SystemAddress = e.SystemAddress;
             BodyName = e.BodyName;
@@ -83,6 +84,7 @@ namespace ODExplorer.NavData
         }
         #endregion
 
+        private SystemInfo starSystem;
         #region Body Info
         private PlanetRing[] rings = Array.Empty<PlanetRing>();
         private double radius;
@@ -366,8 +368,8 @@ namespace ODExplorer.NavData
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                SystemName = e.SystemName;
-                SystemAddress = e.SystemAddress;
+                //SystemName = e.SystemName;
+                //SystemAddress = e.SystemAddress;
                 BodyName = e.BodyName;
                 BodyID = e.BodyID;
                 DistanceFromArrivalLs = e.DistanceFromArrivalLs;

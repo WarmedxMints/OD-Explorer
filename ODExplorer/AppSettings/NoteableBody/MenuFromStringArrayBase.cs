@@ -100,13 +100,15 @@ namespace ODExplorer.AppSettings.NoteableBody
 
             if (index < 0)
             {
+                var active = item.IsChecked;
+
                 foreach (MenuItem mItem in menuItems)
                 {
                     if (mItem == item)
                     {
                         continue;
                     }
-                    mItem.IsChecked = item.IsChecked;
+                    mItem.IsChecked = active;
                 }
             }
             else
@@ -122,16 +124,7 @@ namespace ODExplorer.AppSettings.NoteableBody
 
         private void UpdateList()
         {
-            if (indexes.Count == 0)
-            {
-                indexes.Add(-1);
-            }
-            else
-            {
-                indexes.Clear();
-            }
-
-            bool onechecked = false;
+            indexes.Clear();
 
             foreach (MenuItem mItem in menuItems)
             {
@@ -145,18 +138,7 @@ namespace ODExplorer.AppSettings.NoteableBody
                 {
 
                     indexes.Add((int)mItem.Tag);
-
-                    onechecked = true;
                 }
-            }
-
-            if (onechecked == false)
-            {
-                foreach (MenuItem item in menuItems)
-                {
-                    item.IsChecked = true;
-                }
-                indexes.Add(-1);
             }
         }
 
@@ -188,7 +170,12 @@ namespace ODExplorer.AppSettings.NoteableBody
 
         public bool StringoInfoSelected(string stringinfo)
         {
-            if (indexes.Contains(-1) || Indexes.Count == 0)
+            if (Indexes is null || Indexes.Count == 0)
+            {
+                return false;
+            }
+
+            if (indexes.Contains(-1))
             {
                 return true;
             }

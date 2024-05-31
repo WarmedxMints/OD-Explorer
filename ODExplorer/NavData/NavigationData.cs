@@ -131,7 +131,7 @@ namespace ODExplorer.NavData
                 return;
             }
             //Create a new body.  No need to check if it alread exists as that is done in the AddBody method
-            SystemBody body = new(e, Odyssey);
+            SystemBody body = new(e, Odyssey, CurrentSystem.First());
             //Add the body to the current system
             SystemBody bodyToAdd = AddBodyToCurrentSystem(true, false, body);
 

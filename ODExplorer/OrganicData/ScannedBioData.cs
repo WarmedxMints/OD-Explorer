@@ -26,6 +26,7 @@ namespace ODExplorer.OrganicData
 #endif
 
         public ObservableCollection<BiologicalData> ScannedData { get; private set; } = new();
+        public BiologicalData? CurrentScannedData { get; private set; }
 
         private static readonly Dictionary<string, BiologicalInfo> oldbioValues = new(StringComparer.InvariantCultureIgnoreCase)
         {
@@ -319,7 +320,7 @@ namespace ODExplorer.OrganicData
                 }
             }
 
-            return new BiologicalInfo() { Value = 0, ColonyRange = 0 };
+            return new BiologicalInfo() { Value = 0, ColonyRange = 100 };
         }
 
         private BiologicalInfo BioValues(ScanOrganicEvent.ScanOrganicEventArgs e)
@@ -358,7 +359,6 @@ namespace ODExplorer.OrganicData
             UpdateTotalValue();
         }
 
-        private bool onPlanet;
         private double currentLongitude;
         private double currentLatitude;
         private string currentBody = string.Empty;
@@ -367,11 +367,9 @@ namespace ODExplorer.OrganicData
         {
             if (string.IsNullOrEmpty(e.BodyName) && (string.IsNullOrEmpty(currentBody) == false))
             {
-                var bod = ScannedData.Where(x => string.Equals(x.BodyNameFull, currentBody, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-
-                if (bod is not null)
+                if (CurrentScannedData is not null)
                 {
-                    foreach (var biological in bod.BodyBioData)
+                    foreach (var biological in CurrentScannedData.BodyBioData)
                     {
                         if (biological.ScanData.Any() == false)
                         {
@@ -385,7 +383,7 @@ namespace ODExplorer.OrganicData
                         }
                     }
                 }
-
+                CurrentScannedData = null;
                 currentBody = string.Empty;
                 return;
             }
@@ -393,11 +391,15 @@ namespace ODExplorer.OrganicData
             currentLatitude = e.Latitude;
             currentLongitude = e.Longitude;
             currentBody = e.BodyName;
-            var body = ScannedData.Where(x => string.Equals(x.BodyNameFull, e.BodyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
-            if (body is not null)
+            if (CurrentScannedData is null || string.Equals(CurrentScannedData.BodyNameFull, currentBody, StringComparison.OrdinalIgnoreCase) == false)
             {
-                foreach (var biological in body.BodyBioData)
+                CurrentScannedData = ScannedData.Where(x => string.Equals(x.BodyNameFull, currentBody, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            }
+
+            if (CurrentScannedData is not null)
+            {
+                foreach (var biological in CurrentScannedData.BodyBioData)
                 {
                     if (biological.ScanData.Any() == false)
                     {
