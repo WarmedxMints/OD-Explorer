@@ -7,14 +7,20 @@
     <RootNamespace>ODExplorer</RootNamespace>
     <AssemblyName>ODExplorer</AssemblyName>
     <ApplicationIcon>astronaut.ico</ApplicationIcon>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <Authors>WarmedxMints</Authors>
     <PlatformTarget>x64</PlatformTarget>
     <Configurations>Debug;Release;Portable</Configurations>
     <SignAssembly>False</SignAssembly>
   </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Portable'">
+		<DebugSymbols>False</DebugSymbols>
+		<DebugType>None</DebugType>
+		<AllowedReferenceRelatedFileExtensions>*.pdb</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
+	
+	<ItemGroup>
     <None Remove="Images\arrow-down-sign-to-navigate.png" />
     <None Remove="Images\asteroid.png" />
     <None Remove="Images\astronaut.ico" />
