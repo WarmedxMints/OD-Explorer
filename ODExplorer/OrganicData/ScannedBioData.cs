@@ -227,8 +227,8 @@ namespace ODExplorer.OrganicData
 
             { "CODEX_ENT_GROUND_STRUCT_ICE", new BiologicalInfo { Name = "CRYSTALLINE SHARDS", Value = 1628800, ColonyRange = 0 } },
 
-            { "CODEX_ENT_ELECTRICAE_01_POLONIUM", new BiologicalInfo { Name = "ELECTRICAE PLUMA", Value = 6284600, ColonyRange = 100 } },
-            { "CODEX_ENT_ELECTRICAE_02_TELLURIUM", new BiologicalInfo { Name = "ELECTRICAE RADIALEM", Value = 6284600, ColonyRange = 100 } },
+            { "CODEX_ENT_ELECTRICAE_01_POLONIUM", new BiologicalInfo { Name = "ELECTRICAE PLUMA", Value = 6284600, ColonyRange = 1000 } },
+            { "CODEX_ENT_ELECTRICAE_02_TELLURIUM", new BiologicalInfo { Name = "ELECTRICAE RADIALEM", Value = 6284600, ColonyRange = 1000 } },
 
             { "CODEX_ENT_FONTICULUS_02_M", new BiologicalInfo { Name = "FONTICULUA CAMPESTRIS", Value = 1000000, ColonyRange = 500 } },
             { "CODEX_ENT_FONTICULUS_06_K", new BiologicalInfo { Name = "FONTICULUA DIGITOS", Value = 1804100, ColonyRange = 500 } },

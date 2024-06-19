@@ -1,5 +1,6 @@
 ﻿using ODExplorer.Themes;
 using System.Windows;
+using System.Windows.Media;
 
 namespace ODExplorer
 {
