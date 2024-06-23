@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Markup;
 using static System.Environment;
 
 namespace ODExplorer.OrganicData
@@ -26,11 +27,11 @@ namespace ODExplorer.OrganicData
 #endif
 
         public ObservableCollection<BiologicalData> ScannedData { get; private set; } = new();
-        public BiologicalData? CurrentScannedData { get; private set; }
+        public BiologicalData CurrentScannedData { get; private set; }
 
         private static readonly Dictionary<string, BiologicalInfo> oldbioValues = new(StringComparer.InvariantCultureIgnoreCase)
         {
-            { "ALBIDUM SINUOUS TUBERS", new BiologicalInfo { Value = 111300, ColonyRange = 0   } },
+            { "ALBIDUM SINUOUS TUBERS", new BiologicalInfo { Value = 111300, ColonyRange = 100   } },
 
             { "ALEOIDA ARCUS",          new BiologicalInfo { Value = 7252500, ColonyRange = 150 } },
             { "ALEOIDA CORONAMUS",      new BiologicalInfo { Value = 6284600, ColonyRange = 150 } },
@@ -38,9 +39,9 @@ namespace ODExplorer.OrganicData
             { "ALEOIDA LAMINIAE",       new BiologicalInfo { Value = 3385200, ColonyRange = 150 } },
             { "ALEOIDA SPICA",          new BiologicalInfo { Value = 3385200, ColonyRange = 150 } },
 
-            { "AMPHORA PLANT",          new BiologicalInfo { Value = 3626400, ColonyRange = 0   } },
+            { "AMPHORA PLANT",          new BiologicalInfo { Value = 3626400, ColonyRange = 100   } },
 
-            { "AUREUM BRAIN TREE",      new BiologicalInfo { Value = 1593700, ColonyRange = 0   } },
+            { "AUREUM BRAIN TREE",      new BiologicalInfo { Value = 1593700, ColonyRange = 100   } },
 
             { "BACTERIUM ACIES",        new BiologicalInfo { Value = 1000000, ColonyRange = 500 } },
             { "BACTERIUM ALCYONEUM",    new BiologicalInfo { Value = 1658500, ColonyRange = 500 } },
@@ -56,9 +57,9 @@ namespace ODExplorer.OrganicData
             { "BACTERIUM VESICULA",     new BiologicalInfo { Value = 1000000, ColonyRange = 500 } },
             { "BACTERIUM VOLU",         new BiologicalInfo { Value = 7774700, ColonyRange = 500 } },
 
-            { "BARK MOUNDS",            new BiologicalInfo { Value = 1471900, ColonyRange = 0   } },
+            { "BARK MOUNDS",            new BiologicalInfo { Value = 1471900, ColonyRange = 100   } },
 
-            { "BLATTEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 1499900, ColonyRange = 0   } },
+            { "BLATTEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 1499900, ColonyRange = 100   } },
             { "BLATTEUM SINUOUS TUBERS",new BiologicalInfo { Value = 3425600, ColonyRange = 200 } },
 
             { "CACTOIDA CORTEXUM",      new BiologicalInfo { Value = 3667600, ColonyRange = 300 } },
@@ -67,7 +68,7 @@ namespace ODExplorer.OrganicData
             { "CACTOIDA PULLULANTA",    new BiologicalInfo { Value = 3667600, ColonyRange = 300 } },
             { "CACTOIDA VERMIS",        new BiologicalInfo { Value = 16202800, ColonyRange = 300 } },
 
-            { "CAERULEUM SINUOUS TUBERS",new BiologicalInfo { Value = 1514500, ColonyRange = 0 } },
+            { "CAERULEUM SINUOUS TUBERS",new BiologicalInfo { Value = 1514500, ColonyRange = 100 } },
 
             { "CLYPEUS LACRIMAM",       new BiologicalInfo { Value = 8418000, ColonyRange = 150 } },
             { "CLYPEUS MARGARITUS",     new BiologicalInfo { Value = 11873200, ColonyRange = 150 } },
@@ -78,8 +79,8 @@ namespace ODExplorer.OrganicData
             { "CONCHA LABIATA",         new BiologicalInfo { Value = 2352400, ColonyRange = 150 } },
             { "CONCHA RENIBUS",         new BiologicalInfo { Value = 4572400, ColonyRange = 150 } },
 
-            { "CROCEUM ANEMONE",        new BiologicalInfo { Value = 1499900, ColonyRange = 0 } },
-            { "CRYSTALLINE SHARDS",     new BiologicalInfo { Value = 1628800, ColonyRange = 0 } },
+            { "CROCEUM ANEMONE",        new BiologicalInfo { Value = 1499900, ColonyRange = 100 } },
+            { "CRYSTALLINE SHARDS",     new BiologicalInfo { Value = 1628800, ColonyRange = 100 } },
 
             { "ELECTRICAE PLUMA",       new BiologicalInfo { Value = 6284600, ColonyRange = 100 } },
             { "ELECTRICAE RADIALEM",    new BiologicalInfo { Value = 6284600, ColonyRange = 100 } },
@@ -109,11 +110,11 @@ namespace ODExplorer.OrganicData
             { "FUNGOIDA SETISIS",       new BiologicalInfo { Value = 1670100, ColonyRange = 300 } },
             { "FUNGOIDA STABITIS",      new BiologicalInfo { Value = 2680300, ColonyRange = 300 } },
 
-            { "GYPSEEUM BRAIN TREE",        new BiologicalInfo { Value = 1593700, ColonyRange = 0 } },
-            { "LINDIGOTICUM BRAIN TREE",    new BiologicalInfo { Value = 1593700, ColonyRange = 0 } },
-            { "LINDIGOTICUM SINUOUS TUBERS",new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
-            { "LIVIDUM BRAIN TREE",         new BiologicalInfo { Value = 1593700, ColonyRange = 0 } },
-            { "LUTEOLUM ANEMONE",           new BiologicalInfo { Value = 1499900, ColonyRange = 0 } },
+            { "GYPSEEUM BRAIN TREE",        new BiologicalInfo { Value = 1593700, ColonyRange = 100 } },
+            { "LINDIGOTICUM BRAIN TREE",    new BiologicalInfo { Value = 1593700, ColonyRange = 100 } },
+            { "LINDIGOTICUM SINUOUS TUBERS",new BiologicalInfo { Value = 3425600, ColonyRange = 100 } },
+            { "LIVIDUM BRAIN TREE",         new BiologicalInfo { Value = 1593700, ColonyRange = 100 } },
+            { "LUTEOLUM ANEMONE",           new BiologicalInfo { Value = 1499900, ColonyRange = 100 } },
 
             { "OSSEUS CORNIBUS",        new BiologicalInfo { Value = 1483000, ColonyRange = 800 } },
             { "OSSEUS DISCUS",          new BiologicalInfo { Value = 12934900, ColonyRange = 800 } },
@@ -122,21 +123,21 @@ namespace ODExplorer.OrganicData
             { "OSSEUS PUMICE",          new BiologicalInfo { Value = 3156300, ColonyRange = 800 } },
             { "OSSEUS SPIRALIS",        new BiologicalInfo { Value = 2404700, ColonyRange = 800 } },
 
-            { "OSTRINUM BRAIN TREE",            new BiologicalInfo { Value =1593700, ColonyRange = 0 } },
-            { "PRASINUM BIOLUMINESCENT ANEMONE",new BiologicalInfo { Value =1499900, ColonyRange = 0 } },
-            { "PRASINUM SINUOUS TUBERS",        new BiologicalInfo { Value =1514500, ColonyRange = 0 } },
-            { "PUNICEUM ANEMONE",               new BiologicalInfo { Value =1499900, ColonyRange = 0 } },
-            { "PUNICEUM BRAIN TREE",            new BiologicalInfo { Value =1593700, ColonyRange = 0 } },
+            { "OSTRINUM BRAIN TREE",            new BiologicalInfo { Value =1593700, ColonyRange = 100 } },
+            { "PRASINUM BIOLUMINESCENT ANEMONE",new BiologicalInfo { Value =1499900, ColonyRange = 100 } },
+            { "PRASINUM SINUOUS TUBERS",        new BiologicalInfo { Value =1514500, ColonyRange = 100 } },
+            { "PUNICEUM ANEMONE",               new BiologicalInfo { Value =1499900, ColonyRange = 100 } },
+            { "PUNICEUM BRAIN TREE",            new BiologicalInfo { Value =1593700, ColonyRange = 100 } },
 
             { "RECEPTA CONDITIVUS",     new BiologicalInfo { Value = 14313700, ColonyRange = 150 } },
             { "RECEPTA DELTAHEDRONIX",  new BiologicalInfo { Value = 16202800, ColonyRange = 150 } },
             { "RECEPTA UMBRUX",         new BiologicalInfo { Value = 12934900, ColonyRange = 150 } },
 
-            { "ROSEUM ANEMONE",                 new BiologicalInfo { Value = 1499900, ColonyRange = 0 } },
-            { "ROSEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 1499900, ColonyRange = 0 } },
-            { "ROSEUM BRAIN TREE",              new BiologicalInfo { Value = 1593700, ColonyRange = 0 } },
-            { "ROSEUM SINUOUS TUBERS",          new BiologicalInfo { Value = 111300, ColonyRange = 0 } },
-            { "RUBEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 1499900, ColonyRange = 0 } },
+            { "ROSEUM ANEMONE",                 new BiologicalInfo { Value = 1499900, ColonyRange = 100 } },
+            { "ROSEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 1499900, ColonyRange = 100 } },
+            { "ROSEUM BRAIN TREE",              new BiologicalInfo { Value = 1593700, ColonyRange = 100 } },
+            { "ROSEUM SINUOUS TUBERS",          new BiologicalInfo { Value = 111300, ColonyRange = 100 } },
+            { "RUBEUM BIOLUMINESCENT ANEMONE",  new BiologicalInfo { Value = 1499900, ColonyRange = 100 } },
 
             { "STRATUM ARANEAMUS",      new BiologicalInfo { Value = 2448900, ColonyRange = 500 } },
             { "STRATUM CUCUMISIS",      new BiologicalInfo { Value = 16202800, ColonyRange = 500 } },
@@ -169,14 +170,14 @@ namespace ODExplorer.OrganicData
             { "TUSSOCK VENTUSA",        new BiologicalInfo { Value = 3227700, ColonyRange = 200 } },
             { "TUSSOCK VIRGAM",         new BiologicalInfo { Value = 14313700, ColonyRange = 200 } },
 
-            { "VIOLACEUM SINUOUS TUBERS",   new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
-            { "VIRIDE BRAIN TREE",          new BiologicalInfo { Value = 1593700, ColonyRange = 0 } },
-            { "VIRIDE SINUOUS TUBERS",      new BiologicalInfo { Value = 3425600, ColonyRange = 0 } },
+            { "VIOLACEUM SINUOUS TUBERS",   new BiologicalInfo { Value = 3425600, ColonyRange = 100 } },
+            { "VIRIDE BRAIN TREE",          new BiologicalInfo { Value = 1593700, ColonyRange = 100 } },
+            { "VIRIDE SINUOUS TUBERS",      new BiologicalInfo { Value = 3425600, ColonyRange = 100 } },
         };
 
         private static readonly Dictionary<string, BiologicalInfo> bioValues = new(StringComparer.InvariantCultureIgnoreCase)
         {
-            { "CODEX_ENT_TUBEABCD_02", new BiologicalInfo { Name = "ALBIDUM SINUOUS TUBERS", Value = 111300, ColonyRange = 0 } },
+            { "CODEX_ENT_TUBEABCD_02", new BiologicalInfo { Name = "ALBIDUM SINUOUS TUBERS", Value = 111300, ColonyRange = 100 } },
 
             { "CODEX_ENT_ALEOIDS_01", new BiologicalInfo { Name = "ALEOIDA ARCUS", Value = 7252500, ColonyRange = 150 } },
             { "CODEX_ENT_ALEOIDS_02_K", new BiologicalInfo { Name = "ALEOIDA CORONAMUS", Value = 6284600, ColonyRange = 150 } },
@@ -184,9 +185,9 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_ALEOIDS_04_F", new BiologicalInfo { Name = "ALEOIDA LAMINIAE", Value = 3385200, ColonyRange = 150 } },
             { "CODEX_ENT_ALEOIDS_03", new BiologicalInfo { Name = "ALEOIDA SPICA", Value = 3385200, ColonyRange = 150 } },
 
-            { "CODEX_ENT_VENTS", new BiologicalInfo { Name = "AMPHORA PLANT", Value = 3626400, ColonyRange = 0 } },
+            { "CODEX_ENT_VENTS", new BiologicalInfo { Name = "AMPHORA PLANT", Value = 3626400, ColonyRange = 100 } },
 
-            { "CODEX_ENT_SEEDEFGH_01", new BiologicalInfo { Name = "AUREUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
+            { "CODEX_ENT_SEEDEFGH_01", new BiologicalInfo { Name = "AUREUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
 
             { "CODEX_ENT_BACTERIAL_04_ANTIMONY", new BiologicalInfo { Name = "BACTERIUM ACIES", Value = 1000000, ColonyRange = 500 } },
             { "CODEX_ENT_BACTERIAL_06_G", new BiologicalInfo { Name = "BACTERIUM ALCYONEUM", Value = 1658500, ColonyRange = 500 } },
@@ -202,9 +203,9 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_BACTERIAL_05_RUTHENIUM", new BiologicalInfo { Name = "BACTERIUM VESICULA", Value = 1000000, ColonyRange = 500 } },
             { "CODEX_ENT_BACTERIAL_09", new BiologicalInfo { Name = "BACTERIUM VOLU", Value = 7774700, ColonyRange = 500 } },
 
-            { "CODEX_ENT_CONE", new BiologicalInfo { Name = "BARK MOUNDS", Value = 1471900, ColonyRange = 0 } },
+            { "CODEX_ENT_CONE", new BiologicalInfo { Name = "BARK MOUNDS", Value = 1471900, ColonyRange = 100 } },
 
-            { "CODEX_ENT_SPHEREEFGH", new BiologicalInfo { Name = "BLATTEUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 0 } },
+            { "CODEX_ENT_SPHEREEFGH", new BiologicalInfo { Name = "BLATTEUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 100 } },
             { "CODEX_ENT_TUBEEFGH", new BiologicalInfo { Name = "BLATTEUM SINUOUS TUBERS", Value = 3425600, ColonyRange = 200 } },
 
             { "CODEX_ENT_CACTOID_01_G", new BiologicalInfo { Name = "CACTOIDA CORTEXUM", Value = 3667600, ColonyRange = 300 } },
@@ -213,7 +214,7 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_CACTOID_04_L", new BiologicalInfo { Name = "CACTOIDA PULLULANTA", Value = 3667600, ColonyRange = 300 } },
             { "CODEX_ENT_CACTOID_03", new BiologicalInfo { Name = "CACTOIDA VERMIS", Value = 16202800, ColonyRange = 300 } },
 
-            { "CODEX_ENT_TUBEABCD_03", new BiologicalInfo { Name = "CAERULEUM SINUOUS TUBERS", Value = 1514500, ColonyRange = 0 } },
+            { "CODEX_ENT_TUBEABCD_03", new BiologicalInfo { Name = "CAERULEUM SINUOUS TUBERS", Value = 1514500, ColonyRange = 100 } },
 
             { "CODEX_ENT_CLYPEUS_01_G", new BiologicalInfo { Name = "CLYPEUS LACRIMAM", Value = 8418000, ColonyRange = 150 } },
             { "CODEX_ENT_CLYPEUS_02_G", new BiologicalInfo { Name = "CLYPEUS MARGARITUS", Value = 11873200, ColonyRange = 150 } },
@@ -223,9 +224,9 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_CONCHAS_04_RUTHENIUM", new BiologicalInfo { Name = "CONCHA BICONCAVIS", Value = 19010800, ColonyRange = 150 } },
             { "CODEX_ENT_CONCHAS_03_A", new BiologicalInfo { Name = "CONCHA LABIATA", Value = 2352400, ColonyRange = 150 } },
             { "CODEX_ENT_CONCHAS_01", new BiologicalInfo { Name = "CONCHA RENIBUS", Value = 4572400, ColonyRange = 150 } },
-            { "CODEX_ENT_SPHEREABCD_01", new BiologicalInfo { Name = "CROCEUM ANEMONE", Value = 1499900, ColonyRange = 0 } },
+            { "CODEX_ENT_SPHEREABCD_01", new BiologicalInfo { Name = "CROCEUM ANEMONE", Value = 1499900, ColonyRange = 100 } },
 
-            { "CODEX_ENT_GROUND_STRUCT_ICE", new BiologicalInfo { Name = "CRYSTALLINE SHARDS", Value = 1628800, ColonyRange = 0 } },
+            { "CODEX_ENT_GROUND_STRUCT_ICE", new BiologicalInfo { Name = "CRYSTALLINE SHARDS", Value = 1628800, ColonyRange = 100 } },
 
             { "CODEX_ENT_ELECTRICAE_01_POLONIUM", new BiologicalInfo { Name = "ELECTRICAE PLUMA", Value = 6284600, ColonyRange = 1000 } },
             { "CODEX_ENT_ELECTRICAE_02_TELLURIUM", new BiologicalInfo { Name = "ELECTRICAE RADIALEM", Value = 6284600, ColonyRange = 1000 } },
@@ -254,30 +255,30 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_FUNGOIDS_04", new BiologicalInfo { Name = "FUNGOIDA GELATA", Value = 3330300, ColonyRange = 300 } },
             { "CODEX_ENT_FUNGOIDS_01_POLONIUM", new BiologicalInfo { Name = "FUNGOIDA SETISIS", Value = 1670100, ColonyRange = 300 } },
             { "CODEX_ENT_FUNGOIDS_02_MOLYBDENUM", new BiologicalInfo { Name = "FUNGOIDA STABITIS", Value = 2680300, ColonyRange = 300 } },
-            { "CODEX_ENT_SEEDABCD_01", new BiologicalInfo { Name = "GYPSEEUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
-            { "CODEX_ENT_SEEDEFGH_03", new BiologicalInfo { Name = "LINDIGOTICUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
-            { "CODEX_ENT_TUBEEFGH_01", new BiologicalInfo { Name = "LINDIGOTICUM SINUOUS TUBERS", Value = 3425600, ColonyRange = 0 } },
-            { "CODEX_ENT_SEEDEFGH", new BiologicalInfo { Name = "LIVIDUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
-            { "CODEX_ENT_SPHERE", new BiologicalInfo { Name = "LUTEOLUM ANEMONE", Value = 1499900, ColonyRange = 0 } },
+            { "CODEX_ENT_SEEDABCD_01", new BiologicalInfo { Name = "GYPSEEUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
+            { "CODEX_ENT_SEEDEFGH_03", new BiologicalInfo { Name = "LINDIGOTICUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
+            { "CODEX_ENT_TUBEEFGH_01", new BiologicalInfo { Name = "LINDIGOTICUM SINUOUS TUBERS", Value = 3425600, ColonyRange = 100 } },
+            { "CODEX_ENT_SEEDEFGH", new BiologicalInfo { Name = "LIVIDUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
+            { "CODEX_ENT_SPHERE", new BiologicalInfo { Name = "LUTEOLUM ANEMONE", Value = 1499900, ColonyRange = 100 } },
             { "CODEX_ENT_OSSEUS_05", new BiologicalInfo { Name = "OSSEUS CORNIBUS", Value = 1483000, ColonyRange = 800 } },
             { "CODEX_ENT_OSSEUS_02_NIOBIUM", new BiologicalInfo { Name = "OSSEUS DISCUS", Value = 12934900, ColonyRange = 800 } },
             { "CODEX_ENT_OSSEUS_01_G", new BiologicalInfo { Name = "OSSEUS FRACTUS", Value = 4027800, ColonyRange = 800 } },
             { "CODEX_ENT_OSSEUS_06", new BiologicalInfo { Name = "OSSEUS PELLEBANTUS", Value = 9739000, ColonyRange = 800 } },
             { "CODEX_ENT_OSSEUS_04_POLONIUM", new BiologicalInfo { Name = "OSSEUS PUMICE", Value = 3156300, ColonyRange = 800 } },
             { "CODEX_ENT_OSSEUS_03", new BiologicalInfo { Name = "OSSEUS SPIRALIS", Value = 2404700, ColonyRange = 800 } },
-            { "CODEX_ENT_SEEDABCD_02", new BiologicalInfo { Name = "OSTRINUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
-            { "CODEX_ENT_SPHEREEFGH_02", new BiologicalInfo { Name = "PRASINUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 0 } },
-            { "CODEX_ENT_TUBEABCD_01", new BiologicalInfo { Name = "PRASINUM SINUOUS TUBERS", Value = 1514500, ColonyRange = 0 } },
-            { "CODEX_ENT_SPHEREABCD_02", new BiologicalInfo { Name = "PUNICEUM ANEMONE", Value = 1499900, ColonyRange = 0 } },
-            { "CODEX_ENT_SEEDEFGH_02", new BiologicalInfo { Name = "PUNICEUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
+            { "CODEX_ENT_SEEDABCD_02", new BiologicalInfo { Name = "OSTRINUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
+            { "CODEX_ENT_SPHEREEFGH_02", new BiologicalInfo { Name = "PRASINUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 100 } },
+            { "CODEX_ENT_TUBEABCD_01", new BiologicalInfo { Name = "PRASINUM SINUOUS TUBERS", Value = 1514500, ColonyRange = 100 } },
+            { "CODEX_ENT_SPHEREABCD_02", new BiologicalInfo { Name = "PUNICEUM ANEMONE", Value = 1499900, ColonyRange = 100 } },
+            { "CODEX_ENT_SEEDEFGH_02", new BiologicalInfo { Name = "PUNICEUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
             { "CODEX_ENT_RECEPTA_03_POLONIUM", new BiologicalInfo { Name = "RECEPTA CONDITIVUS", Value = 14313700, ColonyRange = 150 } },
             { "CODEX_ENT_RECEPTA_02_CADMIUM", new BiologicalInfo { Name = "RECEPTA DELTAHEDRONIX", Value = 16202800, ColonyRange = 150 } },
             { "CODEX_ENT_RECEPTA_01_M", new BiologicalInfo { Name = "RECEPTA UMBRUX", Value = 12934900, ColonyRange = 150 } },
-            { "CODEX_ENT_SPHEREABCD_03", new BiologicalInfo { Name = "ROSEUM ANEMONE", Value = 1499900, ColonyRange = 0 } },
-            { "CODEX_ENT_SPHEREEFGH_03", new BiologicalInfo { Name = "ROSEUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 0 } },
-            { "CODEX_ENT_SEED", new BiologicalInfo { Name = "ROSEUM BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
-            { "CODEX_ENT_TUBE", new BiologicalInfo { Name = "ROSEUM SINUOUS TUBERS", Value = 111300, ColonyRange = 0 } },
-            { "CODEX_ENT_SPHEREEFGH_01", new BiologicalInfo { Name = "RUBEUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 0 } },
+            { "CODEX_ENT_SPHEREABCD_03", new BiologicalInfo { Name = "ROSEUM ANEMONE", Value = 1499900, ColonyRange = 100 } },
+            { "CODEX_ENT_SPHEREEFGH_03", new BiologicalInfo { Name = "ROSEUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 100 } },
+            { "CODEX_ENT_SEED", new BiologicalInfo { Name = "ROSEUM BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
+            { "CODEX_ENT_TUBE", new BiologicalInfo { Name = "ROSEUM SINUOUS TUBERS", Value = 111300, ColonyRange = 100 } },
+            { "CODEX_ENT_SPHEREEFGH_01", new BiologicalInfo { Name = "RUBEUM BIOLUMINESCENT ANEMONE", Value = 1499900, ColonyRange = 100 } },
             { "CODEX_ENT_STRATUM_04_F", new BiologicalInfo { Name = "STRATUM ARANEAMUS", Value = 2448900, ColonyRange = 500 } },
             { "CODEX_ENT_STRATUM_06_K", new BiologicalInfo { Name = "STRATUM CUCUMISIS", Value = 16202800, ColonyRange = 500 } },
             { "CODEX_ENT_STRATUM_01_K", new BiologicalInfo { Name = "STRATUM EXCUTITUS", Value = 2448900, ColonyRange = 500 } },
@@ -306,9 +307,9 @@ namespace ODExplorer.OrganicData
             { "CODEX_ENT_TUSSOCKS_12_K", new BiologicalInfo { Name = "TUSSOCK TRITICUM", Value = 7774700, ColonyRange = 200 } },
             { "CODEX_ENT_TUSSOCKS_02_M", new BiologicalInfo { Name = "TUSSOCK VENTUSA", Value = 3227700, ColonyRange = 200 } },
             { "CODEX_ENT_TUSSOCKS_14", new BiologicalInfo { Name = "TUSSOCK VIRGAM", Value = 14313700, ColonyRange = 200 } },
-            { "CODEX_ENT_TUBEEFGH_02", new BiologicalInfo { Name = "VIOLACEUM SINUOUS TUBERS", Value = 3425600, ColonyRange = 0 } },
-            { "CODEX_ENT_SEEDABCD_03", new BiologicalInfo { Name = "VIRIDE BRAIN TREE", Value = 1593700, ColonyRange = 0 } },
-            { "CODEX_ENT_TUBEEFGH_03", new BiologicalInfo { Name = "VIRIDE SINUOUS TUBERS", Value = 3425600, ColonyRange = 0 } },
+            { "CODEX_ENT_TUBEEFGH_02", new BiologicalInfo { Name = "VIOLACEUM SINUOUS TUBERS", Value = 3425600, ColonyRange = 100 } },
+            { "CODEX_ENT_SEEDABCD_03", new BiologicalInfo { Name = "VIRIDE BRAIN TREE", Value = 1593700, ColonyRange = 100 } },
+            { "CODEX_ENT_TUBEEFGH_03", new BiologicalInfo { Name = "VIRIDE SINUOUS TUBERS", Value = 3425600, ColonyRange = 100 } },
         };
         public static BiologicalInfo BioValues(string species)
         {
@@ -406,34 +407,26 @@ namespace ODExplorer.OrganicData
                         continue;
                     }
 
-                    var sendNotification = false;
-
                     foreach (var data in biological.ScanData)
                     {
                         var dist = DistanceTo2(data.Latitude, data.Longtitude, currentLatitude, currentLongitude, e.PlanetRadius);
-
                         data.FarEnoughFromScan = biological.Status != "ANALYSED" && biological.BioInfo.ColonyRange < dist;
+                        data.DistanceToScan = dist < 1000 ? $"{dist:N2}  m" : $"{dist / 1000:N2} Km";            
+                    }
 
-                        if (data.FarEnoughFromScan == true && data.Notified == false)
+                    var allFarEnough = biological.ScanData.All((x) =>
+                    {
+                        return x.FarEnoughFromScan;
+                    });
+
+                    if (allFarEnough && biological.ScanData.Any(x => x.Notified == false))
+                    {
+                        foreach (var data in biological.ScanData)
                         {
-                            sendNotification = true;
                             data.Notified = true;
                         }
-
-                        if (dist < 1000)
-                        {
-                            data.DistanceToScan = $"{dist:N2}  m";
-                            continue;
-                        }
-
-                        data.DistanceToScan = $"{dist / 1000:N2} Km";
-                    }
-
-                    if (sendNotification)
-                    {
                         Notify("Minimum Distance Travelled", $"Over {biological.BioInfo.ColonyRange}m from sample of\n{biological.BioInfo.Name}");
                     }
-
                 }
             }
         }

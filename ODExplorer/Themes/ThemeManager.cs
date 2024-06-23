@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using ODExplorer.AppSettings;
 using ODExplorer.Utils.Converters;
+using static System.Environment;
 
 namespace ODExplorer.Themes
 {
