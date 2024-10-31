@@ -143,7 +143,8 @@ namespace ODExplorer.AppSettings.NoteableBody
             //bio
             ret.Add(body.BiologicalSignals >= Signals[1]);
 
-            return !ret.Contains(false);
+            var result = !ret.Contains(false);
+            return result;
         }
 
         public FoundSignals[] GetPresetMatches(SystemBody body)

@@ -475,6 +475,13 @@
                 <Setter Property="Foreground"
                         Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
             </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static ndata:DiscoveryStatus.Noteable}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowNoteableBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
+            </DataTrigger>
             <Trigger Property="IsSelected"
                      Value="True">
                 <Setter Property="Padding"

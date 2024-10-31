@@ -131,6 +131,7 @@ namespace ODExplorer.AppSettings.NoteableBody
                 if (mItem.IsChecked && (int)mItem.Tag == -1)
                 {
                     indexes.Clear();
+                    indexes.Add((int)mItem.Tag);
                     break;
                 }
 
@@ -172,7 +173,7 @@ namespace ODExplorer.AppSettings.NoteableBody
         {
             if (Indexes is null || Indexes.Count == 0)
             {
-                return false;
+                return true;
             }
 
             if (indexes.Contains(-1))
