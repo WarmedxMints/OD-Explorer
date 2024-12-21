@@ -90,6 +90,9 @@ namespace ODExplorer.Stores
 
         private void AddBioScan(ScanOrganicEvent.ScanOrganicEventArgs scanOrganic)
         {
+            if (string.IsNullOrEmpty(scanOrganic.Genus) || string.IsNullOrEmpty(scanOrganic.Species) || string.IsNullOrEmpty(scanOrganic.Variant))
+                return;
+
             var state = scanOrganic.ScanType == OrganicScanStage.Analyse ? OrganicScanState.Analysed : OrganicScanState.Discovered;
 
             if (OrganicScanItems.TryGetValue(scanOrganic.Genus, out var items))
@@ -278,11 +281,22 @@ namespace ODExplorer.Stores
                     break;
                 case ScanOrganicEvent.ScanOrganicEventArgs scanOrganic:
                     {
-                        AddBioScan(scanOrganic);
-                        if (string.IsNullOrEmpty(scanOrganic.Species) == false)
-                            AddSpecies(scanOrganic.Species);
-                        if (string.IsNullOrEmpty(scanOrganic.Variant) == false)
-                            AddCodex(scanOrganic.Variant);
+                        try
+                        {
+                            AddBioScan(scanOrganic);
+                            if (string.IsNullOrEmpty(scanOrganic.Species) == false)
+                                AddSpecies(scanOrganic.Species);
+                            if (string.IsNullOrEmpty(scanOrganic.Variant) == false)
+                                AddCodex(scanOrganic.Variant);
+                        }
+                        catch (NullReferenceException nullRef)
+                        {
+                            App.Logger.Error(nullRef.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            App.Logger.Error(ex.Message);
+                        }
                     }
                     break;
                 case SellOrganicDataEvent.SellOrganicDataEventArgs sellOrganic:

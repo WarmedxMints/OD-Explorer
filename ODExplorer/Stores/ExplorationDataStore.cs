@@ -563,6 +563,9 @@ namespace ODExplorer.Stores
                         break;
                     case ScanOrganicEvent.ScanOrganicEventArgs scanOrganic:
                         {
+                            if (string.IsNullOrEmpty(scanOrganic.Genus) || string.IsNullOrEmpty(scanOrganic.Species) || string.IsNullOrEmpty(scanOrganic.Variant))
+                                break;
+
                             var body = CurrentBody;
 
                             if (body is null || body.BodyID != scanOrganic.Body)
