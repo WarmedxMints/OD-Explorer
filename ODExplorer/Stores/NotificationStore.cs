@@ -356,6 +356,25 @@ namespace ODExplorer.Stores
                                                                   settingsStore.NotificationSettings, messageOptions));
             }
 
+            if (settings.BodyNotifications.HasFlag(BodyNotification.BioSignals) && body.BiologicalSignals > 0)
+            {
+                var message = body.BiologicalSignals > 0 ? "Signals" : "Signal";
+
+                notifier.Notify(() => new NotableBodyNotification(BodyNotification.BioSignals, body,
+                                                            "Body with Biology Signals",
+                                                            $"{body.BiologicalSignals} Biological {message}",
+                                                            settingsStore.NotificationSettings, messageOptions));
+            }
+
+            if (settings.BodyNotifications.HasFlag(BodyNotification.GeoSignals) && body.GeologicalSignals > 0)
+            {
+                var message = body.GeologicalSignals > 0 ? "Signals" : "Signal";
+
+                notifier.Notify(() => new NotableBodyNotification(BodyNotification.GeoSignals, body,
+                                                            "Body with Geological Signals",
+                                                            $"{body.GeologicalSignals} Geological {message}",
+                                                            settingsStore.NotificationSettings, messageOptions));
+            }
         }
 
         #region Notification Helpers

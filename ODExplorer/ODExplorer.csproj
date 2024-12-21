@@ -49,6 +49,7 @@
     <None Remove="Resources\NotificationIcons\planet.png" />
     <None Remove="Resources\NotificationIcons\saturn.png" />
     <None Remove="Resources\NotificationIcons\shepherdmoon.png" />
+    <None Remove="Resources\NotificationIcons\volcano.png" />
     <None Remove="Resources\organic-structure.png" />
     <None Remove="Resources\orrery_map.png" />
     <None Remove="Resources\paypal-donate-button.png" />
@@ -142,6 +143,7 @@
     <Resource Include="Resources\NotificationIcons\planet.png" />
     <Resource Include="Resources\NotificationIcons\saturn.png" />
     <Resource Include="Resources\NotificationIcons\shepherdmoon.png" />
+    <Resource Include="Resources\NotificationIcons\volcano.png" />
     <Resource Include="Resources\organic-structure.png" />
     <Resource Include="Resources\orrery_map.png" />
     <Resource Include="Resources\paypal-donate-button.png" />

@@ -18,7 +18,9 @@ namespace ODExplorer.Models
         WideRings               = 1 << 9,
         DiverseLife             = 1 << 10,
         ShepherdMoon            = 1 << 11,
-        All                     = ~(-1 << 12)
+        BioSignals              = 1 << 12,
+        GeoSignals              = 1 << 13,
+        All                     = ~(-1 << 14)
     }
 
     public sealed class NotableNotificationOptions

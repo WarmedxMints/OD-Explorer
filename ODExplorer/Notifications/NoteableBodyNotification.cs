@@ -72,6 +72,12 @@ namespace ODExplorer.Notifications
                 case BodyNotification.ShepherdMoon:
                     ImageSource = "/Resources/NotificationIcons/shepherdmoon.png";
                     break;
+                case BodyNotification.BioSignals:
+                    ImageSource = "/Resources/exobtn.png";
+                    break;
+                case BodyNotification.GeoSignals:
+                    ImageSource = "/Resources/NotificationIcons/volcano.png";
+                    break;
                 case BodyNotification.LandableHighGravity:
                 case BodyNotification.LandableLargeRadius:
                 case BodyNotification.SmallPlanet:

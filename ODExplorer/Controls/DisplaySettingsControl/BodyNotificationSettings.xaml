@@ -338,6 +338,9 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center" />
 
+            <StackPanel Grid.Row="12"
+                        Grid.ColumnSpan="6"
+                        Orientation="Horizontal">
 
             <CheckBox Style="{DynamicResource CheckBoxStyle}"
                       IsThreeState="False"
@@ -357,6 +360,27 @@
                       VerticalAlignment="Center"
                       IsChecked="{Binding NotableSettings.BodyNotifications, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:BodyNotification.ShepherdMoon}}"
                       Content="Shepherd Moon" />
+
+            <CheckBox Style="{DynamicResource CheckBoxStyle}"
+                      IsThreeState="False"
+                      HorizontalAlignment="Left"
+                      Margin="10,5"
+                      Grid.Column="4"
+                      Grid.Row="12"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding NotableSettings.BodyNotifications, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:BodyNotification.GeoSignals}}"
+                      Content="Geological Signals" />
+
+            <CheckBox Style="{DynamicResource CheckBoxStyle}"
+                      IsThreeState="False"
+                      HorizontalAlignment="Left"
+                      Margin="10,5"
+                      Grid.Column="5"
+                      Grid.Row="12"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding NotableSettings.BodyNotifications, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:BodyNotification.BioSignals}}"
+                      Content="Biological Signals" />
+            </StackPanel>
         </Grid>
     </GroupBox>
 </UserControl>
