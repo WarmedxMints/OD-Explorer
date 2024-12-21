@@ -1,0 +1,75 @@
+﻿<core:NotificationDisplayPart x:Class="ODExplorer.Notifications.TestNotificationPart"
+                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                              xmlns:local="clr-namespace:ODExplorer.Notifications"
+                              mc:Ignorable="d"
+                              xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
+                              Foreground="{DynamicResource NotificationForeground}"
+                              FontFamily="{StaticResource Eurostile}"
+                              FontSize="{Binding Options.FontSize}"
+                              d:DesignWidth="350"
+                              PreviewMouseDown="NotificationDisplayPart_PreviewMouseDown"
+                              d:DataContext="{d:DesignInstance local:ExoBioNotification, IsDesignTimeCreatable=False}">
+    <Border BorderThickness="{Binding BorderThickness}">
+        <Border.Style>
+            <MultiBinding Converter="{StaticResource StyleConverter}">
+                <MultiBinding.Bindings>
+                    <Binding RelativeSource="{RelativeSource Self}" />
+                    <Binding Path="BorderStyle" />
+                </MultiBinding.Bindings>
+            </MultiBinding>
+        </Border.Style>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Image    Grid.RowSpan="10"
+                      Source="{Binding ImageSource}"
+                      Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="10,10,20,10">
+            </Image>
+
+
+            <TextBlock Text="Test Notification"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="2"
+                       FontSize="{Binding HeaderFontSize}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Grid.Row="0"
+                       Margin="{Binding TextMargin}"
+                       Foreground="{DynamicResource NotificationHeaderColour}" />
+
+            <TextBlock Text="OD Explorer"
+                       Grid.ColumnSpan="2"
+                       Grid.Column="1"
+                       Grid.Row="1"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+
+            <TextBlock Text="Click to open GitHub page"
+                       Grid.Column="1"
+                       Grid.Row="2"
+                       Margin="{Binding TextMargin}"
+                       Grid.ColumnSpan="2" />
+
+            <TextBlock Text="See you in the black"
+                       Grid.Column="1"
+                       Grid.Row="3"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+        </Grid>
+    </Border>
+    </core:NotificationDisplayPart>

@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="ODExplorer.Controls.OrganicVariantColourItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:oduExo="clr-namespace:ODUtils.Exobiology;assembly=ODUtils"
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:modelvms="clr-namespace:ODExplorer.ViewModels.ModelVMs"
+             d:DataContext="{d:DesignInstance Type=modelvms:OrganicVariantViewModel}"
+             mc:Ignorable="d"
+             PreviewMouseWheel="UserControl_PreviewMouseWheel"
+             IsHitTestVisible="True"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <StackPanel Orientation="Horizontal">
+        <Image Height="20"
+               Width="20"
+               ToolTip="Possible new personal Codex entry"
+               Source="/Resources/organic-structure.png">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding NewCodex}"
+                                     Value="False">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding NotConfirmed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <Image Height="20"
+               Width="20">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Chance}"
+                                     Value="{x:Static oduExo:VariantChance.Likely}">
+                            <Setter Property="Source"
+                                    Value="/Resources/GreenArrow.png" />
+                            <Setter Property="ToolTip"
+                                    Value="Variant is likely" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Chance}"
+                                     Value="{x:Static oduExo:VariantChance.Unlikely}">
+                            <Setter Property="Source"
+                                    Value="/Resources/RedArrow.png" />
+                            <Setter Property="ToolTip"
+                                    Value="Variant is unlikely" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Confirmed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding NotConfirmed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        <TextBlock Text="{Binding Colour}"
+                   Margin="5,0" />
+        <TextBlock Text="| "
+                   Margin="5,0"
+                   Visibility="{Binding HasMoreVariants, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Normal}" />
+    </StackPanel>
+</UserControl>

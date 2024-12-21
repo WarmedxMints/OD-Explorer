@@ -1,0 +1,340 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style BasedOn="{StaticResource {x:Type Button}}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Foreground"
+                Value="{DynamicResource PrimaryControlForeground}" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryControlBorder}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="border"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="2"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="1"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryControlBackground}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsDefaulted"
+                                 Value="True">
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryControlForeground}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="border"
+                                    Property="Opacity"
+                                    Value="0.7" />
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type Button}"
+           x:Key="ColourImageBtn">
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryBackground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1,1,0,1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource NavigationBarBackground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1,1,0,1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            MinWidth="{TemplateBinding MinWidth}">
+                        <Grid>
+                            <ContentPresenter x:Name="MyContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" />
+                            <Border Background="{TemplateBinding Background}"
+                                    x:Name="ContentBackground">
+                                <Rectangle Fill="{TemplateBinding Foreground}"
+                                           Margin="{TemplateBinding Padding}"
+                                           Width="{Binding ElementName=MyContentPresenter, Path=ActualWidth}"
+                                           Height="{Binding ElementName=MyContentPresenter, Path=ActualHeight}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="None"
+                                                     Visual="{Binding ElementName=MyContentPresenter}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Button}"
+           x:Key="NavigationImageBtn">
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="border"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="2"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="1"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryBackground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1,1,0,1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource NavigationBarBackground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1,1,0,1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type Button}"
+           x:Key="CartoSelectionBtn">
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource PrimaryDisabled}" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource PrimaryForeground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            MinWidth="{TemplateBinding MinWidth}">
+                        <Grid>
+                            <ContentPresenter x:Name="MyContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" />
+                            <Border Background="{TemplateBinding Background}"
+                                    x:Name="ContentBackground">
+                                <Rectangle Fill="{TemplateBinding Foreground}"
+                                           Margin="{TemplateBinding Padding}"
+                                           Width="{Binding ElementName=MyContentPresenter, Path=ActualWidth}"
+                                           Height="{Binding ElementName=MyContentPresenter, Path=ActualHeight}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="None"
+                                                     Visual="{Binding ElementName=MyContentPresenter}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style BasedOn="{StaticResource {x:Type Button}}"
+           TargetType="{x:Type Button}"
+           x:Key="TabButton">
+        <Setter Property="Foreground"
+                Value="{DynamicResource PrimaryDisabled}" />
+        <Setter Property="Background"
+                Value="{DynamicResource PrimaryBackground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="border"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="2"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="1"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryControlBackground}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsDefaulted"
+                                 Value="True">
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryControlForeground}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="border"
+                                    Property="Opacity"
+                                    Value="1" />
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryBackground}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource PrimaryControlForeground}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="True">
+                            <Setter TargetName="border"
+                                    Property="Opacity"
+                                    Value="0.7" />
+                            <Setter TargetName="border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryBackground}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource PrimaryControlForeground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

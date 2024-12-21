@@ -1,0 +1,183 @@
+﻿<UserControl x:Class="ODExplorer.Controls.CartoDetailsControls.ExobiologyDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Controls.CartoDetailsControls"
+             xmlns:controls="clr-namespace:ODExplorer.Controls"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             mc:Ignorable="d"
+             x:Name="ExoControl"
+             FontSize="18"
+             d:DataContext="{d:DesignInstance Type=viewModels:CartographicViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <ScrollViewer x:Name="Grid"
+                  HorizontalScrollBarVisibility="Disabled">
+        <DataGrid Style="{DynamicResource BaseDataGridStyle}"
+                  x:Name="SignalsGrid"
+                  ItemsSource="{Binding OrganicSignals}"
+                  SelectedItem="{Binding SelectedBody, Mode=TwoWay}"
+                  SelectionChanged="DataGrid_SelectionChanged"
+                  HeadersVisibility="Column"
+                  BorderThickness="0"
+                  IsReadOnly="True"
+                  IsHitTestVisible="True"
+                  RowStyle="{DynamicResource ExoBioBodyRowStyle}"
+                  PreviewMouseWheel="DataGrid_PreviewMouseWheel"
+                  HorizontalScrollBarVisibility="Disabled"
+                  CellStyle="{DynamicResource ExoBodyGrid}"
+                  RowDetailsVisibilityMode="Visible"
+                  ColumnHeaderStyle="{DynamicResource NameHeader}"
+                  Background="{DynamicResource PrimaryBackground}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Body"
+                                    Binding="{Binding Name, Mode=OneWay}"
+                                    MinWidth="80"
+                                    Width="*" />
+                <DataGridTemplateColumn  MinWidth="65">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="-10,0,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <Rectangle Style="{DynamicResource BioRectangle}"
+                                           Height="18"
+                                           Width="18"
+                                           Margin="3,0">
+                                    <Rectangle.OpacityMask>
+                                        <ImageBrush ImageSource="/Resources/SystemGridIcons/StarIcon.png" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text="{Binding GoverningStar, Mode=OneWay}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding PlanetClassDescription, Mode=OneWay}"
+                                    ElementStyle="{DynamicResource DataGridElementCenter}"
+                                    MinWidth="200"
+                                    Width="250" />
+                <DataGridTextColumn Binding="{Binding OrganicValues, Mode=OneWay}"
+                                    MinWidth="150"
+                                    Header="Body Value"
+                                    HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                    ElementStyle="{DynamicResource DataGridElementCenter}" />
+                <DataGridTextColumn Binding="{Binding BiologicalSignals, Mode=OneWay}"
+                                    ElementStyle="{DynamicResource DataGridElementCenter}"
+                                    Width="30">
+                    <DataGridTextColumn.Header>
+                        <Button Style="{StaticResource ColourImageBtn}"
+                                ToolTip="Signal Count"
+                                BorderThickness="0"
+                                IsHitTestVisible="False"
+                                Foreground="{DynamicResource PrimaryControlForeground}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Height="20"
+                                Width="20">
+                            <Image Source="/Resources/exobtn.png"
+                                   Stretch="Uniform"
+                                   SnapsToDevicePixels="True"
+                                   UseLayoutRounding="True"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                        </Button>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Distance"
+                                    SortMemberPath="DistanceFromArrival"
+                                    SortDirection="Ascending"
+                                    HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                    Binding="{Binding DistanceFromArrivalLs, Mode=OneWay}"
+                                    ElementStyle="{DynamicResource DataGridElementRightMargin}"
+                                    Width="120" />
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Grid Visibility="{Binding OrganicScanItems.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}">
+                        <DataGrid Style="{DynamicResource BaseDataGridStyle}"
+                                  ItemsSource="{Binding OrganicScanItems}"
+                                  x:Name="OrganicGrid"
+                                  Margin="20,5,0,10"
+                                  BorderThickness="0"
+                                  IsHitTestVisible="True"
+                                  IsReadOnly="True"
+                                  PreviewMouseWheel="DataGrid_PreviewMouseWheel"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Background="Transparent"
+                                  CellStyle="{DynamicResource ExoDetailsCell}"
+                                  RowStyle="{DynamicResource ExoBioRowStyle}"
+                                  HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding GenusEnglish, Mode=OneWay}"
+                                                    Header="Genus"
+                                                    Width="1*"
+                                                    MinWidth="120" />
+                                <DataGridTemplateColumn Header="Species"
+                                                        MinWidth="120"
+                                                        Width="1*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border CornerRadius="5"
+                                                        BorderBrush="{DynamicResource NotificationHeaderColour}"
+                                                        BorderThickness="1"
+                                                        Width="30"
+                                                        Visibility="{Binding NewSpecies, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Normal}"                                                        
+                                                        Height="15"
+                                                        ToolTip="Possible new species"
+                                                        Background="Blue">
+                                                    <TextBlock Text="NEW"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Center"
+                                                               Foreground="{DynamicResource NotificationHeaderColour}"
+                                                               FontSize="10" />
+                                                </Border>
+                                                <TextBlock Text="{Binding SpeciesEnglish, Mode=OneWay}"
+                                                           Margin="5,0,0,0"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn MinWidth="120"
+                                                        Width="2*"
+                                                        Header="Variant">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:OrganicVariantControl />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding ColonyRange, Mode=OneWay}"
+                                                    Header="Range"
+                                                    Width="80"
+                                                    ElementStyle="{DynamicResource DataGridElementRightMargin}"
+                                                    HeaderStyle="{DynamicResource DataGridHeaderCenter}" />
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:OrganicScanStageControl Size="14"
+                                                                              ToolTip="Scan Status"
+                                                                              VerticalAlignment="Center"
+                                                                              HorizontalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding ValueString, Mode=OneWay}"
+                                                    Header="Value"
+                                                    HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                                    ElementStyle="{DynamicResource DataGridElementRightMargin}"
+                                                    Width="100" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+    </ScrollViewer>
+</UserControl>

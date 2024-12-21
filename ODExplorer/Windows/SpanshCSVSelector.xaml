@@ -1,0 +1,152 @@
+﻿<windows:WindowBase  x:Class="ODExplorer.Windows.SpanshCSVSelector"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:local="clr-namespace:ODExplorer.Windows"
+                     xmlns:windows="clr-namespace:ODUtils.Windows;assembly=ODUtils"
+                     xmlns:spansh="clr-namespace:ODUtils.Spansh;assembly=ODUtils"
+                     mc:Ignorable="d"
+                     Title="Select CSV Type"
+                     FontFamily="{StaticResource Eurostile}"
+                     FontSize="18"
+                     WindowStartupLocation="CenterOwner"
+                     x:Name="Root"
+                     
+                     Foreground="{DynamicResource PrimaryControlForeground}"
+                     Background="{DynamicResource PrimaryBackground}"
+                     Height="350"
+                     Width="700">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="30"
+                      GlassFrameThickness="1"
+                      ResizeBorderThickness="10" />
+    </WindowChrome.WindowChrome>
+    <Border BorderThickness="{Binding ElementName=Root, Path=MainWindowBorderThickness}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <windows:TitleBarColourIcon  Grid.Row="0"
+                                         TitlebarForeground="{StaticResource TitlebarForeGround}"
+                                         TitleBarIcon="/Resources/Astronaut.png" />
+
+            <TextBlock Text="Error identifying CSV"
+                       Grid.Row="1"
+                       FontSize="28"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+
+            <TextBlock Text="Select type"
+                       Grid.Row="2"
+                       FontSize="22"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+
+                <Button Width="220"
+                        Grid.Column="0"
+                        Grid.RowSpan="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Cursor="Hand"
+                        Click="Image_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Image Stretch="Uniform"
+                                   SnapsToDevicePixels="True"
+                                   Source="/Resources/spanshlogo.png" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Grid.Row="2">
+                <Hyperlink NavigateUri="https://www.spansh.co.uk/plotter">
+                    Visit Spansh</Hyperlink>
+                </TextBlock>
+
+                <WrapPanel Grid.Column="1"
+                           Grid.ColumnSpan="2"
+                           Grid.RowSpan="3"
+                           DataContext="{Binding ElementName=Root}">
+                    <Button Content="Road to Riches"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.RoadToRiches}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="Neutron Plotter"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.NeutronRoute}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="Neutron Plotter"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.NeutronRoute}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="World Type Route"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.WorldTypeRoute}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="Tourist Planner"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.TouristRoute}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="Fleet Carrier Router"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.FleetCarrier}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="Galaxy Plotter"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.GalaxyPlotter}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                    <Button Content="Exomastery"
+                            Command="{Binding SetCSVType}"
+                            CommandParameter="{x:Static spansh:CsvType.Exobiology}"
+                            Width="130"
+                            Height="30"
+                            Margin="10" />
+                </WrapPanel>
+
+                <Button Width="130"
+                        Height="30"
+                        Grid.Column="3"
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="20"
+                        Content="Cancel"
+                        Click="Button_Click" />
+            </Grid>
+        </Grid>
+    </Border>
+</windows:WindowBase>

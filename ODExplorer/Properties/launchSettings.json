@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ODExplorer": {
+      "commandName": "Project",
+      "hotReloadEnabled": true
+    }
+  }
+}
