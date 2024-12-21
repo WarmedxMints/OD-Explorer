@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>ODExplorer</RootNamespace>
     <AssemblyName>ODExplorer</AssemblyName>
@@ -10,71 +9,167 @@
     <Version>1.0.8</Version>
     <Authors>WarmedxMints</Authors>
     <PlatformTarget>x64</PlatformTarget>
-    <Configurations>Debug;Release;Portable</Configurations>
+    <Configurations>Debug;Release;Portable;Install</Configurations>
     <SignAssembly>False</SignAssembly>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Install|AnyCPU'">
+    <DefineConstants>$(DefineConstants);INSTALL</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
-    <None Remove="Images\arrow-down-sign-to-navigate.png" />
-    <None Remove="Images\asteroid.png" />
-    <None Remove="Images\astronaut.ico" />
-    <None Remove="Images\astronaut.png" />
-    <None Remove="Images\binoculars.png" />
-    <None Remove="Images\btn_donate_LG.png" />
-    <None Remove="Images\cooling-tower.png" />
-    <None Remove="Images\copy.png" />
-    <None Remove="Images\DNA.png" />
-    <None Remove="Images\earth.png" />
-    <None Remove="Images\jupiter.png" />
-    <None Remove="Images\language.png" />
-    <None Remove="Images\moon-landing.png" />
-    <None Remove="Images\planet.png" />
-    <None Remove="Images\saturn.png" />
-    <None Remove="Images\StarIcon.png" />
-    <None Remove="Images\volcano.png" />
-    <None Remove="Images\water.png" />
-    <None Remove="Fonts\EUROSTILE.TTF" />
+    <None Remove="Resources\Basic.png" />
+    <None Remove="Resources\ClassicCartoViewBtn.png" />
+    <None Remove="Resources\Clipboard.png" />
+    <None Remove="Resources\Current_ExoViewBtn.png" />
+    <None Remove="Resources\DetailedCartoViewBtn.png" />
+    <None Remove="Resources\edastro.png" />
+    <None Remove="Resources\EDSM Logo.png" />
+    <None Remove="Resources\EUROSTILE.TTF" />
+    <None Remove="Resources\ExobiologyPopOut.png" />
+    <None Remove="Resources\exobtn.png" />
+    <None Remove="Resources\explorerElite.png" />
+    <None Remove="Resources\ExtendedBodyInfoCartoViewBtn.png" />
+    <None Remove="Resources\Fleetcarrier_Icon.png" />
+    <None Remove="Resources\GitHub_Logo_White.png" />
+    <None Remove="Resources\GreenArrow.png" />
+    <None Remove="Resources\HorizontalCartoLayoutBtn.png" />
+    <None Remove="Resources\Map-galaxy-map.png" />
+    <None Remove="Resources\monitor.png" />
+    <None Remove="Resources\normal_map.png" />
+    <None Remove="Resources\Notification Bottom Left.png" />
+    <None Remove="Resources\Notification Bottom Right.png" />
+    <None Remove="Resources\Notification Large.png" />
+    <None Remove="Resources\Notification Small.png" />
+    <None Remove="Resources\Notification Top Left.png" />
+    <None Remove="Resources\Notification Top Right.png" />
+    <None Remove="Resources\NotificationIcons\language.png" />
+    <None Remove="Resources\NotificationIcons\moon-landing.png" />
+    <None Remove="Resources\NotificationIcons\nestedmoon.png" />
+    <None Remove="Resources\NotificationIcons\planet.png" />
+    <None Remove="Resources\NotificationIcons\saturn.png" />
+    <None Remove="Resources\NotificationIcons\shepherdmoon.png" />
+    <None Remove="Resources\organic-structure.png" />
+    <None Remove="Resources\orrery_map.png" />
+    <None Remove="Resources\paypal-donate-button.png" />
+    <None Remove="Resources\Premium.png" />
+    <None Remove="Resources\RedArrow.png" />
+    <None Remove="Resources\Selection-galaxy-map.png" />
+    <None Remove="Resources\settings.png" />
+    <None Remove="Resources\spansh.png" />
+    <None Remove="Resources\spanshlogo.png" />
+    <None Remove="Resources\Standard.png" />
+    <None Remove="Resources\surface.png" />
+    <None Remove="Resources\SystemGridIcons\asteroid.png" />
+    <None Remove="Resources\SystemGridIcons\binoculars.png" />
+    <None Remove="Resources\SystemGridIcons\cooling-tower.png" />
+    <None Remove="Resources\SystemGridIcons\DNA.png" />
+    <None Remove="Resources\SystemGridIcons\earth.png" />
+    <None Remove="Resources\SystemGridIcons\jupiter.png" />
+    <None Remove="Resources\SystemGridIcons\language.png" />
+    <None Remove="Resources\SystemGridIcons\moon-landing.png" />
+    <None Remove="Resources\SystemGridIcons\planet.png" />
+    <None Remove="Resources\SystemGridIcons\saturn.png" />
+    <None Remove="Resources\SystemGridIcons\StarIcon.png" />
+    <None Remove="Resources\SystemGridIcons\volcano.png" />
+    <None Remove="Resources\SystemGridIcons\water.png" />
+    <None Remove="Resources\UC.png" />
+    <None Remove="Resources\UCsmall.png" />
+    <None Remove="Resources\UiScale.png" />
+    <None Remove="Resources\ValuableBodiesPopOut.png" />
+    <None Remove="Resources\zoom.png" />
   </ItemGroup>
-
   <ItemGroup>
+    <Resource Include="Resources\edastro.png" />
+    <Resource Include="Resources\explorerElite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Clipboard.png" />
+    <Resource Include="Resources\Current_ExoViewBtn.png" />
+    <Resource Include="Resources\EDSM Logo.png" />
+    <Resource Include="Resources\ExobiologyPopOut.png" />
+    <Resource Include="Resources\ExtendedBodyInfoCartoViewBtn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EFCore.BulkExtensions.Sqlite" Version="8.1.2" />
+    <PackageReference Include="MdXaml" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Full" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Html" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Plugins" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Svg" Version="1.27.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+    <PackageReference Include="NLog" Version="5.3.4" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
     <PackageReference Include="ToastNotifications" Version="2.5.1" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\ColorPicker\src\ColorPicker\ColorPicker.csproj" />
-    <ProjectReference Include="..\..\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj" />
-    <ProjectReference Include="..\LoadSaveSystem\Utils.csproj" />
-    <ProjectReference Include="..\ParserLibrary\ParserLibrary.csproj" />
+    <ProjectReference Include="D:\ODrepos\ODUtils\ODUtils.csproj" />
+    <ProjectReference Include="F:\GitHub\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <Resource Include="Images\arrow-down-sign-to-navigate.png" />
-    <Resource Include="Images\asteroid.png" />
-    <Resource Include="Images\astronaut.ico" />
-    <Resource Include="Images\astronaut.png" />
-    <Resource Include="Images\binoculars.png" />
-    <Resource Include="Images\btn_donate_LG.png" />
-    <Resource Include="Images\cooling-tower.png" />
-    <Resource Include="Images\copy.png" />
-    <Resource Include="Images\DNA.png" />
-    <Resource Include="Images\earth.png" />
-    <Resource Include="Images\jupiter.png" />
-    <Resource Include="Images\language.png" />
-    <Resource Include="Images\moon-landing.png" />
-    <Resource Include="Images\planet.png" />
-    <Resource Include="Images\saturn.png" />
-    <Resource Include="Images\StarIcon.png" />
-    <Resource Include="Images\volcano.png" />
-    <Resource Include="Images\water.png" />
-    <Resource Include="Fonts\EUROSTILE.TTF">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Resources\Astronaut.png" />
+    <Resource Include="Resources\Basic.png" />
+    <Resource Include="Resources\ClassicCartoViewBtn.png" />
+    <Resource Include="Resources\DetailedCartoViewBtn.png" />
+    <Resource Include="Resources\EUROSTILE.TTF" />
+    <Resource Include="Resources\exobtn.png" />
+    <Resource Include="Resources\Fleetcarrier_Icon.png" />
+    <Resource Include="Resources\GitHub_Logo_White.png" />
+    <Resource Include="Resources\GreenArrow.png" />
+    <Resource Include="Resources\HorizontalCartoLayoutBtn.png" />
+    <Resource Include="Resources\Map-galaxy-map.png" />
+    <Resource Include="Resources\monitor.png" />
+    <Resource Include="Resources\normal_map.png" />
+    <Resource Include="Resources\Notification Bottom Left.png" />
+    <Resource Include="Resources\Notification Bottom Right.png" />
+    <Resource Include="Resources\Notification Large.png" />
+    <Resource Include="Resources\Notification Small.png" />
+    <Resource Include="Resources\Notification Top Left.png" />
+    <Resource Include="Resources\Notification Top Right.png" />
+    <Resource Include="Resources\NotificationIcons\language.png" />
+    <Resource Include="Resources\NotificationIcons\moon-landing.png" />
+    <Resource Include="Resources\NotificationIcons\nestedmoon.png" />
+    <Resource Include="Resources\NotificationIcons\planet.png" />
+    <Resource Include="Resources\NotificationIcons\saturn.png" />
+    <Resource Include="Resources\NotificationIcons\shepherdmoon.png" />
+    <Resource Include="Resources\organic-structure.png" />
+    <Resource Include="Resources\orrery_map.png" />
+    <Resource Include="Resources\paypal-donate-button.png" />
+    <Resource Include="Resources\Premium.png" />
+    <Resource Include="Resources\RedArrow.png" />
+    <Resource Include="Resources\Selection-galaxy-map.png" />
+    <Resource Include="Resources\settings.png" />
+    <Resource Include="Resources\spansh.png" />
+    <Resource Include="Resources\spanshlogo.png" />
+    <Resource Include="Resources\Standard.png" />
+    <Resource Include="Resources\surface.png" />
+    <Resource Include="Resources\SystemGridIcons\asteroid.png" />
+    <Resource Include="Resources\SystemGridIcons\binoculars.png" />
+    <Resource Include="Resources\SystemGridIcons\cooling-tower.png" />
+    <Resource Include="Resources\SystemGridIcons\DNA.png" />
+    <Resource Include="Resources\SystemGridIcons\earth.png" />
+    <Resource Include="Resources\SystemGridIcons\jupiter.png" />
+    <Resource Include="Resources\SystemGridIcons\language.png" />
+    <Resource Include="Resources\SystemGridIcons\moon-landing.png" />
+    <Resource Include="Resources\SystemGridIcons\planet.png" />
+    <Resource Include="Resources\SystemGridIcons\saturn.png" />
+    <Resource Include="Resources\SystemGridIcons\StarIcon.png" />
+    <Resource Include="Resources\SystemGridIcons\volcano.png" />
+    <Resource Include="Resources\SystemGridIcons\water.png" />
+    <Resource Include="Resources\UC.png" />
+    <Resource Include="Resources\UCsmall.png" />
+    <Resource Include="Resources\UiScale.png" />
+    <Resource Include="Resources\ValuableBodiesPopOut.png" />
+    <Resource Include="Resources\zoom.png" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Utils\NewFolder\" />
-  </ItemGroup>
-
 </Project>

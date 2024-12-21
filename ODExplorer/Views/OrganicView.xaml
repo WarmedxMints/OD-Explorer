@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="ODExplorer.Views.OrganicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ODExplorer.Views"
+             xmlns:controls="clr-namespace:ODExplorer.Controls"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             xmlns:oduModels="clr-namespace:ODUtils.Models;assembly=ODUtils"
+             d:DataContext="{d:DesignInstance Type=viewModels:OrganicViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="CheckList">
+            <controls:OrganicChecklist />
+        </DataTemplate>
+
+        <DataTemplate x:Key="UnSoldListControl">
+            <controls:OrganicScanItemControl OrganicDetails="{Binding Unsold}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="SoldListControl">
+            <controls:OrganicScanItemControl OrganicDetails="{Binding Sold}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="LostListControl">
+            <controls:OrganicScanItemControl OrganicDetails="{Binding Lost}" />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModels:OrganicViewModel}">
+            <ContentControl Content="{Binding }">
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Setter Property="ContentTemplate"
+                                Value="{x:Null}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="{x:Static oduModels:ExoBiologyViewState.CheckList}">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource CheckList}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="{x:Static oduModels:ExoBiologyViewState.UnSoldList}">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource UnSoldListControl}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="{x:Static oduModels:ExoBiologyViewState.Sold}">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource SoldListControl}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="{x:Static oduModels:ExoBiologyViewState.Lost}">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource LostListControl}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer.Style>
+            <Style TargetType="{x:Type ScrollViewer}">
+                <Setter Property="HorizontalScrollBarVisibility"
+                        Value="Auto" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CurrentState}"
+                                 Value="{x:Static oduModels:ExoBiologyViewState.CheckList}">
+                        <Setter Property="HorizontalScrollBarVisibility"
+                                Value="Disabled" />
+                    </DataTrigger>
+                </Style.Triggers>
+                   </Style>
+        </ScrollViewer.Style>
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Grid Background="{DynamicResource PrimaryControlBackground}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Exobiology"
+                                   FontSize="24"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Medium"
+                                   Margin="10,0,30,0" />
+
+                        <Button Content="Unsold"
+                                FontSize="22"
+                                Command="{Binding SwitchToUnSoldList}"
+                                Style="{DynamicResource TabButton}"
+                                Width="150" />
+
+                        <Button Content="Sold"
+                                FontSize="22"
+                                Command="{Binding SwitchToSoldList}"
+                                Style="{DynamicResource TabButton}"
+                                Width="150" />
+
+
+                        <Button Content="Lost"
+                                FontSize="22"
+                                Command="{Binding SwitchToLostList}"
+                                Style="{DynamicResource TabButton}"
+                                Width="150" />
+
+                        <Button Content="CheckList"
+                                FontSize="22"
+                                Command="{Binding SwitchToCheckList}"
+                                Style="{DynamicResource TabButton}"
+                                Width="150" />
+
+
+                    </StackPanel>
+                </Grid>
+                <ContentControl Content="{Binding }"
+                                Grid.Row="1" />
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

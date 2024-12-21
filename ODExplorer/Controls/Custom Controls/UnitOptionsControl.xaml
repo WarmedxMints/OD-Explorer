@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="ODExplorer.Controls.UnitOptionsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:models="clr-namespace:ODExplorer.Models"
+             xmlns:viewvms="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             d:DataContext="{d:DesignInstance Type=viewvms:SettingsViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="TemperatureUnit"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:Temperature"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="PressureUnit"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:Pressure"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="DistanceUnit"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:Distance"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <GroupBox Header="Unit Settings"
+              BorderBrush="{DynamicResource PrimaryControlBorder}"
+              Padding="10"
+              BorderThickness="0.5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="20"/>
+                <RowDefinition />
+                <RowDefinition Height="20" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <ComboBox ItemsSource="{Binding Source={StaticResource TemperatureUnit}}"
+                      SelectedItem="{Binding TemperatureUnit}"
+                      Width="200" />
+
+            <TextBlock  Grid.Row="0"
+                        Grid.Column="1"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="The unit used for the surface temperature"
+                        TextWrapping="WrapWithOverflow" />
+
+            <ComboBox ItemsSource="{Binding Source={StaticResource PressureUnit}}"
+                      SelectedItem="{Binding PressureUnit}"
+                      Grid.Row="2"
+                      Width="200" />
+
+            <TextBlock  Grid.Row="2"
+                        Grid.Column="1"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="The unit used for the surface pressure"
+                        TextWrapping="WrapWithOverflow" />
+
+            <ComboBox ItemsSource="{Binding Source={StaticResource DistanceUnit}}"
+                      SelectedItem="{Binding DistanceUnit}"
+                      Grid.Row="4"
+                      Width="200" />
+
+            <TextBlock  Grid.Row="4"
+                        Grid.Column="1"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="The unit used for the body radius"
+                        TextWrapping="WrapWithOverflow" />
+        </Grid>
+    </GroupBox>
+</UserControl>

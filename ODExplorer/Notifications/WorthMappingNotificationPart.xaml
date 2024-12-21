@@ -1,0 +1,84 @@
+﻿<core:NotificationDisplayPart x:Class="ODExplorer.Notifications.WorthMappingNotificationPart"
+                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                              xmlns:local="clr-namespace:ODExplorer.Notifications"
+                              mc:Ignorable="d"
+                              xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
+                              PreviewMouseDown="NotificationDisplayPart_PreviewMouseDown"
+                              Foreground="{DynamicResource NotificationForeground}"
+                              FontFamily="{StaticResource Eurostile}"
+                              FontSize="{Binding Options.FontSize}"
+                              d:DesignWidth="350"
+                              d:DataContext="{d:DesignInstance local:WorthMappingNotification, IsDesignTimeCreatable=False}">
+    <Border BorderThickness="{Binding BorderThickness}">
+        <Border.Style>
+            <MultiBinding Converter="{StaticResource StyleConverter}">
+                <MultiBinding.Bindings>
+                    <Binding RelativeSource="{RelativeSource Self}" />
+                    <Binding Path="BorderStyle" />
+                </MultiBinding.Bindings>
+            </MultiBinding>
+        </Border.Style>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Rectangle Fill="{DynamicResource NotificationForeground}"
+                       Grid.RowSpan="10"
+                       Margin="10,10,20,10">
+                <Rectangle.OpacityMask>
+                    <ImageBrush ImageSource="/Resources/UCsmall.png"
+                                x:Name="image"
+                                Stretch="Uniform" />
+                </Rectangle.OpacityMask>
+            </Rectangle>  
+
+            <TextBlock Text="Valuable Body"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="2"
+                       FontSize="{Binding HeaderFontSize}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Grid.Row="0"
+                       Margin="{Binding TextMargin}"
+                       Foreground="{DynamicResource NotificationHeaderColour}" />
+
+            <TextBlock Text="{Binding BodyName}"
+                       Grid.ColumnSpan="2"
+                       Grid.Column="1"
+                       Grid.Row="1"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+
+            <TextBlock Text="{Binding PlanetClass}"
+                       Grid.Column="1"
+                       Grid.Row="2"
+                       Margin="{Binding TextMargin}"
+                       Grid.ColumnSpan="2" />            
+    
+            <TextBlock Text="{Binding MappValue}"
+                       Grid.Column="1"
+                       Grid.Row="3"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+
+            <TextBlock Text="{Binding Distance}"
+                       Grid.Column="1"
+                       Grid.Row="4"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+        </Grid>
+    </Border>
+    </core:NotificationDisplayPart>
+

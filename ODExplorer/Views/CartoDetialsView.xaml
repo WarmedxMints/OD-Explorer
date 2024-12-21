@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="ODExplorer.Views.CartoDetialsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Views"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             xmlns:control="clr-namespace:ODExplorer.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewModels:CartoDetailsViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="Unsold">
+            <control:CartodataSystemList Systems="{Binding UnsoldSystems}"
+                                         SelectedSystem="{Binding SelectedSystem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         ShowIgnoreButton="True"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Sold">
+            <control:CartodataSystemList Systems="{Binding SoldSystems}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="Lost">
+            <control:CartodataSystemList Systems="{Binding LostSystems}" />
+        </DataTemplate>
+        <DataTemplate x:Key="Ignored">
+            <control:CartoIgnoredSystemsControl />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:CartoDetailsViewModel}">
+            <ContentControl Content="{Binding }">
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Setter Property="ContentTemplate"
+                                Value="{x:Null}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="Unsold">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Unsold}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="Sold">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Sold}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="Lost">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Lost}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="Ignored">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Ignored}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid Background="{DynamicResource PrimaryControlBackground}">
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Cartographic"
+                               FontSize="24"
+                               VerticalAlignment="Center"
+                               FontWeight="Medium"
+                               Margin="10,0,30,0" />
+
+                    <Button Content="Unsold"
+                            FontSize="22"
+                            ToolTip="Unsold Carto Data"
+                            Command="{Binding SwitchToUnsold}"
+                            Style="{DynamicResource TabButton}"
+                            Width="150" />
+
+                    <Button Content="Sold"
+                            FontSize="22"
+                            ToolTip="Sold Carto Data"
+                            Command="{Binding SwitchToSold}"
+                            Style="{DynamicResource TabButton}"
+                            Width="150" />
+                    <Button Content="Lost"
+                            FontSize="22"
+                            ToolTip="Unsold Data Potentially Lost On Death"
+                            Command="{Binding SwitchToLost}"
+                            Style="{DynamicResource TabButton}"
+                            Width="150" />
+                    <Button Content="Ignored"
+                            FontSize="22"
+                            ToolTip="Systems Ignored From Unsold Carto Calculations"
+                            Command="{Binding SwitchToIgnored}"
+                            Style="{DynamicResource TabButton}"
+                            Width="150" />
+                </StackPanel>                
+            </Grid>
+            <ContentControl Content="{Binding }"
+                            Grid.Row="1" />
+        </Grid>
+    </Grid>
+</UserControl>

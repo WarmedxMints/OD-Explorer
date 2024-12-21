@@ -1,0 +1,425 @@
+﻿<UserControl x:Class="ODExplorer.Controls.CurrentSystemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             mc:Ignorable="d"
+             FontSize="18"
+             x:Name="Root"
+             d:DataContext="{d:DesignInstance Type=viewModels:CartographicViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="BodiesCVS"
+                              IsLiveSortingRequested="True"
+                              IsLiveFilteringRequested="True" />
+    </UserControl.Resources>
+    <Grid>
+        <Border Background="{DynamicResource DataGridRowHighValueBodyBackground}"
+                Visibility="{Binding InHyperSpace, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Normal}"
+                Height="25"
+                Margin="30,5">
+            <TextBlock Text="{Binding HyperSpaceText}"
+                       Foreground="{DynamicResource DataGridRowHighValueBodyForeGround}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Border>
+        <Grid Visibility="{Binding InHyperSpace, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Inverted}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid DataContext="{Binding CurrentSystem}"
+                  ContextMenu="{Binding ContextMenu}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto"
+                                      ToolTip="STAR CLASS" />
+                    <ColumnDefinition ToolTip="System" />
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="40" />
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="40" />
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="40" />
+                    <ColumnDefinition  Width="130" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                </Grid.RowDefinitions>
+
+                <Border Background="{Binding StarType, Converter={StaticResource ScoopColourConvertor}, Mode=OneWay}"
+                        Grid.Row="1"
+                        Width="5" />
+
+                <Border Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="0,0,2,0"
+                        Style="{DynamicResource CurrentSystemGrid}"
+                        MinWidth="65">
+                    <TextBlock Text="{Binding Path=StarClass, Mode=OneWay}"
+                               Margin="10,0,0,0"
+                               VerticalAlignment="Center"
+                               Style="{DynamicResource SystemGridTextBlockForeground}" />
+                </Border>
+
+                <TextBlock Grid.Column="2"
+                           VerticalAlignment="Center"
+                           Text="NAME" />
+                <Border Grid.Column="2"
+                        Grid.Row="1"
+                        Margin="0,0,2,0"
+                        Style="{DynamicResource CurrentSystemGrid}">
+                    <Grid>
+                        <ProgressBar Value="{Binding PercentageScanned, Mode=OneWay}"
+                                     Minimum="0"
+                                     Maximum="100"
+                                     BorderThickness="0"
+                                     Margin="0,0,0,0"
+                                     Foreground="{DynamicResource ProgressBarColour}"
+                                     Background="Transparent"
+                                     Height="2"
+                                     VerticalAlignment="Bottom" />
+                        <TextBlock Text="{Binding Path=Name, Mode=OneWay}"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Margin="5,0,0,0"
+                                   Style="{DynamicResource SystemGridTextBlockForeground}" />
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Column="3"
+                           Text="J"
+                           Margin="0,0,2,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+
+                <Border Grid.Column="3"
+                        Grid.Row="1"
+                        Margin="0,0,2,0"
+                        Style="{DynamicResource CurrentSystemGrid}">
+                    <Rectangle Style="{DynamicResource JumponiumStyle}"
+                               Stretch="Uniform"
+                               SnapsToDevicePixels="True"
+                               Height="25"
+                               Width="25"
+                               ToolTip="{Binding JumponiumToolTip}" />
+                </Border>
+
+                <TextBlock Grid.Column="4"
+                           Text="DB"
+                           Margin="0,0,2,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <Border Grid.Column="4"
+                        Grid.Row="1"
+                        Margin="0,0,2,0"
+                        Style="{DynamicResource CurrentSystemGrid}">
+                    <TextBlock Text="{Binding Path=DiscoveredBodiesCount, Mode=OneWay}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="5,0,0,0"
+                               Style="{DynamicResource SystemGridTextBlockForeground}" />
+                </Border>
+
+                <TextBlock Grid.Column="5"
+                           Text="KB"
+                           Margin="0,0,2,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <Border Grid.Column="5"
+                        Grid.Row="1"
+                        Margin="0,0,2,0"
+                        Style="{DynamicResource CurrentSystemGrid}">
+                    <TextBlock Text="{Binding Path=KnownBodyCount, Mode=OneWay}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="5,0,0,0"
+                               Style="{DynamicResource SystemGridTextBlockForeground}" />
+                </Border>
+
+                <TextBlock Grid.Column="6"
+                           Text="VALUE"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <Border Grid.Column="6"
+                        Grid.Row="1"
+                        Style="{DynamicResource CurrentSystemGrid}">
+                    <TextBlock Text="{Binding Path=EstimatedValue, Mode=OneWay}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               Style="{DynamicResource SystemGridTextBlockForeground}" />
+                </Border>
+            </Grid>
+
+
+            <Grid Margin="20,5,0,0"
+                  Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[0].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[1].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[14].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[15].ActualWidth, Mode=OneWay}" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"
+                                   MinHeight="5" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+
+                <TextBlock Text="NAME"
+                           Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
+                           Margin="5,0,0,0" />
+                <TextBlock Text="TYPE"
+                           Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
+                           Margin="5,0,0,0"
+                           HorizontalAlignment="Left"
+                           Grid.Column="1" />
+
+                <TextBlock Text="INFO"
+                           Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
+                           Margin="5,0,0,0"
+                           HorizontalAlignment="Left"
+                           Grid.Column="2" />
+                <TextBlock Text="DISTANCE"
+                           Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
+                           HorizontalAlignment="Center"
+                           Grid.Column="3" />
+                <TextBlock Text="VALUE"
+                           Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
+                           HorizontalAlignment="Center"
+                           Grid.Column="4" />
+
+                <ScrollViewer x:Name="ScrollViewer"
+                              Grid.Row="1"
+                              Grid.ColumnSpan="10"
+                              VerticalAlignment="Stretch"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <DataGrid x:Name="DataGrid"
+                              ItemsSource="{Binding CurrentSystemBodies, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                              RowDetailsVisibilityMode="Collapsed"
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="None"
+                              VerticalScrollBarVisibility="Disabled"
+                              Loaded="DataGrid_Loaded"
+                              Unloaded="DataGrid_Unloaded"
+                              EnableRowVirtualization="True"   
+                              PreviewMouseWheel="DataGrid_PreviewMouseWheel"
+                              SelectionChanged="DataGrid_SelectionChanged"
+                              GridLinesVisibility="Horizontal"
+                              Style="{DynamicResource BodiesGridSettings}"
+                              CellStyle="{DynamicResource BodiesGridCell}"
+                              RowStyle="{DynamicResource RowStyleBodies}"
+                              ColumnHeaderStyle="{DynamicResource DataGridHeaderLeft}"
+                              SelectedItem="{Binding ElementName=Root, Path=SelectedBody, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGrid.Columns>
+                            <!--0-->
+                            <DataGridTemplateColumn Header="NAME"
+                                                    x:Name="NameColumn"
+                                                    Width="SizeToCells"
+                                                    MinWidth="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Rectangle Style="{DynamicResource BodyRectangle}"
+                                                           Height="18"
+                                                           Width="18"
+                                                           Margin="0,0,5,0" />
+                                                <TextBlock Text="{Binding BodyID}"
+                                                           FontSize="14"
+                                                           Width="35"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Left"
+                                                           Margin="5,0,0,0" />
+                                                <TextBlock Text="{Binding Name}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Left"
+                                                           Margin="0,0,5,0" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--1-->
+                            <DataGridTemplateColumn Width="*"
+                                                    x:Name="TypeColumn"
+                                                    Header="TYPE">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding BodyDescription}"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Left"
+                                                   Margin="5,0,0,0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--2-->
+                            <DataGridTextColumn Binding="{Binding AtmosphereFormula}"
+                                                FontSize="14"
+                                                Width="SizeToCells"
+                                                CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
+                            <!--3-->
+                            <DataGridTextColumn Binding="{Binding SurfaceTemp}"
+                                                Width="SizeToCells"
+                                                FontSize="14"
+                                                CellStyle="{DynamicResource BodyGridInfoCellRight}" />
+                            <!--4-->
+                            <DataGridTextColumn Binding="{Binding SurfacePressure}"
+                                                Width="SizeToCells"
+                                                FontSize="14"
+                                                CellStyle="{DynamicResource BodyGridInfoCellRight}" />
+                            <!--5-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Height="18"
+                                                   Width="18"
+                                                   Visibility="{Binding WasDiscovered, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Inverted}"
+                                                   Margin="2,0,2,0">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/binoculars.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--6-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Height="18"
+                                                   Width="18"
+                                                   Visibility="{Binding WasMapped, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Inverted}"
+                                                   Margin="2,0,2,0">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/moon-landing.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--7-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Height="18"
+                                                   Width="18"
+                                                   Visibility="{Binding Terraformable, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Normal}"
+                                                   Margin="0,0,3,0">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/cooling-tower.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--8-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Visibility="{Binding HasRings, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Normal}"
+                                                   Height="18"
+                                                   Width="18">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/saturn.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--9-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Visibility="{Binding GeologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                   Height="18"
+                                                   Width="18">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/volcano.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--10-->
+                            <DataGridTextColumn Binding="{Binding GeologicalSignalsString}"
+                                                Width="25"
+                                                FontSize="18"
+                                                Visibility="{Binding GeologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
+                            <!--11-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Visibility="{Binding BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                   Height="18"
+                                                   Width="18">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/DNA.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--12-->
+                            <DataGridTextColumn Binding="{Binding BiologicalSignalsString}"
+                                                Width="25"
+                                                FontSize="18"
+                                                Visibility="{Binding BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
+                            <!--13-->
+                            <DataGridTemplateColumn Width="56"
+                                                    CellStyle="{DynamicResource BodyGridInfoCellCenter}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Gravity}"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   FontSize="18"
+                                                   Width="54"
+                                                   Visibility="{Binding LandableBool, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Normal}"
+                                                   Style="{DynamicResource GravityTextBox}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--14-->
+                            <DataGridTextColumn Width="SizeToCells"
+                                                MinWidth="90"
+                                                Header="DISTANCE"
+                                                HeaderStyle="{DynamicResource SystemGridHeaderCenter}"
+                                                CellStyle="{DynamicResource BodyCellDoubleMargin}"
+                                                Binding="{Binding DistanceFromArrivalLs}"
+                                                ElementStyle="{DynamicResource DataGridElementRightMargin}" />
+                            <!--15-->
+                            <DataGridTextColumn Header="VALUE"
+                                                Width="110"
+                                                HeaderStyle="{DynamicResource SystemGridHeaderCenter}"
+                                                Binding="{Binding MappedValue}"
+                                                ElementStyle="{DynamicResource DataGridElementRightMargin}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

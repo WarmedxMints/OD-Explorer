@@ -1,0 +1,279 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:ODExplorer.Models">
+    <Style x:Key="SystemsGridSettings"
+           TargetType="{x:Type DataGrid}">
+        <Setter Property="AutoGenerateColumns"
+                Value="False" />
+        <Setter Property="CanUserAddRows"
+                Value="False" />
+        <Setter Property="CanUserDeleteRows"
+                Value="False" />
+        <Setter Property="CanUserReorderColumns"
+                Value="False" />
+        <Setter Property="CanUserResizeRows"
+                Value="False" />
+        <Setter Property="CanUserSortColumns"
+                Value="False" />
+        <Setter Property="CanUserResizeColumns"
+                Value="False" />
+        <Setter Property="SelectionMode"
+                Value="Single" />
+        <Setter Property="IsReadOnly"
+                Value="True" />
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="GridLinesVisibility"
+                Value="Vertical" />
+        <Setter Property="HeadersVisibility"
+                Value="Column" />
+        <Setter Property="HorizontalScrollBarVisibility"
+                Value="Disabled" />
+        <Setter Property="SelectionUnit"
+                Value="FullRow" />
+        <Setter Property="EnableRowVirtualization"
+                Value="True" />
+        <Setter Property="HorizontalGridLinesBrush"
+                Value="{DynamicResource DataGridHorizontalGridLine}" />
+        <Setter Property="VerticalGridLinesBrush"
+                Value="{DynamicResource DataGridVerticalGridLine}" />
+    </Style>
+
+    <!--#region Row Styles-->
+    <Style x:Key="SystemsRowStyle"
+           TargetType="{x:Type DataGridRow}">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryBackground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="ContextMenu"
+                Value="{Binding ContextMenu}" />
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="IsManipulationEnabled"
+                Value="False" />
+        <Setter Property="Margin"
+                Value="0,0,0,4" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region HeaderStyles-->
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"
+                Value="{DynamicResource DataGridColumnHeaderBackground}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource DataGridColumnHeaderForeground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+    </Style>
+
+    <Style x:Key="NameHeader"
+           TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="Padding"
+                Value="5,0,0,0" />
+        <Setter Property="Background"
+                Value="{DynamicResource DataGridColumnHeaderBackground}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource DataGridColumnHeaderForeground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+    </Style>
+
+    <Style x:Key="SystemGridHeaderCenter"
+           TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"
+                Value="{DynamicResource DataGridColumnHeaderBackground}" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource DataGridColumnHeaderForeground}" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Cell Styles-->
+    <Style TargetType="{x:Type DataGridCell}"
+           x:Key="RouteCells">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="BorderBrush"
+                Value="Black" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowKnownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="False">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUnknownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="JumponiumStyle"
+           TargetType="{x:Type Rectangle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="True">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="False">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding GreenSystem}"
+                         Value="{x:Static models:Jumponium.Premium}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/Premium.png" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Fill"
+                        Value="{DynamicResource LowGravity}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding GreenSystem}"
+                         Value="{x:Static models:Jumponium.Standard}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/Standard.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding GreenSystem}"
+                         Value="{x:Static models:Jumponium.Basic}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/Basic.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding GreenSystem}"
+                         Value="{x:Static models:Jumponium.None}">
+                <Setter Property="Fill"
+                        Value="Transparent" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Element Styles-->
+    <Style x:Key="DataGridElementDB"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="The Number of Bodies detected by the Discovery Scanner" />
+    </Style>
+
+    <Style x:Key="DataGridElementKB"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="The Number of Bodies reported to EDSM" />
+    </Style>
+
+    <Style x:Key="DataGridElementRightMargin"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Right" />
+        <Setter Property="Margin"
+                Value="0,0,5,0" />
+    </Style>
+
+    <Style x:Key="DataGridElementRightNoMargin"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Right" />
+    </Style>
+
+    <Style x:Key="DataGridElementCenter"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+    </Style>
+
+    <Style x:Key="DataGridElementLeft"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+    </Style>
+
+    <Style x:Key="DataGridElementLeftMargin"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="Margin"
+                Value="5,0,0,0" />
+    </Style>
+    
+    <Style x:Key="SystemValueElement"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="HorizontalAlignment"
+                Value="Right" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Margin"
+                Value="0,0,5,0" />
+        <Setter Property="ToolTip"
+                Value="The estimated max value of the system" />
+    </Style>
+    
+    <Style x:Key="JumpDistanceElement"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="TextAlignment"
+                Value="Right" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Margin"
+                Value="5,0" />
+    </Style>
+    <!--#endregion-->
+    <!--#region Textbox Styles-->
+    <Style x:Key="SystemGridTextBlockForeground"
+           TargetType="{x:Type TextBlock}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="True">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsKnownToEDSM}"
+                         Value="False">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!--#endregion-->
+</ResourceDictionary>

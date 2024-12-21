@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:ODExplorer.WPFConverters"
+                    xmlns:odutilsConverters="clr-namespace:ODUtils.WpfConvertors;assembly=ODUtils">
+    <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    <odutilsConverters:InvertableBooleanToVisibilityConverter x:Key="InvertableBoolToVis" />
+    <odutilsConverters:FlagsEnumValueConverter x:Key="EnumFlagConverter" />
+    <odutilsConverters:InverseBooleanConverter x:Key="InverseBoolConverter" />
+    <odutilsConverters:EnumDescriptionConveter x:Key="EnumDescriptionConverter" />
+    <odutilsConverters:IntToVisibilityConverter x:Key="IntToVisibilty" />
+    <converters:StarClassToScoopClassConverter x:Key="ScoopColourConvertor" />
+    <converters:GravityToColourConverter x:Key="GravToColour" />
+    <odutilsConverters:StringToUpperCaseFirstCharacterConverter x:Key="StringToUpperConverter" />
+    <odutilsConverters:StyleConverter x:Key="StyleConverter" />
+    <converters:HeightConverter x:Key="HeightConverter" />
+    <converters:MaxHeightConverter x:Key="MaxHeightConverter" />
+    <converters:DistanceDisplayConverter x:Key="DistanceDisplayConverter" />
+</ResourceDictionary>

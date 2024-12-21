@@ -1,0 +1,175 @@
+﻿<UserControl x:Class="ODExplorer.Controls.CommanderSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:viewvms="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             d:DataContext="{d:DesignInstance Type=viewvms:SettingsViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <GroupBox Header="Commanders"
+              BorderBrush="{DynamicResource PrimaryControlBorder}"
+              BorderThickness="0.5">
+        <Grid Margin="10"
+              x:Name="grid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DataGrid ItemsSource="{Binding JournalCommanderViews}"
+                      SelectedValue="{Binding SelectedCommander}"
+                      SelectionMode="Single"
+                      IsHitTestVisible="True"
+                      GridLinesVisibility="All"
+                      VerticalAlignment="Stretch"
+                      Width="{Binding ElementName=grid, Path=ActualWidth}"
+                      CanUserAddRows="False"
+                      Background="Transparent"
+                      HeadersVisibility="Column"
+                      RowStyle="{DynamicResource CommanderRowStyle}"
+                      Style="{DynamicResource BaseDataGridStyle}">
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Binding="{Binding Name}"
+                                        Width="SizeToCells"
+                                        MinWidth="150"
+                                        IsReadOnly="True"
+                                        Header="Name"
+                                        CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                        HeaderStyle="{DynamicResource DataGridHeaderLeft}" />
+                    <DataGridTemplateColumn Width="*"
+                                            IsReadOnly="True"
+                                            Header="Journal Folder"
+                                            CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                            HeaderStyle="{DynamicResource DataGridHeaderLeft}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding JournalPath}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="280"
+                                            IsReadOnly="True"
+                                            Header="Last Journal File"
+                                            CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                            HeaderStyle="{DynamicResource DataGridHeaderLeft}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LastFile}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="90"
+                                            Header="Hidden"
+                                            IsReadOnly="True"
+                                            CellStyle="{DynamicResource CmdrSelectionCellCenter}"
+                                            HeaderStyle="{DynamicResource DataGridHeaderCenter}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"
+                                          Width="20"
+                                          IsHitTestVisible="True"
+                                          Style="{DynamicResource CheckBoxStyle}"
+                                          IsChecked="{Binding IsHidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding SelectedCommander.Name}"
+                           FontSize="24" />
+
+                <TextBox Text="{Binding SelectedCommander.JournalPath}"
+                         VerticalAlignment="Center"
+                         BorderBrush="{DynamicResource PrimaryControlBorder}"
+                         BorderThickness="1"
+                         IsReadOnly="True"
+                         Padding="5"
+                         FontSize="16"
+                         Height="40"
+                         Grid.Row="1" />
+
+                <Button Content="Delete Commander"
+                        HorizontalAlignment="Center"
+                        Height="40"
+                        FontSize="18"
+                        Width="180"
+                        VerticalAlignment="Center"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Command="{Binding DeleteCommander}" />
+                
+                <Button Content="Change Logs Folder"
+                        HorizontalAlignment="Center"
+                        Height="40"
+                        FontSize="18"
+                        Width="180"
+                        VerticalAlignment="Center"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Click="Button_Click" />
+
+                <TextBox Text="{Binding SelectedCommander.LastFile}"
+                         VerticalAlignment="Center"
+                         BorderBrush="{DynamicResource PrimaryControlBorder}"
+                         BorderThickness="1"
+                         IsReadOnly="True"
+                         Padding="5"
+                         FontSize="16"
+                         Height="40"
+                         Grid.Row="2" />
+
+                <Button Content="Reset Last File"
+                        HorizontalAlignment="Center"
+                        Height="40"
+                        FontSize="18"
+                        Width="180"
+                        VerticalAlignment="Center"
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Command="{Binding ResetLastReadFile}" />
+
+                <Button Content="Scan Directory"
+                        x:Name="ScanDirectoryBtn"
+                        ToolTip="Scans the selected Directory for Commander Data"
+                        HorizontalAlignment="Left"
+                        Height="40"
+                        FontSize="18"
+                        Width="180"
+                        VerticalAlignment="Center"
+                        Grid.Row="3"
+                        Grid.Column="0" />
+
+                <Button Content="Save Changes"
+                        HorizontalAlignment="Center"
+                        Height="40"
+                        FontSize="18"
+                        Width="180"
+                        VerticalAlignment="Center"
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Command="{Binding SaveCommanderChanges}" />
+            </Grid>
+        </Grid>
+    </GroupBox>
+</UserControl>

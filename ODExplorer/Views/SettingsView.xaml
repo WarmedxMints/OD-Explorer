@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="ODExplorer.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Views"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             xmlns:controls="clr-namespace:ODExplorer.Controls"
+             xmlns:odControls="clr-namespace:ODUtils.Controls;assembly=ODUtils"
+             mc:Ignorable="d"
+             FontSize="18"
+             d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto">
+        <Grid Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="600" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="340" />
+                    <ColumnDefinition MinWidth="260" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <controls:CommanderSettingsControl Grid.ColumnSpan="2" />
+
+                <controls:LinksControl Grid.Row="4"
+                                       Grid.ColumnSpan="2" />
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <controls:SystemGridSortingControl Margin="0,2" />
+
+                <controls:BodyInfoDisplayControl Margin="0,2"
+                                                 Grid.Row="1" />
+
+                <controls:UnitOptionsControl Margin="0,2"
+                                             Grid.Row="2" />
+                <Grid Grid.Row="4"
+                      VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <controls:DatabaseSettingsControl HorizontalAlignment="Left"
+                                                      Height="120" />
+
+                    <Button Width="250"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            Command="{Binding OpenPayPal}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Image Stretch="Uniform"
+                                       SnapsToDevicePixels="True"
+                                       Source="../Resources/paypal-donate-button.png" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+            </Grid>
+
+            <Border Background="{DynamicResource WindowBackground75%}"
+                    Visibility="{Binding ScanningWindowVisibility}"
+                    Grid.ColumnSpan="3"
+                    Grid.RowSpan="3"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                <Border Background="{DynamicResource PrimaryBackground}"
+                        Width="Auto"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        MinWidth="600"
+                        Height="Auto"
+                        CornerRadius="5"
+                        BorderThickness="2"
+                        BorderBrush="{DynamicResource NavigationBarBackground}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding DirectoryScanText}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding FileReadingText}"
+                                   Grid.Row="2"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+
+                        <odControls:LoadingSpinner Grid.Row="1"
+                                                   Margin="0,20" />
+                    </Grid>
+                </Border>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

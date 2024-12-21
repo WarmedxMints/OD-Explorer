@@ -1,0 +1,182 @@
+﻿<UserControl x:Class="ODExplorer.Controls.SystemGridSortingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:models="clr-namespace:ODExplorer.Models"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:SystemCm="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.TypeConverter"
+             mc:Ignorable="d"
+             Width="650"
+             d:DataContext="{d:DesignInstance Type={x:Type viewModels:SettingsViewModel}}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="BodiesSortingCategory"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="{x:Type models:BodySortCategory}" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="BodiesSortDirection"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SystemCm:ListSortDirection" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <GroupBox Header="Current System Bodies Options"
+              BorderBrush="{DynamicResource PrimaryControlBorder}"
+              BorderThickness="0.5"
+              Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Content="Body Sorting Category"
+                   FontSize="16"
+                   Foreground="{DynamicResource PrimaryForeground}"
+                   HorizontalContentAlignment="Center" />
+            <ComboBox Grid.Row="1"
+                      Grid.Column="0"
+                      ItemsSource="{Binding Source={StaticResource BodiesSortingCategory}}"
+                      SelectedItem="{Binding BodySortCategory}"
+                      Width="200"
+                      Margin="0,0,10,0"
+                      HorizontalAlignment="Center"
+                      VerticalContentAlignment="Center"
+                      FontSize="14"
+                      Background="{DynamicResource PrimaryBackground}"
+                      BorderBrush="{DynamicResource GroupBoxBorder}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Label Grid.Row="0"
+                   Grid.Column="2"
+                   Content="Sorting Direction"
+                   FontSize="16"
+                   HorizontalAlignment="Center"
+                   Foreground="{DynamicResource PrimaryForeground}"
+                   HorizontalContentAlignment="Center" />
+            
+            <ComboBox Grid.Row="1" 
+                      Grid.Column="2"
+                      ItemsSource="{Binding Source={StaticResource BodiesSortDirection}}"
+                      SelectedItem="{Binding SortDirection}"
+                      Width="200"
+                      HorizontalAlignment="Center"
+                      VerticalContentAlignment="Center"
+                      FontSize="14"
+                      Background="{DynamicResource PrimaryBackground}"
+                      BorderBrush="{DynamicResource GroupBoxBorder}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <CheckBox Grid.Row="3"
+                      Grid.Column="0"
+                      FontSize="16"
+                      HorizontalAlignment="Left"
+                      Margin="10,0"
+                      VerticalAlignment="Center"
+                      Style="{DynamicResource CheckBoxStyle}"
+                      Foreground="{DynamicResource PrimaryForeground}"
+                      IsChecked="{Binding ExcludeStarsFromRoute}"
+                      Content="Exclude Stars From Sorting" />
+
+            <TextBlock  Grid.Row="3"
+                        Grid.Column="2"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="When enabled stars will be automatically sorted to the bottom of the grid and ignore the above settings"
+                        TextWrapping="WrapWithOverflow" />
+
+            <CheckBox Grid.Row="5"
+                      Grid.Column="0"
+                      FontSize="16"
+                      Margin="10,0"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Style="{DynamicResource CheckBoxStyle}"
+                      Foreground="{DynamicResource PrimaryForeground}"
+                      IsChecked="{Binding IgnoreNonBodies}"
+                      Content="Exclude Non-Bodies" />
+
+            <TextBlock  Grid.Row="5"
+                        Grid.Column="2"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="When enabled Non-Bodies, such as Asteroid Belts, will be ignored and not displayed"
+                        TextWrapping="WrapWithOverflow" />
+
+            <CheckBox Grid.Row="7"
+                      Grid.Column="0"
+                      FontSize="16"
+                      Margin="10,0"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Style="{DynamicResource CheckBoxStyle}"
+                      Foreground="{DynamicResource PrimaryForeground}"
+                      IsChecked="{Binding ShowBodyHeaders}"
+                      Content="Show Body Column Headers" />
+
+            <TextBlock  Grid.Row="7"
+                        Grid.Column="2"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="When enabled column headers will be displayed in the body grid"
+                        TextWrapping="WrapWithOverflow" />
+
+            <CheckBox Grid.Row="9"
+                      Grid.Column="0"
+                      FontSize="16"
+                      Margin="10,0"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Style="{DynamicResource CheckBoxStyle}"
+                      Foreground="{DynamicResource PrimaryForeground}"
+                      IsChecked="{Binding HideUnconfirmedBios}"
+                      Content="Hide Unconfirmed Biological" />
+
+            <TextBlock  Grid.Row="9"
+                        Grid.Column="2"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="When enabled incorrect predicted biological signals will be hidden in the Exo details grid"
+                        TextWrapping="WrapWithOverflow" />
+        </Grid>
+    </GroupBox>
+</UserControl>
