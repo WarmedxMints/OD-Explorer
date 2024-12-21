@@ -2,27 +2,31 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
-             xmlns:Theme="clr-namespace:ODExplorer.Themes"
-             xmlns:settings="clr-namespace:ODExplorer.AppSettings"
-             StartupUri="MainWindow.xaml">
+             xmlns:mdplug="clr-namespace:MdXaml.Plugins;assembly=MdXaml.Plugins"
+             xmlns:mdhtml="clr-namespace:MdXaml.Html;assembly=MdXaml.Html"
+             xmlns:mdsvg="clr-namespace:MdXaml.Svg;assembly=MdXaml.Svg">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <Theme:ThemeManager DefaultSource="/ODExplorer;component/Themes/DefaultTheme.xaml" />
-
-                <ResourceDictionary Source="/ODExplorer;component/ControlStyles/Convertors.xaml" />
-                <ResourceDictionary Source="/ODExplorer;component/ControlStyles/TitleBar.xaml" />
-                <ResourceDictionary Source="/ODExplorer;component/ControlStyles/CenterGroupBox.xaml" />
-                <ResourceDictionary Source="/ODExplorer;component/ControlStyles/DataGridStyles.xaml" />
-                <ResourceDictionary Source="/ODExplorer;component/ControlStyles/ControlStyles.xaml" />
-                <ResourceDictionary Source="/ODExplorer;component/ControlStyles/SecondaryWindowStyles.xaml" />
-                <ResourceDictionary Source="/ODExplorer;component/Notifications/ToastTheme.xaml" />
-
-                <!--<ResourceDictionary Source="/ODExplorer;component/Themes/DefaultTheme.xaml" />-->
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/DefaultColours.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/ButtonStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/ComboBoxStyle.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/Converters.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/SystemGridStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/BodiesGridStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/JournalCommanderGridStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/ScrollViewStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/CheckBoxStyle.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/GroupBoxStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/OtherControlStyles.xaml" />             
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/NotificationStyles.xaml" />          
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/PopOutStyles.xaml" />          
             </ResourceDictionary.MergedDictionaries>
-            <FontFamily x:Key="Eurostile">pack://application:,,,/Fonts/#Eurostile</FontFamily>
-            <System:String x:Key="AppVersion">1.0.11</System:String>
-            <settings:Settings x:Key="AppSettings" />
+            <mdplug:MdXamlPlugins x:Key="MdXamlPlugins">
+                <mdhtml:HtmlPluginSetup />
+                <mdsvg:SvgPluginSetup />
+            </mdplug:MdXamlPlugins>
+            <FontFamily x:Key="Eurostile">pack://application:,,,/Resources/#Eurostile</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

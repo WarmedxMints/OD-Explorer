@@ -1,0 +1,97 @@
+﻿<windows:WindowBase x:Class="ODExplorer.Windows.MainWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:local="clr-namespace:ODExplorer.Windows"
+                    xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+                    xmlns:views="clr-namespace:ODExplorer.Views"
+                    xmlns:windows="clr-namespace:ODUtils.Windows;assembly=ODUtils"
+                    xmlns:controls="clr-namespace:ODExplorer.Controls"
+                    mc:Ignorable="d"
+                    d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+                    x:Name="Root"
+                    Focusable="True"
+                    Title="{Binding Title}"
+                    FontFamily="{StaticResource Eurostile}"
+                    FontSize="18"
+                    Foreground="{DynamicResource PrimaryControlForeground}"
+                    Background="{DynamicResource PrimaryBackground}"
+                    Top="{Binding SettingsStore.WindowPosition.Top, Mode=TwoWay}"
+                    Left="{Binding SettingsStore.WindowPosition.Left, Mode=TwoWay}"
+                    Height="{Binding SettingsStore.WindowPosition.Height, Mode=TwoWay}"
+                    Width="{Binding SettingsStore.WindowPosition.Width, Mode=TwoWay}">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:LoadingViewModel}">
+            <views:LoadingView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:CartographicViewModel}">
+            <views:CartographicDataView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:OrganicViewModel}">
+            <views:OrganicView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DisplaySettingsViewModel}">
+            <views:DisplaySettingsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:CartoDetailsViewModel}">
+            <views:CartoDetialsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SpanshViewModel}">
+            <views:SpanshView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:EdAstroViewModel}">
+            <views:EdAstroView />
+        </DataTemplate>
+    </Window.Resources>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="30"
+                      GlassFrameThickness="1"
+                      ResizeBorderThickness="10" />
+    </WindowChrome.WindowChrome>
+    <Window.InputBindings>
+        <KeyBinding Gesture="CTRL+R"
+                    Command="{Binding ResetWindowPositionCommand}" /> 
+        <KeyBinding Gesture="CTRL+P"
+                    Command="{Binding ResetPopOutPositionCommand}" />
+    </Window.InputBindings>
+    <Border BorderThickness="{Binding ElementName=Root, Path=MainWindowBorderThickness}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="35" />
+            </Grid.RowDefinitions>
+            <windows:TitleBarColourIcon  Grid.Row="0"
+                                         TitlebarForeground="{StaticResource TitlebarForeGround}"
+                                         TitleBarIcon="/Resources/Astronaut.png" />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <controls:NavigationBar Grid.Column="0" />
+
+                <Grid Grid.Column="1">
+                    <Grid.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding UiScale}"
+                                        ScaleY="{Binding UiScale}" />
+                    </Grid.LayoutTransform>
+
+                    <ContentControl Content="{Binding CurrentViewModel}"
+                                    Margin="10"
+                                    Grid.Column="1" />
+                </Grid>
+            </Grid>
+
+            
+
+            <controls:StatusBarControl Grid.Row="2" />
+        </Grid>
+    </Border>
+</windows:WindowBase>

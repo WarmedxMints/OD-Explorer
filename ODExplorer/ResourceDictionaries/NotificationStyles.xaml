@@ -1,0 +1,47 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Style x:Key="NotificationBorderStyle"
+           TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource NotifcationBorder}" />
+        <Setter Property="Margin"
+                Value="0,5" />
+        <Setter Property="CornerRadius"
+                Value="0" />
+        <Setter Property="Padding"
+                Value="10" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0.65"                                  
+                                  Color="{DynamicResource BackgroudRight}" />
+                    <GradientStop Offset="0"
+                                  Color="{DynamicResource BackgroudLeft}" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="NotificationBorderStyleLeft"
+           TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource NotifcationBorder}" />
+        <Setter Property="Margin"
+                Value="0,5" />
+        <Setter Property="CornerRadius"
+                Value="0" />
+        <Setter Property="Padding"
+                Value="10" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0.35"
+                                  Color="{DynamicResource BackgroudRight}" />
+                    <GradientStop Offset="1"
+                                  Color="{DynamicResource BackgroudLeft}" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

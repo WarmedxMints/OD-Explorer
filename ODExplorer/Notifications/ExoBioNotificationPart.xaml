@@ -1,0 +1,89 @@
+﻿<core:NotificationDisplayPart x:Class="ODExplorer.Notifications.ExoBioNotificationPart"
+                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                              xmlns:local="clr-namespace:ODExplorer.Notifications"
+                              mc:Ignorable="d"
+                              xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
+                              PreviewMouseDoubleClick="NotificationDisplayPart_PreviewMouseDoubleClick"
+                              Foreground="{DynamicResource NotificationForeground}"
+                              FontFamily="{StaticResource Eurostile}"
+                              FontSize="{Binding Options.FontSize}"
+                              d:DesignWidth="350"
+                              d:DataContext="{d:DesignInstance local:ExoBioNotification, IsDesignTimeCreatable=False}">
+    <Border BorderThickness="{Binding BorderThickness}">
+        <Border.Style>
+            <MultiBinding Converter="{StaticResource StyleConverter}">
+                <MultiBinding.Bindings>
+                    <Binding RelativeSource="{RelativeSource Self}" />
+                    <Binding Path="BorderStyle" />
+                </MultiBinding.Bindings>
+            </MultiBinding>
+        </Border.Style>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Rectangle Fill="{DynamicResource NotificationForeground}"
+                       Grid.RowSpan="10"
+                       Margin="10,10,20,10">
+                <Rectangle.OpacityMask>
+                    <ImageBrush ImageSource="/Resources/exobtn.png"
+                                x:Name="image"
+                                Stretch="Uniform" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <TextBlock Text="{Binding Header}"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="2"
+                       FontSize="{Binding HeaderFontSize}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="{Binding TextMargin}"
+                       Grid.Row="0"
+                       Foreground="{DynamicResource NotificationHeaderColour}" />
+
+
+            <Button x:Name="CloseButton"
+                    Visibility="Hidden"
+                    Click="CloseButton_Click"
+                    Content="X"
+                    Grid.Column="1"
+                    Foreground="{DynamicResource NotificationForeground}"
+                    BorderBrush="{DynamicResource NotificationForeground}"
+                    Height="20"
+                    Width="20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top" />
+            
+            <TextBlock Text="{Binding EstimatedValue}"
+                       Grid.ColumnSpan="2"
+                       Grid.Column="1"
+                       Grid.Row="1"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+
+            <TextBlock Text="{Binding ColonyRange}"
+                       Grid.Column="1"
+                       Grid.Row="2"
+                       Margin="{Binding TextMargin}"
+                       Grid.ColumnSpan="2" />
+
+            <TextBlock Text="{Binding ScanStage}"
+                       Grid.Column="1"
+                       Grid.Row="3"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />           
+        </Grid>
+    </Border>
+</core:NotificationDisplayPart>

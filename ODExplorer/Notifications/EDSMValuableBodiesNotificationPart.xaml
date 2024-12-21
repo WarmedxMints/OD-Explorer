@@ -1,0 +1,102 @@
+﻿<core:NotificationDisplayPart x:Class="ODExplorer.Notifications.EDSMValuableBodiesNotificationPart"
+                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                              xmlns:local="clr-namespace:ODExplorer.Notifications"
+                              xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
+                              mc:Ignorable="d"
+                              PreviewMouseDoubleClick="NotificationDisplayPart_PreviewMouseDoubleClick"
+                              Foreground="{DynamicResource NotificationForeground}"
+                              FontFamily="{StaticResource Eurostile}"
+                              FontSize="{Binding Options.FontSize}"
+                              d:DesignWidth="350"
+                              d:DesignHeight="200"
+                              d:DataContext="{d:DesignInstance local:EDSMValuableBodiesNotification, IsDesignTimeCreatable=False}">
+    <Border BorderThickness="{Binding BorderThickness}">
+        <Border.Style>
+            <MultiBinding Converter="{StaticResource StyleConverter}">
+                <MultiBinding.Bindings>
+                    <Binding RelativeSource="{RelativeSource Self}" />
+                    <Binding Path="BorderStyle" />
+                </MultiBinding.Bindings>
+            </MultiBinding>
+        </Border.Style>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2.5*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Rectangle Fill="{DynamicResource NotificationHeaderColour}"
+                       Grid.RowSpan="10"
+                       VerticalAlignment="Stretch"
+                       HorizontalAlignment="Stretch"
+                       Margin="5,5,10,5">
+                <Rectangle.OpacityMask>
+                    <ImageBrush ImageSource="/Resources/EDSM Logo.png"
+                                x:Name="image"
+                                Stretch="Uniform" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <TextBlock Text="EDSM Valuable Bodies"
+                       Grid.Column="1"
+                       FontSize="{Binding HeaderFontSize}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="{Binding TextMargin}"
+                       Grid.Row="0"
+                       Foreground="{DynamicResource NotificationHeaderColour}" />
+
+
+            <Button x:Name="CloseButton"
+                    Visibility="Hidden"
+                    Click="CloseButton_Click"
+                    Content="X"
+                    Margin="5"
+                    Grid.Column="1"
+                    Foreground="{DynamicResource NotificationForeground}"
+                    BorderBrush="{DynamicResource NotificationForeground}"
+                    Height="20"
+                    Width="20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top" />
+
+            <TextBlock Text="EDSM reports bodies of value in system"
+                       Grid.Column="1"
+                       Grid.Row="1"
+                       Margin="{Binding TextMargin}"
+                       VerticalAlignment="Center" />
+
+            <DataGrid ItemsSource="{Binding Bodies}"
+                      Grid.Column="1"
+                      Margin="5,0,0,0"
+                      GridLinesVisibility="None"
+                      IsReadOnly="True"
+                      IsHitTestVisible="False"
+                      Grid.Row="2"
+                      Style="{DynamicResource SystemsGridSettings}">
+                <DataGrid.RowStyle>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="Foreground"
+                                Value="{DynamicResource NotificationForeground}" />
+                        <Setter Property="Background"
+                                Value="Transparent" />
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding BodyNameLocal}"
+                                        Width="*" />
+                    <DataGridTextColumn Binding="{Binding DistanceFromArrivalLs, StringFormat={}{0:N0} ls}"
+                                        ElementStyle="{DynamicResource DataGridElementRightMargin}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Border>
+</core:NotificationDisplayPart>

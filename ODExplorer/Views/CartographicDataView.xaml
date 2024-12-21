@@ -1,0 +1,237 @@
+﻿<UserControl x:Class="ODExplorer.Views.CartographicDataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ODExplorer.Views"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             xmlns:controls="clr-namespace:ODExplorer.Controls"
+             xmlns:models="clr-namespace:ODExplorer.Models"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewModels:CartographicViewModel}"
+             Foreground="{DynamicResource PrimaryControlForeground}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="Horizontal">
+            <controls:HorizontalSystemsLayout />
+        </DataTemplate>
+
+        <DataTemplate x:Key="Classic">
+            <controls:ClassicSystemsLayout />
+        </DataTemplate>
+
+        <DataTemplate x:Key="Detailed">
+            <controls:DetailedCartoView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ExtendedBodyInfo">
+            <controls:CartoExtendedBodyInfoView />
+        </DataTemplate>
+        
+        <DataTemplate x:Key="ExtendedExoInfo">
+            <controls:Current_ExoView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModels:CartographicViewModel}">
+            <ContentControl Content="{Binding }">
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Setter Property="ContentTemplate"
+                                Value="{x:Null}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="HorizontalView">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Horizontal}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="ClassicView">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Classic}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="DetailedView">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource Detailed}" />
+                            </DataTrigger>      
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="ExtendedBodyInfo">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource ExtendedBodyInfo}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentState}"
+                                         Value="DetailedExo">
+                                <Setter Property="ContentTemplate"
+                                        Value="{StaticResource ExtendedExoInfo}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Margin="0,0,0,-10">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Content="{Binding }" />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        Margin="5,0"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Systems In Route : "
+                           VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Route.Count, StringFormat=N0}"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="1"
+                        Margin="5,0"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Estimated Carto Value : " />
+                <TextBlock Text="{Binding CartoValue}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="2"
+                        Margin="5,0"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Estimated Exo Value : " />
+                <TextBlock Text="{Binding ExoValue}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        Margin="5,0,30,0"
+                        Grid.Column="3"
+                        VerticalAlignment="Center">
+
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Valuable Bodies Overlay"
+                        Width="30"
+                        Height="30" VerticalAlignment="Center"
+                        Command="{Binding OpenValuableBodiesPopOut}"
+                        Grid.Column="2">
+                    <Image Source="/Resources/ValuableBodiesPopOut.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Exobiology Overlay"
+                        Width="30"
+                        Height="30"
+                        Command="{Binding OpenExobiologyPopOut}"
+                        Grid.Column="2">
+                    <Image Source="/Resources/ExobiologyPopOut.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal"
+                        Margin="5,0"
+                        Grid.Column="4"
+                        VerticalAlignment="Center">
+
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Current System/Exo Layout"
+                        Width="30"
+                        Height="30" VerticalAlignment="Center"
+                        Command="{Binding SwitchView}"
+                        CommandParameter="{x:Static models:CartoViewState.DetailedExo}"
+                        Grid.Column="2">
+                    <Image Source="/Resources/Current_ExoViewBtn.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+                
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Detailed Layout"
+                        Width="30"
+                        Height="30"
+                        Command="{Binding SwitchView}"
+                        CommandParameter="{x:Static models:CartoViewState.DetailedView}"
+                        Grid.Column="2">
+                    <Image Source="/Resources/DetailedCartoViewBtn.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+                
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Classic Layout"
+                        Width="30"
+                        Height="30"
+                        Command="{Binding SwitchView}"
+                        CommandParameter="{x:Static models:CartoViewState.ClassicView}"
+                        Grid.Column="2">
+                    <Image Source="/Resources/ClassicCartoViewBtn.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Horizontal Layout"
+                        Width="30"
+                        Height="30"
+                        Grid.Column="2"
+                        Command="{Binding SwitchView}"
+                        CommandParameter="{x:Static models:CartoViewState.HorizontalView}">
+                    <Image Source="/Resources/HorizontalCartoLayoutBtn.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+
+                <Button Style="{StaticResource CartoSelectionBtn}"
+                        ToolTip="Extended Body Info Layout"
+                        Width="30"
+                        Height="30"
+                        Grid.Column="2"
+                        Command="{Binding SwitchView}"
+                        CommandParameter="{x:Static models:CartoViewState.ExtendedBodyInfo}">
+                    <Image Source="/Resources/ExtendedBodyInfoCartoViewBtn.png"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

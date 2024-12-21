@@ -1,0 +1,280 @@
+﻿<UserControl x:Class="ODExplorer.Controls.CartodataSystemList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             mc:Ignorable="d" 
+             x:Name="Root"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  />
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        
+        <GroupBox Header="Systems"
+                  Margin="5"
+                  Padding="5"
+                  BorderBrush="{DynamicResource PrimaryControlBorder}"
+                  BorderThickness="0.5">
+            <Grid x:Name="Grid">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <DataGrid ItemsSource="{Binding ElementName=Root, Path=Systems}"
+                          SelectedItem="{Binding ElementName=Root, Path=SelectedSystem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectionChanged="SystemGrid_SelectionChanged"
+                          x:Name="SystemGrid"
+                          Loaded="SystemGrid_Loaded"
+                          SelectionMode="Single"
+                          Width="{Binding ElementName=Grid, Path=ActualWidth}"
+                          IsHitTestVisible="True"
+                          GridLinesVisibility="All"
+                          Background="Transparent"
+                          HeadersVisibility="Column"
+                          BorderThickness="0"
+                          Style="{DynamicResource BaseDataGridStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="System Name"
+                                            Binding="{Binding Name}"
+                                            CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                            IsReadOnly="True"
+                                            HeaderStyle="{DynamicResource DataGridHeaderLeft}"
+                                            Width="*" />
+                        <DataGridTextColumn HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                            Binding="{Binding DataCount}"
+                                            CellStyle="{DynamicResource CmdrSelectionCellRight}"
+                                            SortMemberPath="ScannedBodiesValue"
+                                            IsReadOnly="True"
+                                            Width="50">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Count"
+                                           ToolTip="Data Body Count" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn  HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                             Binding="{Binding DataValue, StringFormat=N0}"
+                                             CellStyle="{DynamicResource CmdrSelectionCellRight}"
+                                             SortMemberPath="Value"
+                                             IsReadOnly="True"
+                                             Width="180">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Value"
+                                           ToolTip="Carto value" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Total Systems"
+                               Grid.Column="0"
+                               Width="140"
+                               FontSize="20"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding ElementName=Root, Path=Systems.Count}"
+                               Grid.Column="1"
+                               FontSize="20"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="Total Value"
+                               Width="140"
+                               FontSize="20"
+                               Grid.Column="3"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding ElementName=Root, Path=TotalValue}"
+                               Grid.Column="4"
+                               FontSize="20"
+                               Margin="0,0,25,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </GroupBox>
+        
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Links"
+                      Margin="5"
+                      Padding="5"
+                      BorderBrush="{DynamicResource PrimaryControlBorder}"
+                      BorderThickness="0.5">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="EDSM"
+                            Width="80"
+                            Height="30"
+                            Margin="5"
+                            Command="{Binding OpenEDSM}"
+                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}"/>
+
+                    <Button Content="Spansh"
+                            Width="80"
+                            Height="30"
+                            Margin="5"
+                            Command="{Binding OpenSpansh}"
+                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="DataBase"
+                      Grid.Column="1"
+                      Visibility="{Binding ElementName=Root, Path=ShowIgnoreButton, Converter={StaticResource BoolToVis}}"
+                      Margin="5"
+                      Padding="5"
+                      BorderBrush="{DynamicResource PrimaryControlBorder}"
+                      BorderThickness="0.5">
+                <Button ToolTip="ED will sometimes fire a scan event without giving you carto data which will generate erroneous systems in the above list&#x0a;&#x0a;You can add the selected system to the ignore list so they aren't included"
+                        Width="Auto"
+                        HorizontalAlignment="Center"
+                        Height="30"
+                        Margin="10,5"
+                        Command="{Binding AddToIgnoreList}"
+                        CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}">
+                    <TextBlock Text="{Binding ElementName=Root, Path=IgnoreSystemText}"
+                               Margin="10,0" />
+                </Button>
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Column="2"
+              Grid.RowSpan="2"
+              HorizontalAlignment="Stretch"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="Bodies"
+                      BorderThickness="0.5"
+                      Margin="5"
+                      Padding="5">
+                <DataGrid SelectedItem="{Binding ElementName=Root, Path=SelectedBody}"    
+                          x:Name="BodiesGrid"
+                          Grid.Column="2"
+                          SelectionMode="Single"
+                          IsHitTestVisible="True"
+                          GridLinesVisibility="All"
+                          Background="Transparent"
+                          CanUserSortColumns="True"
+                          HeadersVisibility="Column"
+                          BorderThickness="0"
+                          Style="{DynamicResource BaseDataGridStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding BodyID}"
+                                            SortMemberPath="BodyID"
+                                            CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                            IsReadOnly="True"
+                                            HeaderStyle="{DynamicResource DataGridHeaderLeft}"
+                                            Width="50">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Id"
+                                           ToolTip="Body ID #" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Name}"
+                                            CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                            IsReadOnly="True"
+                                            HeaderStyle="{DynamicResource DataGridHeaderLeft}"
+                                            Width="*">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Name"
+                                           ToolTip="Local Body Name" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding BodyDescription}"
+                                            CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                                            IsReadOnly="True"
+                                            HeaderStyle="{DynamicResource DataGridHeaderLeft}"
+                                            Width="*">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Class"
+                                           ToolTip="Body Class" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding ScanStage}"
+                                            CellStyle="{DynamicResource CmdrSelectionCellCenter}"
+                                            IsReadOnly="True"
+                                            HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                            Width="90">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Scan Stage"
+                                           ToolTip="Body Class" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding DistanceFromArrivalLs}"
+                                            SortMemberPath="DistanceFromArrival"
+                                            CellStyle="{DynamicResource CmdrSelectionCellRight}"
+                                            IsReadOnly="True"
+                                            HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                            Width="150">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Arrival ls"
+                                           ToolTip="Distance from arrival in light seconds" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding DataValue, StringFormat=N0}"
+                                            CellStyle="{DynamicResource CmdrSelectionCellRight}"
+                                            IsReadOnly="True"
+                                            SortMemberPath="DataValue"
+                                            HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                            Width="150">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="Value"
+                                           ToolTip="Carto value" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="Body Info"
+                      Grid.Row="1"
+                      Height="250"
+                      Margin="5"
+                      Padding="5"
+                      BorderThickness="0.5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.ColumnSpan="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding ElementName=Root, Path=SelectedBody.FullName}" />
+
+                        <TextBlock Text="{Binding ElementName=Root, Path=SelectedBody.BodyDescription}"
+                                   Grid.Column="2"
+                                   Grid.Row="0" />
+                    </Grid>
+                    <local:BodyInfoControl Grid.Row="1"
+                                           DataContext="{Binding ElementName=Root, Path=SelectedBody}"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

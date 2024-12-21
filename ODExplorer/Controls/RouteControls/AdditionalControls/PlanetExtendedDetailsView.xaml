@@ -1,0 +1,336 @@
+﻿<UserControl x:Class="ODExplorer.Controls.PlanetExtendedDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:viewModel="clr-namespace:ODExplorer.ViewModels.ModelVMs"
+             mc:Ignorable="d"
+             Foreground="{DynamicResource PrimaryForeground}"
+             d:DataContext="{d:DesignInstance Type=viewModel:SystemBodyViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="IsHitTestVisible"
+                    Value="False" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource PrimaryBackground}" />
+            <Setter Property="BorderThickness"
+                    Value="0" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource PrimaryControlForeground}" />
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Left" />
+        </Style>
+
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background"
+                    Value="Transparent" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding FullName}"
+                   Grid.ColumnSpan="3"
+                   Margin="0,0,0,5"
+                   FontSize="18" />
+        <TextBlock Text="{Binding PlanetClassDescription}"
+                   Grid.ColumnSpan="3"
+                   Grid.Row="1" />
+
+        <TextBlock Text="{Binding Volcanism}"
+                   Grid.ColumnSpan="3"
+                   Grid.Row="2" />
+        
+        <TextBlock Text="Orbital Period"
+                   Grid.Row="4" />
+        <TextBlock Text="{Binding OrbitalPeriod}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="4"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Rotation Period"
+                   Grid.Row="5" />
+        <TextBlock Text="{Binding RotationPeriod}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="5"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Radius"
+                   Grid.Row="6" />
+        <TextBlock Text="{Binding Radius}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="6"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Earth Masses"
+                   Grid.Row="7" />
+        <TextBlock Text="{Binding EarthMasses}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="7"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Axial Tile"
+                   Grid.Row="8" />
+        <TextBlock Text="{Binding AxialTilt}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="8"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Gravity"
+                   Grid.Row="9" />
+        <TextBlock Text="{Binding SurfaceGravity, StringFormat={}{0:N3} g}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="9"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Tidally Locked"
+                   Grid.Row="10" />
+        <TextBlock Text="{Binding TidalLock}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="10"
+                   Grid.Column="2" />
+        
+        <TextBlock Text="Surface Pressure"
+                   Grid.Row="11" />
+        <TextBlock Text="{Binding SurfacePressure}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="11"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Surface Temperature"
+                   Grid.Row="12" />
+        <TextBlock Text="{Binding SurfaceTemp}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="12"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Was Discovered"
+                   Grid.Row="13" />
+        <TextBlock Text="{Binding WasDiscoveredString}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="13"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Was Mapped"
+                   Grid.Row="14" />
+        <TextBlock Text="{Binding WasMappedString}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="14"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Terraformable"
+                   Grid.Row="15" />
+        <TextBlock Text="{Binding TerraformStatus}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="15"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Landable"
+                   Grid.Row="16" />
+        <TextBlock Text="{Binding Landable}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="16"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Distance From Arrival"
+                   Grid.Row="17" />
+        <TextBlock Text="{Binding DistanceFromArrivalLs}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="17"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Atmosphere Type"
+                   Grid.Row="18" />
+        <TextBlock Text="{Binding AtmosphereType}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="18"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Atmosphere Description"
+                   Grid.Row="19" />
+        <TextBlock Text="{Binding AtmosphereDescription}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="19"
+                   Grid.Column="2" />
+        
+        <TextBlock Text="Atmosphere Composition :"
+                   Margin="0,5,0,5"
+                   Grid.Row="20"
+                   Visibility="{Binding HasAtmosphere, Converter={StaticResource BoolToVis}}" />
+
+        <DataGrid Style="{DynamicResource BaseDataGridStyle}"
+                  Visibility="{Binding HasAtmosphere, Converter={StaticResource BoolToVis}}"
+                  Grid.Row="21"
+                  Grid.ColumnSpan="4"
+                  Margin="18,0,0,0"
+                  BorderThickness="0"
+                  HeadersVisibility="None"
+                  GridLinesVisibility="None"
+                  Background="Transparent"
+                  IsHitTestVisible="False"
+                  ItemsSource="{Binding AtmosphereComposition}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}"
+                                    Width="216" />
+                <DataGridTextColumn Binding="{Binding Percent, StringFormat={}{0:N3} %}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+        <TextBlock Text="Planet Composition :"
+                   Margin="0,5,0,0"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Grid.Row="22" />
+
+        <TextBlock Grid.Row="23"
+                   Margin="20,0,0,0"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Text="Ice" />
+        <TextBlock Grid.Row="23"
+                   Grid.Column="2"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Text="{Binding Composition.IcePercent}" />
+
+        <TextBlock Grid.Row="24"
+                   Margin="20,0,0,0"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Text="Rock" />
+        <TextBlock Grid.Row="24"
+                   Grid.Column="2"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Text="{Binding Composition.RockPercent}" />
+
+        <TextBlock Grid.Row="25"
+                   Margin="20,0,0,0"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Text="Metal" />
+        <TextBlock Grid.Row="25"
+                   Grid.Column="2"
+                   Visibility="{Binding Composition.HasValue, Converter={StaticResource BoolToVis}}"
+                   Text="{Binding Composition.MetalPercent}" />
+
+        <TextBlock Text="Materials :"
+                   Margin="0,5,0,0"
+                   Grid.Row="26"
+                   Visibility="{Binding HasMaterials, Converter={StaticResource BoolToVis}}" />
+
+        <DataGrid Style="{DynamicResource BaseDataGridStyle}"
+                  Visibility="{Binding HasMaterials, Converter={StaticResource BoolToVis}}"
+                  Grid.Row="27"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="4"
+                  Margin="20,0,0,0"
+                  BorderThickness="0"
+                  HeadersVisibility="None"
+                  GridLinesVisibility="None"
+                  Background="Transparent"
+                  IsHitTestVisible="False"
+                  ItemsSource="{Binding Materials}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name, Converter={StaticResource EnumDescriptionConverter}}"
+                                    Width="216" />
+                <DataGridTextColumn Binding="{Binding Percent, StringFormat={}{0:N3} %}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+        <TextBlock Text="Rings :"
+                   Margin="0,5,0,0"
+                   Grid.Row="28"
+                   Visibility="{Binding RingsView.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}" />
+        <DataGrid Style="{DynamicResource BaseDataGridStyle}"
+                  Visibility="{Binding RingsView.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}"
+                  Grid.Row="29"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="4"
+                  Margin="20,0,0,0"
+                  BorderThickness="0"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="None"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Disabled"
+                  Background="Transparent"
+                  IsHitTestVisible="False"
+                  ItemsSource="{Binding RingsView}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}"
+                                    Header="Name"
+                                    ElementStyle="{DynamicResource DataGridElementLeftMargin}"
+                                    Width="70" />
+                <DataGridTextColumn Binding="{Binding RingClass}"
+                                    Header="Type"
+                                    ElementStyle="{DynamicResource DataGridElementLeftMargin}"
+                                    Width="150" />
+                <DataGridTextColumn Binding="{Binding InnRad}"
+                                    Header="Inner"
+                                    HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                    ElementStyle="{DynamicResource DataGridElementRightMargin}"
+                                    Width="SizeToCells" />
+                <DataGridTextColumn Binding="{Binding OutRad}"
+                                    Header="Outer"
+                                    HeaderStyle="{DynamicResource DataGridHeaderCenter}"
+                                    ElementStyle="{DynamicResource DataGridElementRightMargin}"
+                                    Width="SizeToCells" />
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <TextBlock Text="FSS Value"
+                   Margin="0,5,0,0"
+                   Grid.Row="30" />
+        <TextBlock Text="{Binding FssValue,StringFormat={}{0} cr}"
+                   Margin="0,5"
+                   HorizontalAlignment="Left"
+                   Grid.Row="30"
+                   Grid.Column="2" />
+
+        <TextBlock Text="Max Mapped Value"
+                   Grid.Row="31" />
+        <TextBlock Text="{Binding MappedValue,StringFormat={}{0} cr}"
+                   HorizontalAlignment="Left"
+                   Grid.Row="31"
+                   Grid.Column="2" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="ODExplorer.Controls.DetailedCartoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ODExplorer.Controls"
+             xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+             xmlns:cartoContols="clr-namespace:ODExplorer.Controls.CartoDetailsControls"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewModels:CartographicViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <sys:Double x:Key="adjMaxHeightRatio">0.7</sys:Double>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding DetailedViewGridSize[0], Mode=TwoWay}" />
+            <ColumnDefinition Width="{Binding DetailedViewGridSize[1], Mode=TwoWay}" />
+            <ColumnDefinition Width="{Binding DetailedViewGridSize[2], Mode=TwoWay}" />
+        </Grid.ColumnDefinitions>
+
+
+        <Grid x:Name="SystemGrid"
+              Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="CURRENT SYSTEM"
+                      MaxHeight="{Binding ElementName=SystemGrid, Path=ActualHeight, Converter={StaticResource MaxHeightConverter}, ConverterParameter={StaticResource adjMaxHeightRatio}, Mode=OneWay}"
+                      Style="{DynamicResource CenterHeaderGroupBox}"
+                      MinHeight="77"
+                      Grid.Row="0"
+                      Padding="5">
+                <local:CurrentSystemControl SelectedBody="{Binding SelectedBody, Mode=TwoWay}" />
+            </GroupBox>
+
+            <GroupBox Header="ROUTE"
+                      Style="{DynamicResource CenterHeaderGroupBox}"
+                      MinHeight="110"
+                      Grid.Row="2"
+                      Padding="5">
+                <local:CurrentRouteControl />
+            </GroupBox>
+        </Grid>
+
+
+        <GridSplitter Grid.Column="1"
+                      Width="3"
+                      Background="{DynamicResource PrimaryForeground}"
+                      HorizontalAlignment="Stretch" />
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding DetailedViewGridSize[3], Mode=TwoWay}" />
+                <RowDefinition Height="{Binding DetailedViewGridSize[4], Mode=TwoWay}" />
+                <RowDefinition Height="{Binding DetailedViewGridSize[5], Mode=TwoWay}" />
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="BODY INFO"
+                      Style="{DynamicResource CenterHeaderGroupBox}"
+                      MinHeight="77"
+                      Margin="0,5,0,5"
+                      Padding="5">
+                <local:BodyInfoControl />
+            </GroupBox>
+            
+            <GridSplitter Grid.Row="1"
+                          Height="3"
+                          Background="{DynamicResource PrimaryForeground}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch" />
+
+            <GroupBox Header="EXO INFO"
+                      Grid.Row="2"
+                      Style="{DynamicResource CenterHeaderGroupBox}"
+                      MinHeight="77"
+                      Margin="0,5,0,10"
+                      Padding="5">
+                <cartoContols:ExobiologyDetailsControl />
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

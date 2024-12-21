@@ -1,0 +1,562 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:oduModels="clr-namespace:ODUtils.Models;assembly=ODUtils"
+                    xmlns:controls="clr-namespace:ODExplorer.Controls"
+                    xmlns:models="clr-namespace:ODExplorer.Models">
+    <Style x:Key="BodiesGridSettings"
+           TargetType="{x:Type DataGrid}"
+           BasedOn="{StaticResource SystemsGridSettings}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="SelectionMode"
+                Value="Single" />
+        <Setter Property="IsManipulationEnabled"
+                Value="False" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Margin"
+                Value="0" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGridCell}"
+           x:Key="BodiesGridCell">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryBackground}" />
+        <Setter Property="BorderThickness"
+                Value="0,0,1,0" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Padding"
+                        Value="0" />
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="BorderThickness"
+                        Value="0,0,1,0" />
+                <Setter Property="Background"
+                        Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                <Setter Property="Foreground"
+                        Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+            </Trigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Discovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowKnownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.UnDiscovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUnknownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.WorthMapping}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowHighValueBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Noteable}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowNoteableBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.MappedByUser}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUserMappedBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type DataGridCell}"
+           x:Key="ExoBodyGrid">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryBackground}" />
+        <Setter Property="BorderThickness"
+                Value="0,0,1,0" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Padding"
+                        Value="0" />
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="BorderThickness"
+                        Value="0,0,1,0" />
+                <Setter Property="Background"
+                        Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                <Setter Property="Foreground"
+                        Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+            </Trigger>
+            <DataTrigger Binding="{Binding WasMapped}"
+                         Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowKnownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding WasMapped}"
+                         Value="False">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUnknownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsHighValueExo}"
+                         Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowHighValueBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type DataGridCell}"
+           x:Key="ExoDetailsCell">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryBackground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Padding"
+                        Value="0" />
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+                <Setter Property="Background"
+                        Value="{Binding Background, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                <Setter Property="Foreground"
+                        Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="BodyCellDoubleMargin"
+           TargetType="{x:Type DataGridCell}"
+           BasedOn="{StaticResource BodiesGridCell}">
+        <Setter Property="BorderThickness"
+                Value="1,0" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Padding"
+                        Value="0" />
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="BorderThickness"
+                        Value="1,0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="BodyGridNonGridline"
+           TargetType="{x:Type DataGridCell}">
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource PrimaryBackground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Padding"
+                        Value="0" />
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Discovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowKnownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.UnDiscovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUnknownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.WorthMapping}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowHighValueBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Noteable}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowNoteableBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.MappedByUser}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUserMappedBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type DataGridCell}"
+           BasedOn="{StaticResource BodyGridNonGridline}"
+           x:Key="BodyGridInfoCellLeft">
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Name="border"
+                            BorderThickness="0"
+                            Padding="0"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type DataGridCell}"
+           BasedOn="{StaticResource BodyGridNonGridline}"
+           x:Key="BodyGridInfoCellRight">
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Name="border"
+                            BorderThickness="0"
+                            Padding="0"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Right"
+                                              VerticalAlignment="Center"                                              
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type DataGridCell}"
+           BasedOn="{StaticResource BodyGridNonGridline}"
+           x:Key="BodyGridInfoCellCenter">
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Name="border"
+                            BorderThickness="0"
+                            Padding="0"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Name="content"                                               />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="RowStyleBodies"
+           TargetType="{x:Type DataGridRow}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="IsManipulationEnabled"
+                Value="False" />
+        <Setter Property="IsHitTestVisible"
+                Value="True" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="0,0,0,1" />
+        <Setter Property="ToolTipService.InitialShowDelay"
+                Value="10000" />
+        <Setter Property="ToolTipService.BetweenShowDelay"
+                Value="5000" />
+        <Setter Property="ToolTip"
+                Value="{Binding ToolTip}" />  
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="FontWeight"
+                        Value="Normal" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource GroupBoxBorder}" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+            </Trigger>
+            <Trigger Property="IsSelected"
+                     Value="False">
+                <Setter Property="FontWeight"
+                        Value="Normal" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+            </Trigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Discovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowKnownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.UnDiscovered}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUnknownBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.WorthMapping}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowHighValueBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Noteable}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowNoteableBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.MappedByUser}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DataGridRowUserMappedBodyBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>   
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"
+                Value="{DynamicResource DataGridColumnHeaderBackground}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource DataGridColumnHeaderForeground}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+    </Style>
+
+    <Style x:Key="DataGridHeaderLeft"
+           TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background"
+                Value="{DynamicResource DataGridColumnHeaderBackground}" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="Padding"
+                Value="5,0,0,0" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource DataGridColumnHeaderForeground}" />
+    </Style>
+
+    <Style x:Key="BioRectangle"
+           TargetType="{x:Type Rectangle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding WasMapped}"
+                         Value="True">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding WasMapped}"
+                         Value="False">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsHighValueExo}"
+                         Value="True">
+                <Setter Property="Fill"
+                        Value="{DynamicResource PrimaryBackground}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="Rectangle Style"
+           TargetType="{x:Type Rectangle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Discovered}">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+                <Setter Property="Opacity"
+                        Value="1" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.UnDiscovered}">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
+                <Setter Property="Opacity"
+                        Value="1" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.WorthMapping}">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowHighValueBodyForeGround}" />
+                <Setter Property="Opacity"
+                        Value="1" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.MappedByUser}">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowUserMappedBodyForeGround}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}"
+                         Value="{x:Static oduModels:DiscoveryStatus.Noteable}">
+                <Setter Property="Fill"
+                        Value="{DynamicResource DataGridRowNoteableBodyForeGround}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="BodyRectangle"
+           TargetType="{x:Type Rectangle}"
+           BasedOn="{StaticResource Rectangle Style}">
+        <Setter Property="Fill"
+                Value="{DynamicResource DataGridRowKnownBodyForeGround}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static models:PlanetImage.Planet}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/planet.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static models:PlanetImage.Earth}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/earth.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static models:PlanetImage.Water}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/water.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static models:PlanetImage.Gas}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/jupiter.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding PlanetImage}"
+                         Value="{x:Static models:PlanetImage.Default}">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/language.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsStar}"
+                         Value="True">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/StarIcon.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsNonBody}"
+                         Value="True">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/ODExplorer;component/Resources/SystemGridIcons/asteroid.png" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}"
+           x:Key="GravityTextBox">
+        <Setter Property="Foreground"
+                Value="{Binding Path=SurfaceGravity, Converter={StaticResource GravToColour}}" />
+        <Setter Property="Background"
+                Value="Black" />
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Landable}"
+                         Value="True">
+                <Setter Property="Visibility"
+                        Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Landable}"
+                         Value="False">
+                <Setter Property="Visibility"
+                        Value="Hidden" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>
