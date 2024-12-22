@@ -48,14 +48,31 @@
                                 <TextBlock Text="{Binding Path=Name, Mode=OneWay}"
                                            HorizontalAlignment="Left"
                                            VerticalAlignment="Center"
-                                           Margin="5,0,0,0"
-                                           Style="{DynamicResource SystemGridTextBlockForeground}" />
+                                           Margin="5,0,0,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}"
+                                               BasedOn="{StaticResource SystemGridTextBlockForeground}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding VisitedByCommander}"
+                                                             Value="True">
+                                                    <Setter Property="Foreground"
+                                                            Value="{DynamicResource LowGravity}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
 
+            <DataGridTextColumn Width="100"
+                                FontSize="15"
+                                ElementStyle="{DynamicResource JumpDistanceElement}"
+                                Binding="{Binding Path=EdsmPercentage, Mode=OneWay}" />
+            
             <DataGridTextColumn Width="100"
                                 FontSize="15"
                                 ElementStyle="{DynamicResource JumpDistanceElement}"

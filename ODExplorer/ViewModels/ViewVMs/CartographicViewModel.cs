@@ -127,7 +127,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             }
         }
 
-        public string CartoValue => explorationData.GetUnsoldCartoSystems().Sum(x => x.CmdrValue).ToString("N0");
+        public string CartoValue => explorationData.GetUnsoldCartoSystems().Sum(x => x.CommanderValue).ToString("N0");
         public string ExoValue => explorationData.GetUnsoldExoValueString();
         public bool FilterUnconfirmedBios => settingsStore.SystemGridSetting.FilterUnconfirmedBios;
         public SystemGridSettings CurrentSystemGridSettings => settingsStore.SystemGridSetting;

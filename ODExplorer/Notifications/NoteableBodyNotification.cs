@@ -1,13 +1,8 @@
 ﻿using ODExplorer.Models;
-using ODExplorer.Stores;
 using ODUtils.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using ToastNotifications.Core;
 
@@ -60,35 +55,15 @@ namespace ODExplorer.Notifications
                     break;
             }
 
-            switch (notification)
+            ImageSource = notification switch
             {
-                case BodyNotification.WideRings:
-                case BodyNotification.LandableWithRings:
-                    ImageSource = "/Resources/NotificationIcons/saturn.png";
-                    break;
-                case BodyNotification.NestedMoon:
-                    ImageSource = "/Resources/NotificationIcons/nestedmoon.png";
-                    break;
-                case BodyNotification.ShepherdMoon:
-                    ImageSource = "/Resources/NotificationIcons/shepherdmoon.png";
-                    break;
-                case BodyNotification.BioSignals:
-                    ImageSource = "/Resources/exobtn.png";
-                    break;
-                case BodyNotification.GeoSignals:
-                    ImageSource = "/Resources/NotificationIcons/volcano.png";
-                    break;
-                case BodyNotification.LandableHighGravity:
-                case BodyNotification.LandableLargeRadius:
-                case BodyNotification.SmallPlanet:
-                case BodyNotification.HighEccentricity:
-                case BodyNotification.FastRotation:
-                case BodyNotification.FastOrbit:
-                case BodyNotification.LandableTerraformable:
-                default:
-                    ImageSource = "/Resources/NotificationIcons/planet.png";
-                    break;
-            }
+                BodyNotification.WideRings or BodyNotification.LandableWithRings => "/Resources/NotificationIcons/saturn.png",
+                BodyNotification.NestedMoon => "/Resources/NotificationIcons/nestedmoon.png",
+                BodyNotification.ShepherdMoon => "/Resources/NotificationIcons/shepherdmoon.png",
+                BodyNotification.BioSignals => "/Resources/exobtn.png",
+                BodyNotification.GeoSignals => "/Resources/NotificationIcons/volcano.png",
+                _ => "/Resources/NotificationIcons/planet.png",
+            };
         }
 
         private NotableBodyNotificationPart? _displayPart;

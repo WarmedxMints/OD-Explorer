@@ -39,8 +39,21 @@ namespace ODExplorer.ViewModels.ModelVMs
         public string EstimatedValue => EstValue == 0 ? "?" : EstValue.ToString("N0");
 
         public bool IsKnownToEDSM => _system.IsKnownToEDSM;
+        public bool VisitedByCommander => _system.VisitedByCommander;
         public int DiscoveredBodiesCount => _system.DiscoveredBodyCount;
-        public int KnownBodyCount => _system.BodyCount;
+        public string EdsmPercentage
+        {
+            get
+            {
+                if (_system.BodyCount < 0 || _system.EdsmScannedBodyCount < 0)
+                    return string.Empty;
+                if (_system.BodyCount == 0)
+                    return $"0 %";
+                int percent = (int)Math.Round((double)(100 * _system.EdsmScannedBodyCount) / KnownBodyCount);
+                return $"{percent:N0} %";
+            }
+        }
+        public int KnownBodyCount => _system.BodyCount >= 0 ? _system.BodyCount : 0;
         public string EdsmUrl => _system.EdsmUrl;
         public string JumpDistanceRemaining { get; set; } = string.Empty;
         public string JumpDistanceToSystem { get; set; } = string.Empty;
@@ -146,9 +159,6 @@ namespace ODExplorer.ViewModels.ModelVMs
 
         public void OnSystemUpdatedFromEDSM()
         {
-            OnPropertyChanged(nameof(IsKnownToEDSM));
-            OnPropertyChanged(nameof(EstimatedValue));
-
             foreach (var body in _system.SystemBodies)
             {
                 bool knownBody = Bodies.FirstOrDefault(x => x.BodyID == body.BodyID) != default;
@@ -161,7 +171,9 @@ namespace ODExplorer.ViewModels.ModelVMs
                 Bodies.AddToCollection(new(body, _settingsStore));
             }
             OnPropertyChanged(nameof(Bodies));
-            OnPropertyChanged(nameof(EstimatedValue));
+            OnPropertyChanged(nameof(EstimatedValue)); 
+            OnPropertyChanged(nameof(IsKnownToEDSM));
+            OnPropertyChanged(nameof(EdsmPercentage));
         }
 
         private void OpenEDSMUrl(object sender, RoutedEventArgs e)

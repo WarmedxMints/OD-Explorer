@@ -272,7 +272,7 @@
                          Value="False">
                 <Setter Property="Foreground"
                         Value="{DynamicResource DataGridRowUnknownBodyForeGround}" />
-            </DataTrigger>
+            </DataTrigger>                         
         </Style.Triggers>
     </Style>
     <!--#endregion-->

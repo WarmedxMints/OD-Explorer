@@ -224,7 +224,7 @@ namespace ODExplorer.Stores
                     case FSDJumpEvent.FSDJumpEventArgs fsdJumpEvent:
                         {
                             var system = UpdateCurrentSystem(new(fsdJumpEvent));
-
+                          
                             if (parserStore.IsLive && settingsStore.NotificationOptions.HasFlag(NotificationOptions.EDSMValuableBody)
                                 && system.SystemBodies.Any(x => x.PlanetClass == PlanetClass.EdsmValuableBody))
                             {
@@ -1077,7 +1077,6 @@ namespace ODExplorer.Stores
                     CurrentSystem.StarType = system.StarClass;
                     CurrentSystem.Name = system.StarSystem;
                     CurrentSystem.Position = new(system.StarPos);
-                    //TriggerCurrentSystemEventIfLive();
                     continue;
                 }
 
@@ -1101,10 +1100,10 @@ namespace ODExplorer.Stores
             {
                 Task.Run(async () =>
                 {
-                    if (await GetSystemValue(system).ConfigureAwait(true))
-                    {
+                    var valueUpdate = await GetSystemValue(system).ConfigureAwait(true);
+                    var countUpdate = await UpdateKnownBodyCount(system).ConfigureAwait(true);
+                    if (valueUpdate || countUpdate)
                         OnSystemUpdatedFromEDSM?.Invoke(this, system);
-                    }
                 });
             }
         }
@@ -1113,7 +1112,7 @@ namespace ODExplorer.Stores
         {
             if (_cartoData.TryGetValue(system.Address, out var value))
             {
-                //Update position and region
+                //Update position and region                
                 value.Position = new(system.Position.X, system.Position.Y, system.Position.Z);
                 value.Region = RegionMap.FindRegion(system.Position.X, system.Position.Y, system.Position.Z);
                 return value;
@@ -1131,8 +1130,9 @@ namespace ODExplorer.Stores
             if (known != null)
             {
                 var index = Route.IndexOf(known);
-                Route.RemoveRange(0, index + 1);
+                Route.RemoveRange(0, index + 1);           
                 CurrentSystem = known;
+                CurrentSystem.VisitedByCommander = true;
                 Task.Run(async () => { await UpdateKnownBodyCount(CurrentSystem).ConfigureAwait(true); OnSystemUpdatedFromEDSM?.Invoke(this, CurrentSystem); }).ConfigureAwait(true);
                 OnCurrentSystemUpdated?.Invoke(this, CurrentSystem);
                 OnRouteUpdated?.Invoke(this, Route);
@@ -1140,6 +1140,7 @@ namespace ODExplorer.Stores
             }
 
             CurrentSystem = system;
+            CurrentSystem.VisitedByCommander = true;
 
             if (parserStore.IsLive == false)
                 return CurrentSystem;
@@ -1170,9 +1171,10 @@ namespace ODExplorer.Stores
         {
             var count = await edsmApi.GetBodyCountAsync(system.Address).ConfigureAwait(true);
 
-            var ret = system.BodyCount != count;
-            system.BodyCount = count;
-            if (count > 0)
+            var ret = system.BodyCount != count.Item1;
+            system.BodyCount = count.Item1;
+            system.EdsmScannedBodyCount = count.Item2;
+            if (count.Item1 > 0)
             {
                 system.IsKnownToEDSM = true;
             }
@@ -1186,11 +1188,11 @@ namespace ODExplorer.Stores
 
             bool ret = false;
 
-            var starclass = await edsmApi.GetPrimaryStarClassAsync(system.Name).ConfigureAwait(true);
+            var starClass = await edsmApi.GetPrimaryStarClassAsync(system.Name).ConfigureAwait(true);
 
-            if (starclass != StarType.Unknown)
+            if (starClass != StarType.Unknown)
             {
-                system.StarType = starclass;
+                system.StarType = starClass;
                 ret = true;
             }
 
