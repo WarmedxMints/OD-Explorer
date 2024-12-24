@@ -50,7 +50,8 @@ namespace ODExplorer.ViewModels.ModelVMs
                 if (_system.BodyCount == 0)
                     return $"0 %";
                 int percent = (int)Math.Round((double)(100 * _system.EdsmScannedBodyCount) / KnownBodyCount);
-                return $"{percent:N0} %";
+                //Clamp the percent just for the rare systems which have changed name (Such as Delphi) and give erroneous results from EDSM
+                return $"{Math.Clamp(percent, 0, 100):N0} %";
             }
         }
         public int KnownBodyCount => _system.BodyCount >= 0 ? _system.BodyCount : 0;
@@ -161,7 +162,7 @@ namespace ODExplorer.ViewModels.ModelVMs
         {
             foreach (var body in _system.SystemBodies)
             {
-                bool knownBody = Bodies.FirstOrDefault(x => x.BodyID == body.BodyID) != default;
+                bool knownBody = Bodies.FirstOrDefault(x => x.EdsmBodyId == body.EdsmBodyID) != default;
 
                 if (knownBody)
                 {

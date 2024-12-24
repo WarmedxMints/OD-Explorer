@@ -238,7 +238,8 @@ namespace ODExplorer.ViewModels.ModelVMs
         public long SoldDataValue => _body.SoldCommanderValue;
         public long LostDataValue => _body.LostCommanderValue;
         private string SystemName => _body.Owner.Name;
-        public long BodyID => IsEdsmVb ? 0 : _body.BodyID;
+        public long BodyID => _body.BodyID;
+        public int EdsmBodyId => _body.EdsmBodyID;
         public string FullName => _body.BodyName;
         public DiscoveryStatus Status => _body.Status;
         public bool WorthMapping => Status == DiscoveryStatus.WorthMapping;
@@ -430,6 +431,7 @@ namespace ODExplorer.ViewModels.ModelVMs
             OnPropertyChanged(nameof(GoverningStar));
             OnPropertyChanged(nameof(IsHighValueExo));
             OnPropertyChanged(nameof(DistanceFromArrival));
+            OnPropertyChanged(nameof(BodyID));
         }
         #endregion
     }

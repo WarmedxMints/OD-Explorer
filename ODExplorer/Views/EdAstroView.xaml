@@ -9,11 +9,11 @@
              xmlns:converters="clr-namespace:ODUtils.WpfConvertors;assembly=ODUtils"
              FontFamily="{StaticResource Eurostile}"
              d:DataContext="{d:DesignInstance Type=viewvms:EdAstroViewModel}"
-             mc:Ignorable="d"             
+             mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
     <UserControl.Resources>
-        <converters:MarkDownImageWidthConverter x:Key="MarkdownWidth"/>
+        <converters:MarkDownImageWidthConverter x:Key="MarkdownWidth" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -42,10 +42,12 @@
                             Ed Astro Home Page</Hyperlink>
             </TextBlock>
         </Grid>
-        <Grid Grid.Row="1">
+
+        <Grid Grid.Row="1"
+              x:Name="DisplayGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
             <DataGrid ItemsSource="{Binding PointsOfInterest}"
@@ -89,12 +91,13 @@
 
                 <mdxam:MarkdownScrollViewer Margin="10"
                                             Grid.Row="1"
+                                            HorizontalScrollBarVisibility="Disabled"
                                             ClickAction="SafetyOpenBrowser"
-                                            CacheMode="BitmapCache"
                                             x:Name="MarkdownSV">
                     <mdxam:MarkdownScrollViewer.Markdown>
                         <MultiBinding Converter="{StaticResource MarkdownWidth}">
-                            <Binding ElementName="MarkdownSV" Path="DataContext.SelectedPoi.MarkDown" />
+                            <Binding ElementName="MarkdownSV"
+                                     Path="DataContext.SelectedPoi.MarkDown" />
                             <Binding ElementName="MarkdownSV"
                                      Path="ActualWidth" />
                         </MultiBinding>

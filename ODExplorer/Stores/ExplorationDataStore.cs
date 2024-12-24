@@ -1210,9 +1210,9 @@ namespace ODExplorer.Stores
                 {
                     foreach (var body in value.ValuableBodies)
                     {
-                        bool systemKnown = system.SystemBodies.FirstOrDefault(x => string.Equals(x.BodyName, body.BodyName, StringComparison.OrdinalIgnoreCase)) != default;
+                        bool bodyKnown = system.SystemBodies.FirstOrDefault(x => x.EdsmBodyID == body.BodyId) != default;
 
-                        if (systemKnown)
+                        if (bodyKnown)
                         {
                             continue;
                         }

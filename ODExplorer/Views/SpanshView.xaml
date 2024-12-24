@@ -48,8 +48,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Disabled"
-                  HorizontalScrollBarVisibility="Auto">
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
@@ -127,7 +126,10 @@
                           Grid.Column="2" />
             </Grid>
 
-            <Grid Grid.Row="1">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      Grid.Row="1">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="20" />
@@ -187,7 +189,9 @@
                     </DataGrid>
                     </Grid>
                 </GroupBox>
+                
             </Grid>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
+   
 </UserControl>

@@ -170,13 +170,16 @@
 
 
             <Grid Margin="20,5,0,0"
+                  x:Name="BodyHeaderGrid"
                   Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[0].ActualWidth, Mode=OneWay}" />
-                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[1].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[2].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[3].ActualWidth, Mode=OneWay}" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[14].ActualWidth, Mode=OneWay}" />
-                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[15].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[16].ActualWidth, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=Columns[17].ActualWidth, Mode=OneWay}" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"
@@ -186,27 +189,28 @@
 
 
                 <TextBlock Text="NAME"
+                           Grid.Column="2"
                            Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
                            Margin="5,0,0,0" />
                 <TextBlock Text="TYPE"
+                           Grid.Column="3"
                            Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
                            Margin="5,0,0,0"
-                           HorizontalAlignment="Left"
-                           Grid.Column="1" />
+                           HorizontalAlignment="Left" />
 
                 <TextBlock Text="INFO"
                            Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
                            Margin="5,0,0,0"
                            HorizontalAlignment="Left"
-                           Grid.Column="2" />
+                           Grid.Column="4" />
                 <TextBlock Text="DISTANCE"
                            Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
                            HorizontalAlignment="Center"
-                           Grid.Column="3" />
+                           Grid.Column="5" />
                 <TextBlock Text="VALUE"
                            Visibility="{Binding CurrentSystemGridSettings.ShowBodyHeaders, Converter={StaticResource BoolToVis}}"
                            HorizontalAlignment="Center"
-                           Grid.Column="4" />
+                           Grid.Column="6" />
 
                 <ScrollViewer x:Name="ScrollViewer"
                               Grid.Row="1"
@@ -221,10 +225,10 @@
                               VerticalScrollBarVisibility="Disabled"
                               Loaded="DataGrid_Loaded"
                               Unloaded="DataGrid_Unloaded"
-                              EnableRowVirtualization="True"   
+                              EnableRowVirtualization="True"
                               PreviewMouseWheel="DataGrid_PreviewMouseWheel"
                               SelectionChanged="DataGrid_SelectionChanged"
-                              GridLinesVisibility="Horizontal"
+                              GridLinesVisibility="None"
                               Style="{DynamicResource BodiesGridSettings}"
                               CellStyle="{DynamicResource BodiesGridCell}"
                               RowStyle="{DynamicResource RowStyleBodies}"
@@ -232,62 +236,52 @@
                               SelectedItem="{Binding ElementName=Root, Path=SelectedBody, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <DataGrid.Columns>
                             <!--0-->
-                            <DataGridTemplateColumn Header="NAME"
-                                                    x:Name="NameColumn"
-                                                    Width="SizeToCells"
-                                                    MinWidth="80">
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Grid>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Rectangle Style="{DynamicResource BodyRectangle}"
-                                                           Height="18"
-                                                           Width="18"
-                                                           Margin="0,0,5,0" />
-                                                <TextBlock Text="{Binding BodyID}"
-                                                           FontSize="14"
-                                                           Width="35"
-                                                           VerticalAlignment="Center"
-                                                           HorizontalAlignment="Left"
-                                                           Margin="5,0,0,0" />
-                                                <TextBlock Text="{Binding Name}"
-                                                           VerticalAlignment="Center"
-                                                           HorizontalAlignment="Left"
-                                                           Margin="0,0,5,0" />
-                                            </StackPanel>
-                                        </Grid>
+                                        <Rectangle Style="{DynamicResource BodyRectangle}"
+                                                   Height="18"
+                                                   Width="18" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <!--1-->
-                            <DataGridTemplateColumn Width="*"
-                                                    x:Name="TypeColumn"
-                                                    Header="TYPE">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding BodyDescription}"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Left"
-                                                   Margin="5,0,0,0" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            <DataGridTextColumn CellStyle="{DynamicResource BodyGridNonGridline}"
+                                                ElementStyle="{DynamicResource DataGridElementLeft}"
+                                                Width="SizeToCells"
+                                                MinWidth="25"
+                                                FontSize="14"
+                                                Binding="{Binding BodyID}" />
+
                             <!--2-->
+                            <DataGridTextColumn CellStyle="{DynamicResource BodyGridNonGridline}"
+                                                ElementStyle="{DynamicResource DataGridElementLeft}"
+                                                MinWidth="55"
+                                                Binding="{Binding Name}" />
+                            <!--3-->
+                            <DataGridTextColumn Binding="{Binding BodyDescription}"
+                                                ElementStyle="{DynamicResource DataGridElementLeftMargin}"
+                                                Width="*"
+                                                MinWidth="100"
+                                                Header="TYPE">
+                            </DataGridTextColumn>
+                            <!--4-->
                             <DataGridTextColumn Binding="{Binding AtmosphereFormula}"
                                                 FontSize="14"
                                                 Width="SizeToCells"
                                                 CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
-                            <!--3-->
+                            <!--5-->
                             <DataGridTextColumn Binding="{Binding SurfaceTemp}"
                                                 Width="SizeToCells"
                                                 FontSize="14"
                                                 CellStyle="{DynamicResource BodyGridInfoCellRight}" />
-                            <!--4-->
+                            <!--6-->
                             <DataGridTextColumn Binding="{Binding SurfacePressure}"
                                                 Width="SizeToCells"
                                                 FontSize="14"
                                                 CellStyle="{DynamicResource BodyGridInfoCellRight}" />
-                            <!--5-->
+                            <!--7-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -304,7 +298,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--6-->
+                            <!--8-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -321,7 +315,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--7-->
+                            <!--9-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -338,7 +332,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--8-->
+                            <!--10-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -354,7 +348,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--9-->
+                            <!--11-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -370,19 +364,19 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--10-->
+                            <!--12-->
                             <DataGridTextColumn Binding="{Binding GeologicalSignalsString}"
                                                 Width="25"
                                                 FontSize="18"
-                                                Visibility="{Binding GeologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                Visibility="{Binding Path=GeologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
                                                 CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
-                            <!--11-->
+                            <!--13-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Rectangle Style="{DynamicResource Rectangle Style}"
-                                                   Visibility="{Binding BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                   Visibility="{Binding Path=BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
                                                    Height="18"
                                                    Width="18">
                                             <Rectangle.OpacityMask>
@@ -392,13 +386,12 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--12-->
+                            <!--14-->
                             <DataGridTextColumn Binding="{Binding BiologicalSignalsString}"
-                                                Width="25"
                                                 FontSize="18"
-                                                Visibility="{Binding BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                                Visibility="{Binding Path=BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
                                                 CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
-                            <!--13-->
+                            <!--15-->
                             <DataGridTemplateColumn Width="56"
                                                     CellStyle="{DynamicResource BodyGridInfoCellCenter}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -414,7 +407,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--14-->
+                            <!--16-->
                             <DataGridTextColumn Width="SizeToCells"
                                                 MinWidth="90"
                                                 Header="DISTANCE"
@@ -422,9 +415,10 @@
                                                 CellStyle="{DynamicResource BodyCellDoubleMargin}"
                                                 Binding="{Binding DistanceFromArrivalLs}"
                                                 ElementStyle="{DynamicResource DataGridElementRightMargin}" />
-                            <!--15-->
+                            <!--17-->
                             <DataGridTextColumn Header="VALUE"
-                                                Width="110"
+                                                Width="SizeToCells"
+                                                MinWidth="90"
                                                 HeaderStyle="{DynamicResource SystemGridHeaderCenter}"
                                                 Binding="{Binding MappedValue}"
                                                 ElementStyle="{DynamicResource DataGridElementRightMargin}" />

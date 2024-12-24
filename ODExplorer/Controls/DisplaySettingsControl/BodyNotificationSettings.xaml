@@ -188,7 +188,7 @@
                       Grid.Row="6"
                       VerticalAlignment="Center"
                       IsChecked="{Binding NotableSettings.BodyNotifications, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:BodyNotification.LandableLargeRadius}}"
-                      Content="Lanable Large Radius" />
+                      Content="Landable Large Radius" />
             <oduControls:SliderWithHeader Header="Minimum Radius"
                                           IsEnabled="{Binding NotableSettings.BodyNotifications, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:BodyNotification.LandableLargeRadius}, Mode=OneWay}"
                                           Value="{Binding LargeRadius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

@@ -203,6 +203,18 @@ namespace ODExplorer.ViewModels.ViewVMs
             set => settingsStore.SystemGridSetting.FilterUnconfirmedBios = value;
         }
 
+        public bool ShowBodyIcon
+        {
+            get => settingsStore.SystemGridSetting.ShowBodyIcon;
+            set => settingsStore.SystemGridSetting.ShowBodyIcon = value;
+        }
+
+        public bool ShowBodyId
+        {
+            get => settingsStore.SystemGridSetting.ShowBodyId;
+            set => settingsStore.SystemGridSetting.ShowBodyId = value;
+        }
+
         public BodyInfoIconDisplay IconDisplay
         {
             get => settingsStore.SystemGridSetting.InfoDisplayOptions;

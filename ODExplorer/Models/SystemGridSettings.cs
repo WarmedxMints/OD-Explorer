@@ -18,7 +18,8 @@ namespace ODExplorer.Models
         public Distance DistanceUnit { get; set; }
         public int ExoValuableBodyValue { get; set; } = 20_000_000;
         public bool FilterUnconfirmedBios { get; set; } = true;
-
+        public bool ShowBodyIcon { get; set; } = true;
+        public bool ShowBodyId { get; set; } = true;
         public static SystemGridSettings DefaultValues()
         {
             return new()
@@ -54,7 +55,9 @@ namespace ODExplorer.Models
                 && PressureUnit == setting.PressureUnit
                 && DistanceUnit == setting.DistanceUnit
                 && ExoValuableBodyValue == setting.ExoValuableBodyValue
-                && FilterUnconfirmedBios == setting.FilterUnconfirmedBios;
+                && FilterUnconfirmedBios == setting.FilterUnconfirmedBios
+                && ShowBodyIcon == setting.ShowBodyIcon
+                && ShowBodyId == setting.ShowBodyId;
         }
 
         public SystemGridSettings Clone()

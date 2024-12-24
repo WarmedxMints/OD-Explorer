@@ -40,18 +40,23 @@ namespace ODExplorer.Controls
 
             if (GridSettings != null)
             {
-                DataGrid.Columns[2].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.AtmosphereType));
-                DataGrid.Columns[3].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceTemp));
-                DataGrid.Columns[4].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfacePressure));
-                DataGrid.Columns[5].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.WasDiscovered));
-                DataGrid.Columns[6].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Unmapped));
-                DataGrid.Columns[7].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Terraformable));
-                DataGrid.Columns[8].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.HasRings));
-                DataGrid.Columns[9].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
-                DataGrid.Columns[10].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
-                DataGrid.Columns[11].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
-                DataGrid.Columns[12].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
-                DataGrid.Columns[13].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceGravity));                
+                DataGrid.Columns[0].Visibility = BoolToVis(GridSettings.ShowBodyIcon);
+                DataGrid.Columns[1].Visibility = BoolToVis(GridSettings.ShowBodyId);
+                BodyHeaderGrid.ColumnDefinitions[0].Width = GridSettings.ShowBodyIcon ? new GridLength(DataGrid.Columns[0].ActualWidth) : new GridLength(0);
+                BodyHeaderGrid.ColumnDefinitions[1].Width = GridSettings.ShowBodyId ? new GridLength(DataGrid.Columns[1].ActualWidth) : new GridLength(0);
+
+                DataGrid.Columns[4].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.AtmosphereType));
+                DataGrid.Columns[5].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceTemp));
+                DataGrid.Columns[6].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfacePressure));
+                DataGrid.Columns[7].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.WasDiscovered));
+                DataGrid.Columns[8].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Unmapped));
+                DataGrid.Columns[9].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Terraformable));
+                DataGrid.Columns[10].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.HasRings));
+                DataGrid.Columns[11].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
+                DataGrid.Columns[12].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
+                DataGrid.Columns[13].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
+                DataGrid.Columns[14].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
+                DataGrid.Columns[15].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceGravity));                
             }
         }
 
@@ -59,6 +64,7 @@ namespace ODExplorer.Controls
         {
             return value ? Visibility.Visible : Visibility.Collapsed;
         }
+
         private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Handled)

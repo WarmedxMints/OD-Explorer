@@ -19,12 +19,12 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <ScrollViewer Grid.Column="0"
-                      VerticalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
             <controls:NotificationSettingsControl />
         </ScrollViewer>
         <ScrollViewer Grid.Column="2"
-                      VerticalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
             <Grid Width="900"
                   HorizontalAlignment="Left">

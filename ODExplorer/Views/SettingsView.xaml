@@ -16,7 +16,8 @@
                   VerticalScrollBarVisibility="Auto">
         <Grid Margin="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="600" />
+                <ColumnDefinition MinWidth="700"
+                                  Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>

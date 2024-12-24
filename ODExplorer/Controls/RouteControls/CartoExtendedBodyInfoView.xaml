@@ -57,7 +57,8 @@
                   MinHeight="77"
                   Grid.Column="2"
                   Padding="5">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
                 <local:ExtendedDetailsControl DataContext="{Binding SelectedBody, Mode=OneWay}" />
             </ScrollViewer>
         </GroupBox>

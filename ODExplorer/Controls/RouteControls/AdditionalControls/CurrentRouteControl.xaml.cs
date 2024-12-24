@@ -1,6 +1,7 @@
 ﻿using ODExplorer.ViewModels.ModelVMs;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ODExplorer.Controls
 {
@@ -62,6 +63,26 @@ namespace ODExplorer.Controls
                 return body.IsEdsmVb;
             }
             return false;
+        }
+
+        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Handled)
+            {
+                return;
+            }
+            if (sender is not Control control)
+            {
+                return;
+            }
+            e.Handled = true;
+            var wheelArgs = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = MouseWheelEvent,
+                Source = control
+            };
+            var parent = control.Parent as UIElement;
+            parent?.RaiseEvent(wheelArgs);
         }
     }
 }
