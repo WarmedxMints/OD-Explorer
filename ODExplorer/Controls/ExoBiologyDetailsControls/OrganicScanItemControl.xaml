@@ -90,9 +90,10 @@
                     Value="{x:Null}" />
         </Style>
     </UserControl.Resources>
-    <Grid Margin="10">
+    <Grid Margin="10"
+          x:Name="Grid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition  />
+            <ColumnDefinition />
             <ColumnDefinition Width="40" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
@@ -114,6 +115,7 @@
                                     Header="Genus" />
                 <DataGridTextColumn Binding="{Binding SpeciesEnglish}"
                                     CellStyle="{DynamicResource DarkerCellLeft}"
+                                    Width="SizeToCells"
                                     MinWidth="120"
                                     Header="Species" />
                 <DataGridTextColumn Binding="{Binding Colour}"
@@ -122,8 +124,6 @@
                                     Header="Colour" />
                 <DataGridTextColumn Binding="{Binding BodyName}"
                                     CellStyle="{DynamicResource DarkerCellLeft}"
-                                    MinWidth="300"
-                                     Width="*"
                                     Header="Body" />
                 <DataGridTextColumn Binding="{Binding ValueString}"
                                     CellStyle="{DynamicResource CmdrSelectionCellRight}"
@@ -134,6 +134,7 @@
                                     CellStyle="{DynamicResource CmdrSelectionCellRight}"
                                     HeaderStyle="{DynamicResource DataGridHeaderCenter}"
                                     MinWidth="120"
+                                    Width="SizeToCells"
                                     Header="Bonus" />
             </DataGrid.Columns>
         </DataGrid>

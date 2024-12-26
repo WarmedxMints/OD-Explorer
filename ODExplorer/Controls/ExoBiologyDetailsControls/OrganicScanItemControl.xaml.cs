@@ -100,7 +100,7 @@ namespace ODExplorer.Controls
             {
                 var total = new OrganicTotalsViewModel()
                 {
-                    EnglishName = item.Key,
+                    EnglishName = item.Key.Contains("Unknown") ? item.First().SpeciesEnglish : item.Key,
                     Count = item.Count(),
                     Value = item.Sum(x => x.Value),
                     Bonus = item.Sum(x => x.Bonus)

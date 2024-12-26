@@ -48,12 +48,28 @@ namespace ODExplorer.ViewModels.ModelVMs
             }
         }
 
-        public string EnglishName
+        public string Colour
         {
             get
             {
                 var variant = Item.Variants.FirstOrDefault(x => x.Confirmed);
-
+                if (variant is null || variant?.Colour == VariantColours.Unknown)
+                {
+                    return string.Empty;
+                }
+                return $"{variant?.Colour}";
+            }
+        }
+        public string EnglishName
+        {
+            get
+            {
+               
+                var variant = Item.Variants.FirstOrDefault(x => x.Confirmed);
+                if(variant is null || variant?.Colour == VariantColours.Unknown)
+                {
+                    return item.SpeciesLocalised;
+                }
                 return $"{item.GenusEnglish} {item.SpeciesEnglish} - {variant?.Colour}";
             }
         }
