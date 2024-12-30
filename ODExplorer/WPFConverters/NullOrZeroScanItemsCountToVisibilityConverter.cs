@@ -25,10 +25,9 @@ namespace ODExplorer.WPFConverters
             if (value == null)
                 return hideControl;
 
-            if (value is SystemBodyViewModel body)
+            if (value is SystemBodyViewModel)
             {
-                var visibility = body.OrganicScanItems.Count > 0 ? showControl : hideControl;
-                return visibility;
+                return showControl;
             }
 
             return Visibility.Collapsed;

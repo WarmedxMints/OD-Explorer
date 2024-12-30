@@ -43,6 +43,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             BuildUnsoldList();
             BuildSoldList();
             BuildLostList();
+            CountBios();
         }
 
         public override void Dispose()
@@ -121,6 +122,9 @@ namespace ODExplorer.ViewModels.ViewVMs
         }
 
         public string SelectedRegionText { get; private set; } = string.Empty;
+        public string SelectedRegionSpeciesCount { get; private set; } = string.Empty;
+        public string SelectedRegionVariantCount { get; private set; } = string.Empty;
+
         public IReadOnlyList<OrganicCheckListItemViewModel> Aleoida => CheckInRegion(checkListDataStore.OrganicScanItems["$Codex_Ent_Aleoids_Genus_Name;"]);
         public IReadOnlyList<OrganicCheckListItemViewModel> Bacterium => CheckInRegion(checkListDataStore.OrganicScanItems["$Codex_Ent_Bacterial_Genus_Name;"]);
         public IReadOnlyList<OrganicCheckListItemViewModel> Cactoida => CheckInRegion(checkListDataStore.OrganicScanItems["$Codex_Ent_Cactoid_Genus_Name;"]);
@@ -263,6 +267,55 @@ namespace ODExplorer.ViewModels.ViewVMs
             OnPropertyChanged(nameof(Tussock));
             OnPropertyChanged(nameof(Other));
             OnPropertyChanged(nameof(OthersVisibility));
+
+            CountBios();
+        }
+
+        private void CountBios()
+        {
+            var species = 0;
+            var speciesFound = 0;
+            var variants = 0;
+            var variantsFound = 0;
+
+            var allSpecies = new List<OrganicCheckListItemViewModel>();
+            allSpecies.AddRange(Aleoida);
+            allSpecies.AddRange(Bacterium);
+            allSpecies.AddRange(Cactoida);
+            allSpecies.AddRange(Clypeus);
+            allSpecies.AddRange(Concha);
+            allSpecies.AddRange(Electricae);
+            allSpecies.AddRange(Fonticulua);
+            allSpecies.AddRange(Fumerola);
+            allSpecies.AddRange(Fungoida);
+            allSpecies.AddRange(Osseus);
+            allSpecies.AddRange(Fumerola);
+            allSpecies.AddRange(Recepta);
+            allSpecies.AddRange(Frutexa);
+            allSpecies.AddRange(Stratum);
+            allSpecies.AddRange(Tubus);
+            allSpecies.AddRange(Tussock);
+            allSpecies.AddRange(Other);
+
+            foreach (var specie in allSpecies)
+            {
+                if (specie.State == OrganicScanState.Unavailable)
+                    continue;
+
+                species++;
+
+                if (specie.State >= OrganicScanState.Analysed)
+                    speciesFound++;
+                variants += specie.Variants.Count;
+
+                variantsFound += specie.Variants.Where(x => x.StageValue >= OrganicScanState.Analysed).Count();
+            }
+
+            SelectedRegionSpeciesCount = $"{speciesFound} / {species}";
+            SelectedRegionVariantCount = $"{variantsFound} / {variants}";
+
+            OnPropertyChanged(nameof(SelectedRegionSpeciesCount));
+            OnPropertyChanged(nameof(SelectedRegionVariantCount));
         }
 
         private void FireUpdatePropertyChanged(string key)
@@ -318,6 +371,8 @@ namespace ODExplorer.ViewModels.ViewVMs
                     OnPropertyChanged(nameof(Other));
                     break;
             }
+
+            CountBios();
         }
 
         private void ExplorationDataStore_OnBioDataLost(object? sender, EventArgs e)

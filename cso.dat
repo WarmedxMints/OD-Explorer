@@ -304,3 +304,10 @@ V1
 2:distanceStarParent,g0
 2:totalDistance,Z8
 2:distance,yJ
+2:CheckListDataStore_OnOrganicScanDetailsUpdated,V3
+2:species,G_
+2:speciesFound,h7
+2:variants,FH
+2:variantsFound,DX
+2:allSpecies,uO
+2:specie,KV

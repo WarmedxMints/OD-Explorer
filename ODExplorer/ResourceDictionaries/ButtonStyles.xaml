@@ -65,7 +65,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="{x:Type Button}"
            x:Key="ColourImageBtn">
         <Setter Property="SnapsToDevicePixels"
@@ -186,12 +186,12 @@
                             <Setter Property="BorderThickness"
                                     Value="1,1,0,1" />
                         </Trigger>
-                    </ControlTemplate.Triggers>                    
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="{x:Type Button}"
            x:Key="CartoSelectionBtn">
         <Setter Property="SnapsToDevicePixels"
@@ -260,14 +260,9 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style BasedOn="{StaticResource {x:Type Button}}"
-           TargetType="{x:Type Button}"
+
+    <Style TargetType="{x:Type Button}"
            x:Key="TabButton">
-        <Setter Property="Foreground"
-                Value="{DynamicResource PrimaryDisabled}" />
-        <Setter Property="Background"
-                Value="{DynamicResource PrimaryBackground}" />
         <Setter Property="BorderThickness"
                 Value="0" />
         <Setter Property="Template">
@@ -282,17 +277,12 @@
                         <Grid>
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
+                                              SnapsToDevicePixels="True"
                                               Name="content" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                                 Value="True">
-                            <Setter Property="BorderBrush"
-                                    Value="{DynamicResource PrimaryDisabled}" />
-                            <Setter Property="Background"
-                                    Value="{DynamicResource PrimaryControlMouseOver}" />
-                        </Trigger>
+
                         <Trigger Property="IsPressed"
                                  Value="True">
                             <Setter Property="BorderBrush"
@@ -311,10 +301,8 @@
                             <Setter TargetName="border"
                                     Property="Opacity"
                                     Value="1" />
-                            <Setter TargetName="border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource PrimaryDisabled}" />
                             <Setter Property="Background"
+                                    TargetName="border"
                                     Value="{DynamicResource PrimaryBackground}" />
                             <Setter Property="Foreground"
                                     Value="{DynamicResource PrimaryControlForeground}" />
@@ -323,14 +311,23 @@
                                  Value="True">
                             <Setter TargetName="border"
                                     Property="Opacity"
-                                    Value="0.7" />
-                            <Setter TargetName="border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource PrimaryDisabled}" />
+                                    Value="0.6" />
                             <Setter Property="Background"
+                                    TargetName="border"
                                     Value="{DynamicResource PrimaryBackground}" />
                             <Setter Property="Foreground"
                                     Value="{DynamicResource PrimaryControlForeground}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="border"
+                                    Property="Opacity"
+                                    Value="0.8" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource PrimaryDisabled}" />
+                            <Setter Property="Background"
+                                    TargetName="border"
+                                    Value="{DynamicResource TitlebarMouseOver}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

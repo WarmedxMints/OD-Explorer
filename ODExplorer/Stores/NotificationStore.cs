@@ -139,9 +139,6 @@ namespace ODExplorer.Stores
 
         internal void CopyToClipBoard(string message)
         {
-            if (settingsStore.NotificationSettings.NotificationsEnabled == false)
-                return;
-
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (ODUtils.Helpers.ClipboardHelper.SetStringToClipboard(message) == false)
@@ -149,7 +146,7 @@ namespace ODExplorer.Stores
                     return;
                 }
 
-                if (settingsStore.NotificationOptions.HasFlag(NotificationOptions.CopyToClipboard))
+                if (settingsStore.NotificationSettings.NotificationsEnabled && settingsStore.NotificationOptions.HasFlag(NotificationOptions.CopyToClipboard))
                 {
                     notifier.Notify(() => new CopyToClipboardNotification(settingsStore.NotificationSettings, message, messageOptions));
                 }
@@ -358,7 +355,7 @@ namespace ODExplorer.Stores
 
             if (settings.BodyNotifications.HasFlag(BodyNotification.BioSignals) && body.BiologicalSignals > 0)
             {
-                var message = body.BiologicalSignals > 0 ? "Signals" : "Signal";
+                var message = body.BiologicalSignals > 1 ? "Signals" : "Signal";
 
                 notifier.Notify(() => new NotableBodyNotification(BodyNotification.BioSignals, body,
                                                             "Body with Biology Signals",
@@ -368,7 +365,7 @@ namespace ODExplorer.Stores
 
             if (settings.BodyNotifications.HasFlag(BodyNotification.GeoSignals) && body.GeologicalSignals > 0)
             {
-                var message = body.GeologicalSignals > 0 ? "Signals" : "Signal";
+                var message = body.GeologicalSignals > 1 ? "Signals" : "Signal";
 
                 notifier.Notify(() => new NotableBodyNotification(BodyNotification.GeoSignals, body,
                                                             "Body with Geological Signals",

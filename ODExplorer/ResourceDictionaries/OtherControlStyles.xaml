@@ -91,7 +91,7 @@
                     Background="{DynamicResource PrimaryBackground}" />
     </ItemsPanelTemplate>
 
-    <Style TargetType="{x:Type TextBox}">
+    <Style TargetType="{x:Type TextBox}" >
         <Setter Property="SnapsToDevicePixels"
                 Value="True" />
         <Setter Property="OverridesDefaultStyle"
@@ -135,7 +135,8 @@
                 Value="{DynamicResource PrimaryForeground}" />
     </Style>
 
-    <Style TargetType="{x:Type TextBlock}">
+    <Style TargetType="{x:Type TextBlock}"
+           x:Key="DisabledText">
         <Style.Triggers>
             <Trigger Property="TextBlock.IsEnabled"
                      Value="False">

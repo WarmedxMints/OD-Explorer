@@ -51,6 +51,18 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <TextBlock Text="Species : "
+                       Margin="20,0,5,2" 
+                       VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding SelectedRegionSpeciesCount}"
+                       VerticalAlignment="Center"
+                       FontSize="16" />
+            <TextBlock Text="Variants : "
+                       Margin="20,0,5,2"
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{Binding SelectedRegionVariantCount}"
+                       VerticalAlignment="Center"
+                       FontSize="16"/>
         </StackPanel>
         <ScrollViewer x:Name="MainScrollBar"
                       HorizontalScrollBarVisibility="Disabled"

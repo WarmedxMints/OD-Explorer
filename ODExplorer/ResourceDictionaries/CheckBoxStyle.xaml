@@ -8,6 +8,8 @@
                 Value="True" />
         <Setter Property="FocusVisualStyle"
                 Value="{x:Null}" />
+        <Setter Property="Focusable"
+                Value="False" />
         <Setter Property="BorderBrush"
                 Value="{DynamicResource PrimaryControlBorder}" />
         <Setter Property="VerticalAlignment"
@@ -52,6 +54,8 @@
                         </Trigger>
                         <Trigger Property="IsFocused"
                                  Value="True">
+                            <Setter Property="Foreground"
+                                    Value="Green" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="False">
@@ -63,7 +67,6 @@
                                     Property="Background"
                                     Value="{DynamicResource PrimaryDisabled}" />
                         </Trigger>
-
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

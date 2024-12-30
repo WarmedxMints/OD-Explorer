@@ -576,8 +576,10 @@ namespace ODExplorer.ViewModels.ViewVMs
             if (known == null)
             {
                 known = new SystemBodyViewModel(e, _settings);
-                known.AddOrganicItems();
             }
+
+            if (known.OrganicScanItems.Count == 0)
+                known.AddOrganicItems();
 
             known.UpdateOrganicInfo();
             OnBioUpdated?.Invoke(this, known);
