@@ -43,7 +43,10 @@
                       BorderThickness="0"
                       IsHitTestVisible="True"
                       IsReadOnly="True"
+                      CanUserResizeColumns="True"
                       VerticalAlignment="Top"
+                      Loaded="DataGrid_Loaded"
+                      Unloaded="DataGrid_Unloaded"
                       EnableRowVirtualization="False"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
@@ -54,11 +57,9 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding GenusEnglish, Mode=OneWay}"
                                         Header="Genus"
-                                        Width="1*"
-                                        MinWidth="120" />
+                                        Width="SizeToCells" />
                     <DataGridTemplateColumn Header="Species"
-                                            MinWidth="120"
-                                            Width="1*">
+                                            Width="SizeToCells">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -84,8 +85,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn MinWidth="120"
-                                            Width="2*"
+                    <DataGridTemplateColumn Width="*"
                                             Header="Variant">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -95,10 +95,10 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding ColonyRange, Mode=OneWay}"
                                         Header="Range"
-                                        Width="80"
+                                        MinWidth="60"
                                         ElementStyle="{DynamicResource DataGridElementRightMargin}"
                                         HeaderStyle="{DynamicResource DataGridHeaderCenter}" />
-                    <DataGridTemplateColumn>
+                    <DataGridTemplateColumn MinWidth="60">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <controls:OrganicScanStageControl Size="14"
@@ -112,7 +112,7 @@
                                         Header="Value"
                                         HeaderStyle="{DynamicResource DataGridHeaderCenter}"
                                         ElementStyle="{DynamicResource DataGridElementRightMargin}"
-                                        Width="100" />
+                                        MinWidth="60" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -128,6 +128,9 @@
                   IsReadOnly="True"
                   IsHitTestVisible="True"
                   VerticalAlignment="Bottom"
+                  CanUserResizeColumns="True"
+                  Loaded="DataGrid_Loaded"
+                  Unloaded="DataGrid_Unloaded"
                   RowStyle="{DynamicResource ExoBioBodyOverlayRowStyle}"
                   HorizontalScrollBarVisibility="Disabled"
                   CellStyle="{DynamicResource ExoBodyGrid}"
@@ -137,9 +140,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Body"
                                     Binding="{Binding Name, Mode=OneWay}"
-                                    MinWidth="80"
-                                    Width="*" />
-                <DataGridTemplateColumn  MinWidth="65">
+                                    MinWidth="40"
+                                    Width="SizeToCells" />
+                <DataGridTemplateColumn  MinWidth="40">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
@@ -161,8 +164,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding PlanetClassDescription, Mode=OneWay}"
                                     ElementStyle="{DynamicResource DataGridElementCenter}"
-                                    MinWidth="200"
-                                    Width="250" />
+                                    Width="*" />
                 <DataGridTextColumn Binding="{Binding OrganicValues, Mode=OneWay}"
                                     MinWidth="150"
                                     Header="Body Value"
@@ -170,7 +172,7 @@
                                     ElementStyle="{DynamicResource DataGridElementCenter}" />
                 <DataGridTextColumn Binding="{Binding BiologicalSignals, Mode=OneWay}"
                                     ElementStyle="{DynamicResource DataGridElementCenter}"
-                                    Width="30">
+                                    MinWidth="30">
                     <DataGridTextColumn.Header>
                         <Button Style="{StaticResource ColourImageBtn}"
                                 ToolTip="Signal Count"
@@ -194,7 +196,8 @@
                                     HeaderStyle="{DynamicResource DataGridHeaderCenter}"
                                     Binding="{Binding DistanceFromArrivalLs, Mode=OneWay}"
                                     ElementStyle="{DynamicResource DataGridElementRightMargin}"
-                                    Width="120" />
+                                    MinWidth="120"
+                                    Width="SizeToCells"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

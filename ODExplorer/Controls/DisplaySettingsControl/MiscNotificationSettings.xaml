@@ -17,7 +17,8 @@
               BorderThickness="0.5">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <CheckBox Style="{DynamicResource CheckBoxStyle}"
                       IsThreeState="False"
@@ -26,7 +27,16 @@
                       Margin="10,0"
                       VerticalAlignment="Center"
                       IsChecked="{Binding NotifyOptions, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:NotificationOptions.CopyToClipboard}}"
-                      Content="String copied to clipboard" />           
+                      Content="String copied to clipboard" />
+            
+            <CheckBox Style="{DynamicResource CheckBoxStyle}"
+                      IsThreeState="False"
+                      Grid.Column="1"
+                      HorizontalAlignment="Left"
+                      Margin="10,0"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding NotifyOptions, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:NotificationOptions.SpanshCSV}}"
+                      Content="Spansh CSV Parser" />
         </Grid>
     </GroupBox>
 </UserControl>

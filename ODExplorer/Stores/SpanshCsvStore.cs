@@ -38,6 +38,7 @@ namespace ODExplorer.Stores
         private readonly OdExplorerDatabaseProvider databaseProvider;
         private readonly CountdownTimer fleetCarrierTimer = new(new(0, 20, 0));
         private Dictionary<CsvType, SpanshCsvContainer> containers = [];
+        private CsvType currentContainerType;
         private string carrierName = string.Empty;
 
         public event EventHandler<ExplorationTarget?>? OnCurrentTargetChanged;
@@ -133,6 +134,8 @@ namespace ODExplorer.Stores
 
         public SpanshCsvContainer GetCurrentContainer(CsvType csvType)
         {
+            currentContainerType = csvType;
+
             if (containers.TryGetValue(csvType, out var container))
             {
                 CurrentContainer = container;
@@ -239,6 +242,12 @@ namespace ODExplorer.Stores
                 {
                     CurrentIndex = index;
 
+                    if (currentContainerType == CsvType.GalaxyPlotter
+                    && string.IsNullOrEmpty(CurrentTarget?.Property3) == false
+                    && CurrentTarget.Property3.Contains("Yes", StringComparison.OrdinalIgnoreCase))
+                    {
+                        notificationStore.ShowSpanshNotification(Notifications.SpanshNotificationType.Refuel);
+                    }
 
                     if (NextTarget != null && settingsStore.SpanshCSVSettings.AutoCopySystemToClipboard)
                     {

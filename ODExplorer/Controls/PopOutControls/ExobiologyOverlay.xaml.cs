@@ -92,5 +92,31 @@ namespace ODExplorer.Controls
                 OrganicGrid.ItemsSource = body.OrganicScanItems;
             }
         }
+
+        private void DataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is DataGrid dataGrid)
+                dataGrid.ItemContainerGenerator.StatusChanged += (container, e) => ItemContainerGenerator_StatusChanged(container, dataGrid);
+        }
+
+        private void DataGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is DataGrid dataGrid)
+                dataGrid.ItemContainerGenerator.StatusChanged -= (container, e) => ItemContainerGenerator_StatusChanged(container, dataGrid);
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object? sender, DataGrid dataGrid)
+        {
+            if (sender is ItemContainerGenerator icg && icg.Status == System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            {
+                foreach (DataGridColumn col in dataGrid.Columns)
+                {
+                    DataGridLength width = col.Width;
+                    col.Width = 0;
+                    col.Width = width;
+                }
+            }
+        }
     }
 }

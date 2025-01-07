@@ -37,8 +37,7 @@
         <StackPanel Orientation="Horizontal"
                     Visibility="{Binding ScanStageEnum, Converter={StaticResource converter}, ConverterParameter={x:Static ejr:OrganicScanStage.Log}}"
                     VerticalAlignment="Center">
-            <Border Margin="5,0"
-                    VerticalAlignment="Center"
+            <Border VerticalAlignment="Center"
                     Width="{Binding ElementName=Root, Path=Size}"
                     Height="{Binding ElementName=Root, Path=Size}"
                     Background="Transparent"
@@ -63,8 +62,7 @@
                         Height="{Binding ElementName=Root, Path=Size, Converter={StaticResource MaxHeightConverter}, ConverterParameter={StaticResource adjMaxHeightRatio}}"
                         Background="{Binding ElementName=Root, Path=Foreground}" />
             </Border>
-            <Border Margin="5,0"
-                    VerticalAlignment="Center"
+            <Border VerticalAlignment="Center"
                     Width="{Binding ElementName=Root, Path=Size}"
                     Height="{Binding ElementName=Root, Path=Size}"
                     Background="Transparent"

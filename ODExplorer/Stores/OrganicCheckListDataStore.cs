@@ -265,53 +265,60 @@ namespace ODExplorer.Stores
 
         public void ParseJournalEvent(JournalEntry e)
         {
-            switch (e.EventData)
+            try
             {
-                case FSDJumpEvent.FSDJumpEventArgs fsdJump:
-                    {
-                        currentRegion = (GalacticRegions)RegionMap.FindRegion(fsdJump.StarPos.X, fsdJump.StarPos.Y, fsdJump.StarPos.Z).Id;
-                    }
-                    break;
-                case CodexEntryEvent.CodexEntryEventArgs codex:
-                    {
-                        currentRegion = codex.Region;
-                        if (string.IsNullOrEmpty(codex.Name) == false)
-                            AddCodex(codex.Name);
-                    }
-                    break;
-                case ScanOrganicEvent.ScanOrganicEventArgs scanOrganic:
-                    {
-                        try
+                switch (e.EventData)
+                {
+                    case FSDJumpEvent.FSDJumpEventArgs fsdJump:
                         {
-                            AddBioScan(scanOrganic);
-                            if (string.IsNullOrEmpty(scanOrganic.Species) == false)
-                                AddSpecies(scanOrganic.Species);
-                            if (string.IsNullOrEmpty(scanOrganic.Variant) == false)
-                                AddCodex(scanOrganic.Variant);
+                            currentRegion = (GalacticRegions)RegionMap.FindRegion(fsdJump.StarPos.X, fsdJump.StarPos.Y, fsdJump.StarPos.Z).Id;
                         }
-                        catch (NullReferenceException nullRef)
+                        break;
+                    case CodexEntryEvent.CodexEntryEventArgs codex:
                         {
-                            App.Logger.Error(nullRef.Message);
+                            currentRegion = codex.Region;
+                            if (string.IsNullOrEmpty(codex.Name) == false)
+                                AddCodex(codex.Name);
                         }
-                        catch (Exception ex)
+                        break;
+                    case ScanOrganicEvent.ScanOrganicEventArgs scanOrganic:
                         {
-                            App.Logger.Error(ex.Message);
+                            try
+                            {
+                                AddBioScan(scanOrganic);
+                                if (string.IsNullOrEmpty(scanOrganic.Species) == false)
+                                    AddSpecies(scanOrganic.Species);
+                                if (string.IsNullOrEmpty(scanOrganic.Variant) == false)
+                                    AddCodex(scanOrganic.Variant);
+                            }
+                            catch (NullReferenceException nullRef)
+                            {
+                                App.Logger.Error(nullRef.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                App.Logger.Error(ex.Message);
+                            }
                         }
-                    }
-                    break;
-                case SellOrganicDataEvent.SellOrganicDataEventArgs sellOrganic:
-                    {
-                        foreach (var organic in sellOrganic.BioData)
+                        break;
+                    case SellOrganicDataEvent.SellOrganicDataEventArgs sellOrganic:
                         {
-                            MarkBioSold(organic);
+                            foreach (var organic in sellOrganic.BioData)
+                            {
+                                MarkBioSold(organic);
+                            }
                         }
-                    }
-                    break;
-                case DiedEvent.DiedEventArgs:
-                    {
-                        MarkUnsoldLost();
-                    }
-                    break;
+                        break;
+                    case DiedEvent.DiedEventArgs:
+                        {
+                            MarkUnsoldLost();
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                App.Logger.Error(ex, "Exception parsing journal logs");
             }
         }
 

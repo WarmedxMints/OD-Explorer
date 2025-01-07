@@ -8,6 +8,7 @@ using ODUtils.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace ODExplorer.Stores
@@ -135,26 +136,36 @@ namespace ODExplorer.Stores
 
         public static void ResetWindowPositionActual(WindowPositionViewModel windowPosition, double windowWidth = 1800, double windowHeight = 1050)
         {
-            double screenWidth = SystemParameters.PrimaryScreenWidth;
-            double screenHeight = SystemParameters.PrimaryScreenHeight;
-
-            var left = (screenWidth / 2) - (windowWidth / 2);
-            var top = (screenHeight / 2) - (windowHeight / 2);
-
-            if (windowHeight > SystemParameters.VirtualScreenHeight)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                windowHeight = SystemParameters.VirtualScreenHeight;
+                double screenWidth = SystemParameters.PrimaryScreenWidth;
+                double screenHeight = SystemParameters.PrimaryScreenHeight;
+
+                var left = (screenWidth / 2) - (windowWidth / 2);
+                var top = (screenHeight / 2) - (windowHeight / 2);
+
+                if (windowHeight > SystemParameters.VirtualScreenHeight)
+                {
+                    windowHeight = SystemParameters.VirtualScreenHeight;
+                }
+
+                if (windowWidth > SystemParameters.VirtualScreenWidth)
+                {
+                    windowWidth = SystemParameters.VirtualScreenWidth;
+                }
+
+                windowPosition.Top = top;
+                windowPosition.Left = left;
+                windowPosition.Width = windowWidth;
+                windowPosition.Height = windowHeight;
+                windowPosition.State = WindowState.Normal;
+                return;
             }
 
-            if (windowWidth > SystemParameters.VirtualScreenWidth)
-            {
-                windowWidth = SystemParameters.VirtualScreenWidth;
-            }
-
-            windowPosition.Top = top;
-            windowPosition.Left = left;
-            windowPosition.Width = windowWidth;
-            windowPosition.Height = windowHeight;
+            windowPosition.Top = 10;
+            windowPosition.Left = 10;
+            windowPosition.Width = 800;
+            windowPosition.Height = 600;
             windowPosition.State = WindowState.Normal;
         }
         #endregion

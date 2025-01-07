@@ -22,7 +22,8 @@ namespace ODExplorer.Models
         CopyToClipboard = 1 << 5,
         EDSMValuableBody = 1 << 6,
         NewBioSpecies = 1 << 7,       
-        All = ~(-1 << 8)
+        SpanshCSV = 1 << 8,       
+        All = ~(-1 << 9)
     }
 
     public sealed class NotificationSettings

@@ -44,7 +44,15 @@ namespace ODExplorer.Stores
         #endregion
 
         private bool isLive;
-        public bool IsLive { get => isLive; private set { isLive = value; OnParserStoreLive?.Invoke(this, value); } }
+        public bool IsLive 
+        { 
+            get => isLive; 
+            private set 
+            { 
+                isLive = value; 
+                OnParserStoreLive?.Invoke(this, value); 
+            } 
+        }
         public bool Odyssey => !journalEventParser.Legacy;
         public List<JournalCommander> JournalCommanders => _journalCommanders;
         public NavigationRoute? GetNavRoute() => journalEventParser.ReadNavRouteJson(settingsStore.SelectedCommanderID);
@@ -75,7 +83,10 @@ namespace ODExplorer.Stores
             var commander = odToolsDatabase.GetCommander(commanderID)
                         ?? new(0, "", "", "", false);
 
-            journalEventParser.StartWatching(commander, null);
+            if (!journalEventParser.StartWatching(commander, null))
+            {
+                IsLive = true;
+            }
         }
 
         public void ReadNewDirectory(string path)
@@ -91,7 +102,10 @@ namespace ODExplorer.Stores
 
             var commander = new JournalCommander(-1, "", path, null, false);
 
-            journalEventParser.StartWatching(commander);
+            if (!journalEventParser.StartWatching(commander, null))
+            {
+                IsLive = true;
+            }
         }
 
         private async Task OnJournalLiveStatusChange(bool e)

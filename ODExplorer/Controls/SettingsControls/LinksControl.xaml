@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ODExplorer.Controls"
              mc:Ignorable="d"
+             UseLayoutRounding="True"
              d:DesignHeight="450"
              d:DesignWidth="800">
     <GroupBox Header="Links &amp; Credits"
@@ -117,7 +118,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/eucalyp"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            Eucalyp on wwww.flaticon.com
+                            Eucalyp on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -136,7 +137,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/ayub-irawan"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            Ayub Irawan on wwww.flaticon.com
+                            Ayub Irawan on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -155,7 +156,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/kiranshastry"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            Kiranshastry on wwww.flaticon.com
+                            Kiranshastry on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -174,7 +175,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/turkkub"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            turkkub on wwww.flaticon.com
+                            turkkub on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -193,7 +194,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/nikita-golubev"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            nikita-golubev on wwww.flaticon.com
+                            nikita-golubev on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -212,7 +213,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/srip"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            srip on wwww.flaticon.com
+                            srip on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -231,7 +232,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/kornkun"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            kornkun on wwww.flaticon.com
+                            kornkun on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -250,7 +251,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/good-ware"
                                        RequestNavigate="Hyperlink_RequestNavigate"
                                        Foreground="{DynamicResource PrimaryForeground}">
-                            Good Ware on wwww.flaticon.com
+                            Good Ware on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -269,7 +270,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/khoirul-huda"
                                             RequestNavigate="Hyperlink_RequestNavigate"
                                             Foreground="{DynamicResource PrimaryForeground}">
-                            Khoirul Huda on wwww.flaticon.com
+                            Khoirul Huda on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -294,7 +295,7 @@
                         <Hyperlink NavigateUri="https://www.flaticon.com/authors/justicon"
                                    RequestNavigate="Hyperlink_RequestNavigate"
                                    Foreground="{DynamicResource PrimaryForeground}">
-                            justicon on wwww.flaticon.com
+                            justicon on www.flaticon.com
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -537,6 +538,21 @@
                      </Hyperlink>
                     </TextBlock>
                 </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/NotificationIcons/refuel.png"
+                           Height="18"
+                           Width="18"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           Margin="10,5,20,0" />
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink NavigateUri="https://www.flaticon.com/authors/handicon"
+                            RequestNavigate="Hyperlink_RequestNavigate"
+                            Foreground="{DynamicResource PrimaryForeground}">
+                            Hanicon on www.flaticon.com
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
                 
                 <TextBlock VerticalAlignment="Center">
                     <Hyperlink NavigateUri="https://github.com/klightspeed/EliteDangerousRegionMap"
@@ -545,6 +561,7 @@
                         klightspeed Region Map
                     </Hyperlink>
                 </TextBlock>
+      
             </StackPanel>
         </Grid>
     </GroupBox>

@@ -55,6 +55,7 @@
     <None Remove="Resources\paypal-donate-button.png" />
     <None Remove="Resources\Premium.png" />
     <None Remove="Resources\RedArrow.png" />
+    <None Remove="Resources\refuel.png" />
     <None Remove="Resources\Selection-galaxy-map.png" />
     <None Remove="Resources\settings.png" />
     <None Remove="Resources\spansh.png" />
@@ -149,6 +150,7 @@
     <Resource Include="Resources\paypal-donate-button.png" />
     <Resource Include="Resources\Premium.png" />
     <Resource Include="Resources\RedArrow.png" />
+    <Resource Include="Resources\NotificationIcons\refuel.png" />
     <Resource Include="Resources\Selection-galaxy-map.png" />
     <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\spansh.png" />

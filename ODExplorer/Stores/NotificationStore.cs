@@ -175,6 +175,16 @@ namespace ODExplorer.Stores
             });
         }
 
+        internal void ShowSpanshNotification(SpanshNotificationType type)
+        {
+            if (settingsStore.NotificationSettings.NotificationsEnabled == false || settingsStore.NotificationOptions.HasFlag(NotificationOptions.SpanshCSV) == false)
+                return;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                notifier.Notify(() => new SpanshNotification(settingsStore.NotificationSettings, messageOptions, type));
+            });
+        }
         internal void CheckForNotableNotifications(SystemBody body)
         {
             if (settingsStore.NotificationSettings.NotificationsEnabled == false)

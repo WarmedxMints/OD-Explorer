@@ -24,7 +24,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto"
+                           MinHeight="40"/>
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding ElementName=Root, Path=Title}"
                    Margin="0,0,10,0"

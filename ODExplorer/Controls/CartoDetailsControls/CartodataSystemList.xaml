@@ -181,6 +181,13 @@
                           HeadersVisibility="Column"
                           BorderThickness="0"
                           Style="{DynamicResource BaseDataGridStyle}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}"
+                               BasedOn="{StaticResource CommanderRowStyle}">
+                            <Setter Property="ToolTip"
+                                    Value="{Binding ToolTip}" />
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding BodyID}"
                                             SortMemberPath="BodyID"

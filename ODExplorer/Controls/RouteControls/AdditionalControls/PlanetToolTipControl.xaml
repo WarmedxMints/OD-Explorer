@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:ODExplorer.Controls"
              xmlns:viewModel="clr-namespace:ODExplorer.ViewModels.ModelVMs"
              mc:Ignorable="d"
+             FontFamily="{StaticResource Eurostile}"
              Foreground="{DynamicResource PrimaryForeground}"
              d:DataContext="{d:DesignInstance Type=viewModel:SystemBodyViewModel}"
              d:DesignHeight="450"

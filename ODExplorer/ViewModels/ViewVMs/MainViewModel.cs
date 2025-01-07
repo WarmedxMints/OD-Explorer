@@ -67,6 +67,11 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             currentSystem = null;
             OrganicSignals.ClearCollection();
+            //If the store is already live then no commanders where found
+            if (_journalParserStore.IsLive)
+            {
+                UiEnabled = true;
+            }
 
             OnCurrentSystemUpdated(null, explorationData.CurrentSystem);
             ExplorationData_OnRouteUpdated("Start up", explorationData.Route);

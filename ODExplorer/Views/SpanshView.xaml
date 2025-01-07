@@ -126,10 +126,7 @@
                           Grid.Column="2" />
             </Grid>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Auto"
-                      Grid.Row="1">
-            <Grid>
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="20" />
@@ -154,7 +151,7 @@
                           BorderThickness="0.5">
                     <controls:FleetCarrierTimerControl />
                 </GroupBox>
-
+     
                 <GroupBox Header="Route Details"
                           Margin="10"
                           Padding="10"
@@ -189,9 +186,8 @@
                     </DataGrid>
                     </Grid>
                 </GroupBox>
-                
-            </Grid>
-        </ScrollViewer>
+        </Grid>
+       
     </Grid>
    
 </UserControl>

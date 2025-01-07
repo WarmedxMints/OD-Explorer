@@ -37,14 +37,22 @@ namespace ODExplorer.ViewModels.ViewVMs
             UpdateStatusText("Checking For App Updates");
             await Task.Delay(1000);
 
-            var updateInfo = await Json.GetJsonFromUrlAndDeserialise<UpdateInfo>("https://raw.githubusercontent.com", "/WarmedxMints/ODUpdates/main/ODExplorerUpdate.json");
-
-            if (updateInfo.Version > App.AppVersion)
+            try
             {
-                OnUpdateAvailable?.Invoke(updateInfo);
-                return;
-            }
+                var updateInfo = await Json.GetJsonFromUrlAndDeserialise<UpdateInfo>("https://raw.githubusercontent.com", "/WarmedxMints/ODUpdates/main/ODExplorerUpdate.json");
 
+                if (updateInfo.Version > App.AppVersion)
+                {
+                    OnUpdateAvailable?.Invoke(updateInfo);
+                    return;
+                }
+            }
+            catch (Exception ex) 
+            {
+                UpdateStatusText("Error Getting Update");
+                App.Logger.Error(ex.Message);
+                await Task.Delay(1000);
+            }
             await MigrateDatabase();
         }
 
@@ -52,28 +60,47 @@ namespace ODExplorer.ViewModels.ViewVMs
         {
             UpdateStatusText("Migrating Database");
             await Task.Delay(1000);
-            using var dbContext = dbContextFactory.CreateDbContext();
-            await dbContext.Database.MigrateAsync();
-
-            if (provider is OdExplorerDatabaseProvider e)
+            try
             {
-                try
-                {
-                    UpdateStatusText("Updating Points of Interest");
-                    var pois = await edAstroApi.GetPois().ConfigureAwait(true);
+                using var dbContext = dbContextFactory.CreateDbContext();
+                await dbContext.Database.MigrateAsync();
 
-                    if (pois.Count > 0)
+                if (provider is OdExplorerDatabaseProvider e)
+                {
+                    try
                     {
-                        e.AddEdAstroPois(pois);
+                        UpdateStatusText("Updating Points of Interest");
+                        var pois = await edAstroApi.GetPois().ConfigureAwait(true);
+
+                        if (pois.Count > 0)
+                        {
+                            e.AddEdAstroPois(pois);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateStatusText("Error updating Points of Interest");
+                        App.Logger.Error(ex);
                     }
                 }
-                catch (Exception ex)
-                {
-                    UpdateStatusText("Error updating Points of Interest");
-                    App.Logger.Error(ex);
-                }
+                OnUpdateComplete?.Invoke();
             }
-            OnUpdateComplete?.Invoke();
+            catch (Microsoft.Data.Sqlite.SqliteException ex)
+            {
+                UpdateStatusText("Error Accessing Database\nApplication will now close");
+                await Task.Delay(5000);
+                App.Logger.Error(ex.Message);
+                App.Logger.Error(ex.StackTrace);
+                App.Current.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                UpdateStatusText("Error Loading OD Explorer\nApplication will now close");
+                await Task.Delay(5000);
+                App.Logger.Error(ex.Message);
+                App.Logger.Error(ex.StackTrace);
+                App.Current.Shutdown();
+            }
         }
 
         private void UpdateStatusText(string text)

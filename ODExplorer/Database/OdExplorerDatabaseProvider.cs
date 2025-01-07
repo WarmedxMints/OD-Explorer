@@ -512,7 +512,7 @@ namespace ODExplorer.Database
 
             foreach (var system in ignoredSystems)
             {
-                if(system is null)
+                if (system is null)
                     continue;
 
                 system.Commanders.Remove(cmdr);
