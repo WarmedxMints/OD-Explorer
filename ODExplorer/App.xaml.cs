@@ -21,7 +21,7 @@ namespace ODExplorer
     {
         public static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static readonly Version AppVersion = new(2, 0, 7);
+        public static readonly Version AppVersion = new(2, 0, 8);
 #if INSTALL
         public readonly static string BaseDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OD Explorer");
 #else

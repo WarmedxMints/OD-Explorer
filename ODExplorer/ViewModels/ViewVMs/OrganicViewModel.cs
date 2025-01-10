@@ -323,51 +323,67 @@ namespace ODExplorer.ViewModels.ViewVMs
             switch (key)
             {
                 case "$Codex_Ent_Aleoids_Genus_Name;":
+                    UpdateSpeciesCounts(Aleoida);
                     OnPropertyChanged(nameof(Aleoida));
                     break;
                 case "$Codex_Ent_Bacterial_Genus_Name;":
+                    UpdateSpeciesCounts(Bacterium);
                     OnPropertyChanged(nameof(Bacterium));
                     break;
                 case "$Codex_Ent_Cactoid_Genus_Name;":
+                    UpdateSpeciesCounts(Cactoida);
                     OnPropertyChanged(nameof(Cactoida));
                     break;
                 case "$Codex_Ent_Clypeus_Genus_Name;":
+                    UpdateSpeciesCounts(Clypeus);
                     OnPropertyChanged(nameof(Clypeus));
                     break;
                 case "$Codex_Ent_Conchas_Genus_Name;":
+                    UpdateSpeciesCounts(Concha);
                     OnPropertyChanged(nameof(Concha));
                     break;
                 case "$Codex_Ent_Electricae_Genus_Name":
+                    UpdateSpeciesCounts(Electricae);
                     OnPropertyChanged(nameof(Electricae));
                     break;
                 case "$Codex_Ent_Fonticulus_Genus_Name":
+                    UpdateSpeciesCounts(Fonticulua);
                     OnPropertyChanged(nameof(Fonticulua));
                     break;
                 case "$Codex_Ent_Fumerolas_Genus_Name;":
+                    UpdateSpeciesCounts(Fumerola);
                     OnPropertyChanged(nameof(Fumerola));
                     break;
                 case "$Codex_Ent_Fungoids_Genus_Name;":
+                    UpdateSpeciesCounts(Fungoida);
                     OnPropertyChanged(nameof(Fungoida));
                     break;
                 case "$Codex_Ent_Osseus_Genus_Name;":
+                    UpdateSpeciesCounts(Osseus);
                     OnPropertyChanged(nameof(Osseus));
                     break;
                 case "$Codex_Ent_Recepta_Genus_Name;":
+                    UpdateSpeciesCounts(Recepta);
                     OnPropertyChanged(nameof(Recepta));
                     break;
                 case "$Codex_Ent_Shrubs_Genus_Name;":
+                    UpdateSpeciesCounts(Frutexa);
                     OnPropertyChanged(nameof(Frutexa));
                     break;
                 case "$Codex_Ent_Stratum_Genus_Name;":
+                    UpdateSpeciesCounts(Stratum);
                     OnPropertyChanged(nameof(Stratum));
                     break;
                 case "$Codex_Ent_Tubus_Genus_Name;":
+                    UpdateSpeciesCounts(Tubus);
                     OnPropertyChanged(nameof(Tubus));
                     break;
                 case "$Codex_Ent_Tussocks_Genus_Name;":
+                    UpdateSpeciesCounts(Tussock);
                     OnPropertyChanged(nameof(Tussock));
                     break;
                 case "Other":
+                    UpdateSpeciesCounts(Other);
                     OnPropertyChanged(nameof(Other));
                     break;
             }
@@ -375,6 +391,13 @@ namespace ODExplorer.ViewModels.ViewVMs
             CountBios();
         }
 
+        private static void UpdateSpeciesCounts(IReadOnlyList<OrganicCheckListItemViewModel> list)
+        {
+            foreach(var item in list)
+            {
+                item.UpdateCounts();
+            }
+        }
         private void ExplorationDataStore_OnBioDataLost(object? sender, EventArgs e)
         {
             BuildLostList();

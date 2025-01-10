@@ -60,8 +60,7 @@ namespace ODExplorer.ViewModels.ModelVMs
         {
             get
             {
-                var count = Variants.Where(x => x.StageValue >= OrganicScanState.Analysed).DistinctBy(x => x.CodexValue).Count();
-                var variantCount = Variants.Count;
+                var count = Variants.Where(x => x.StageValue >= OrganicScanState.Discovered).DistinctBy(x => x.CodexValue).Count();
                 return $"{count}";
             }
         }
@@ -73,6 +72,12 @@ namespace ODExplorer.ViewModels.ModelVMs
                 var variantCount = Variants.Count;
                 return $"{variantCount}";
             }
+        }
+
+        public void UpdateCounts()
+        {
+            OnPropertyChanged(nameof(VariantCount));
+            OnPropertyChanged(nameof(TotalVariants));
         }
     }
 }

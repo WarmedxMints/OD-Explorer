@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Windows.Forms.AxHost;
 
 namespace ODExplorer.Stores
 {
@@ -103,7 +104,7 @@ namespace ODExplorer.Stores
                     return;
 
                 item.AddRegion(currentRegion, state);
-                if (string.IsNullOrEmpty(scanOrganic.Variant_Localised) == false)
+                if (string.IsNullOrEmpty(scanOrganic.Variant) == false)
                 {
                     var names = ExoData.GetNames(scanOrganic.Variant);
 
@@ -116,7 +117,6 @@ namespace ODExplorer.Stores
                         item.AddVariant(scanOrganic.Variant, scanOrganic.Variant_Localised, currentRegion, state);
                     }
                 }
-
 
                 if (parserStore.IsLive)
                     OnSpeciesUpdated?.Invoke(this, scanOrganic.Genus);
@@ -277,8 +277,45 @@ namespace ODExplorer.Stores
                     case CodexEntryEvent.CodexEntryEventArgs codex:
                         {
                             currentRegion = codex.Region;
-                            if (string.IsNullOrEmpty(codex.Name) == false)
-                                AddCodex(codex.Name);
+
+                            if (codex.Category != "$Codex_Category_Biology;")
+                                break;
+                            
+                            if (string.IsNullOrEmpty(codex.Name))
+                                break;
+
+                            AddCodex(codex.Name);                            
+
+                            var bioNames = ExoData.GetNames(codex.Name);
+
+                            if (bioNames == null)
+                                break;
+                                                   
+                            if (OrganicScanItems.TryGetValue(bioNames.GenusCodex, out var items))
+                            {
+                                var item = items.FirstOrDefault(x => x.SpeciesCodex == bioNames.SpeciesCodex);
+
+                                if (item is null)
+                                    return;
+
+                                item.AddRegion(currentRegion, OrganicScanState.Discovered);
+
+                                if (item.Variants.TryGetValue(currentRegion, out var variants))
+                                {
+                                    var knownVariant = variants.FirstOrDefault(x => x.VaritantCodex == codex.Name);
+
+                                    if(knownVariant == null)
+                                    {
+                                        knownVariant = new(codex.Name, codex.Name_Localised, currentRegion, OrganicScanState.Discovered);
+                                        variants.Add(knownVariant);
+                                    }
+
+                                    knownVariant.State = OrganicScanState.Discovered;
+
+                                    if (parserStore.IsLive)
+                                        OnSpeciesUpdated?.Invoke(this, bioNames.GenusCodex);
+                                }
+                            }
                         }
                         break;
                     case ScanOrganicEvent.ScanOrganicEventArgs scanOrganic:
