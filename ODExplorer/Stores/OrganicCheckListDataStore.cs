@@ -310,7 +310,8 @@ namespace ODExplorer.Stores
                                         variants.Add(knownVariant);
                                     }
 
-                                    knownVariant.State = OrganicScanState.Discovered;
+                                    if(knownVariant.State < OrganicScanState.Discovered)
+                                        knownVariant.State = OrganicScanState.Discovered;
 
                                     if (parserStore.IsLive)
                                         OnSpeciesUpdated?.Invoke(this, bioNames.GenusCodex);

@@ -231,7 +231,7 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             if (items.Any(x => x.Region.ContainsKey(SelectedRegion)))
             {
-                return items.Select(x => new OrganicCheckListItemViewModel()
+                return items.Where(x => x.Region.ContainsKey(SelectedRegion)).Select(x => new OrganicCheckListItemViewModel()
                 {
                     CodexValue = x.SpeciesCodex,
                     Name = x.Name,
