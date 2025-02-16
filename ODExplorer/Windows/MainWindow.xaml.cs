@@ -33,6 +33,7 @@ namespace ODExplorer.Windows
                 WindowState = vm.SettingsStore.WindowPosition.State;
                 vm.OnMessageBoxRequested += Vm_OnMessageBoxRequested;
                 vm.AdjustUiScaleEvent += Vm_OnAdjustUiScale;
+                vm.AdjustMinimumValueEvent += Vm_OnAdjustMinimumValue;
             }
             base.WindowBase_Loaded(sender, e);
         }
@@ -40,6 +41,16 @@ namespace ODExplorer.Windows
         private void Vm_OnAdjustUiScale(object? sender, EventArgs e)
         {
             var adjuster = new UiScaleAdjustment()
+            {
+                DataContext = this.DataContext,
+                Owner = this
+            };
+            adjuster.ShowDialog();
+        }
+
+        private void Vm_OnAdjustMinimumValue(object? sender, EventArgs e)
+        {
+            var adjuster = new MinimumValueAdjustment()
             {
                 DataContext = this.DataContext,
                 Owner = this

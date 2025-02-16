@@ -63,6 +63,9 @@ namespace ODExplorer.ViewModels.ViewVMs
             AdjustUiScale = new RelayCommand(OnAdjustUiScale, (_) => UiEnabled);
             ResetUiScale = new RelayCommand(OnResetUiScale);
 
+            AdjustMinimumValue = new RelayCommand(OnAdjustMinimumValue, (_) => UiEnabled);
+            ResetMinimumValue = new RelayCommand(OnResetMinimumValue);
+
             Title = $"OD Explorer v{App.AppVersion}";
 
             currentSystem = null;
@@ -113,6 +116,16 @@ namespace ODExplorer.ViewModels.ViewVMs
             {
                 SettingsStore.UiScale = value;
                 OnPropertyChanged(nameof(UiScale));
+            }
+        }
+
+        public double MinimumValue
+        {
+            get => SettingsStore.MinimumValue;
+            set
+            {
+                SettingsStore.MinimumValue = value;
+                OnPropertyChanged(nameof(MinimumValue));
             }
         }
         #endregion
@@ -228,11 +241,14 @@ namespace ODExplorer.ViewModels.ViewVMs
         public ICommand NavigateToView { get; }
         public ICommand AdjustUiScale { get; }
         public ICommand ResetUiScale { get; }
+        public ICommand AdjustMinimumValue { get; }
+        public ICommand ResetMinimumValue { get; }
         #endregion
 
         #region Events & Methods
         public event EventHandler<MessageBoxEventArgsAsync>? OnMessageBoxRequested;
         public event EventHandler? AdjustUiScaleEvent;
+        public event EventHandler? AdjustMinimumValueEvent;
         public event EventHandler<StarSystemViewModel?>? OnCurrentSystemUpdatedEvent;
         public event EventHandler<ObservableCollection<StarSystemViewModel>>? OnRouteUpdated;
         public event EventHandler<SystemBodyViewModel>? OnBodyUpdated;
@@ -241,13 +257,6 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         private void Settings_OnSystemGridSettingsUpdatedEvent(object? sender, EventArgs e)
         {
-            if (OrganicSignals.Count != 0)
-            {
-                foreach (var signal in OrganicSignals)
-                {
-                    signal.SetAlternationIndexes();
-                }
-            }
             OnPropertyChanged(nameof(FilterUnconfirmedBios));
         }
 
@@ -355,6 +364,15 @@ namespace ODExplorer.ViewModels.ViewVMs
         private void OnAdjustUiScale(object? obj)
         {
             AdjustUiScaleEvent?.Invoke(obj, EventArgs.Empty);
+        }
+        private void OnResetMinimumValue(object? obj)
+        {
+            MinimumValue = 0;
+        }
+
+        private void OnAdjustMinimumValue(object? obj)
+        {
+            AdjustMinimumValueEvent?.Invoke(obj, EventArgs.Empty);
         }
 
         private void OnResetWindowPos(object? obj)
@@ -509,7 +527,7 @@ namespace ODExplorer.ViewModels.ViewVMs
                 {
                     var body = system.UpdateBody(e);
 
-                    if (system.Address == _explorationData.CurrentSystem?.Address && body.BiologicalSignals > 0)
+                    if (system.Address == _explorationData.CurrentSystem?.Address && body.FilteredOrganicScanItems.Count > 0)
                     {
                         if (OrganicSignals.Contains(body) == false)
                             OrganicSignals.AddToCollection(body);

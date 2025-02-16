@@ -89,7 +89,7 @@ namespace ODExplorer.Controls
         {
             if (sender is ListCollectionView view && view.CurrentItem is SystemBodyViewModel body)
             {
-                OrganicGrid.ItemsSource = body.OrganicScanItems;
+                OrganicGrid.ItemsSource = body.FilteredOrganicScanItems;
             }
         }
 

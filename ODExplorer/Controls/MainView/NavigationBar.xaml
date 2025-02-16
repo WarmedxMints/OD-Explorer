@@ -38,6 +38,8 @@
                            SharedSizeGroup="Button" />
             <RowDefinition Height="Auto"
                            SharedSizeGroup="Button" />
+            <RowDefinition Height="Auto"
+                           SharedSizeGroup="Button" />
         </Grid.RowDefinitions>
         <Button  Style="{StaticResource ColourImageBtn}"
                  Foreground="{DynamicResource PrimaryControlForeground}"
@@ -129,11 +131,25 @@
         </Button>
 
         <Button Style="{StaticResource ColourImageBtn}"
+                ToolTip="Adjust UI Scale"
+                Foreground="{DynamicResource PrimaryControlForeground}"
+                Command="{Binding AdjustMinimumValue}"
+                Grid.Row="7" >
+            <Image Source="/Resources/value.png"
+                   Stretch="Uniform"
+                   SnapsToDevicePixels="True"
+                   UseLayoutRounding="True"
+                   Margin="3"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        </Button>
+
+        <Button Style="{StaticResource ColourImageBtn}"
                 ToolTip="Notification Settings"
                 Foreground="{DynamicResource PrimaryControlForeground}"
                 Command="{Binding NavigateToView}"
                 CommandParameter="{x:Static models:ActiveViewModel.DisplaySettings}"
-                Grid.Row="7" >
+                Grid.Row="8" >
             <Image Source="/Resources/monitor.png"
                    Stretch="Uniform"
                    SnapsToDevicePixels="True"
@@ -148,7 +164,7 @@
                 Foreground="{DynamicResource PrimaryControlForeground}"
                 Command="{Binding NavigateToView}"
                 CommandParameter="{x:Static models:ActiveViewModel.Settings}"
-                Grid.Row="8" >
+                Grid.Row="9" >
             <Image Source="/Resources/settings.png"
                    Stretch="Uniform"
                    SnapsToDevicePixels="True"
