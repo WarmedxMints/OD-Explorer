@@ -295,6 +295,14 @@ namespace ODExplorer.ViewModels.ModelVMs
         public bool HasMaterials => Materials?.Count > 0;
         private ObservableCollection<OrganicScanItemViewModel> _organicScanItems = [];
         public ObservableCollection<OrganicScanItemViewModel> OrganicScanItems { get => _organicScanItems; set { _organicScanItems = value; OnPropertyChanged(nameof(OrganicScanItems)); } }
+        public ObservableCollection<OrganicScanItemViewModel> FilteredOrganicScanItems { get { 
+                ObservableCollection<OrganicScanItemViewModel> result = [.. _organicScanItems.Where(
+                    e => (e.Value > settingsStore.MinimumValue) && (!(e.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios))
+                )];
+                SetAlternationIndexes(settingsStore, result);
+                return result;
+            } 
+        }
         #endregion
         public bool IsNonBody => _body.IsPlanet == false && _body.IsStar == false;
 
@@ -324,17 +332,10 @@ namespace ODExplorer.ViewModels.ModelVMs
                 organicsToAdd.Add(newOrganic);
             }
             var biosToAdd = organicsToAdd.OrderBy(x => x.GenusEnglish).ThenBy(x => x.SpeciesEnglish);
-
-            SetAlternationIndexes(settingsStore, biosToAdd);
             OrganicScanItems.AddRangeToCollection(biosToAdd);
             OnPropertyChanged(nameof(OrganicValues));
             OnPropertyChanged(nameof(OrganicScanItems));
             return true;
-        }
-
-        public void SetAlternationIndexes()
-        {
-            SetAlternationIndexes(settingsStore, OrganicScanItems);
         }
 
         private static void SetAlternationIndexes(SettingsStore settingsStore, IEnumerable<OrganicScanItemViewModel> biosToAdd)
@@ -343,23 +344,10 @@ namespace ODExplorer.ViewModels.ModelVMs
             OrganicScanItemViewModel? lastItem = null;
             foreach (var item in biosToAdd)
             {
-                if (item.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios)
+                if (lastItem?.GenusCodex != item.GenusCodex)
                 {
-                    lastItem = item;
-                    continue;
+                    currentIndex = currentIndex == 0 ? 1 : 0;
                 }
-                if (lastItem != null && lastItem.GenusCodex == item.GenusCodex)
-                {
-                    if (lastItem.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios)
-                    {
-                        currentIndex = currentIndex == 0 ? 1 : 0;
-                    }
-                    item.AlternationIndex = currentIndex;
-                    lastItem = item;
-                    continue;
-
-                }
-                currentIndex = currentIndex == 0 ? 1 : 0;
                 item.AlternationIndex = currentIndex;
                 lastItem = item;
             }
@@ -370,7 +358,6 @@ namespace ODExplorer.ViewModels.ModelVMs
             if (OrganicScanItems is null || OrganicScanItems.Count == 0)
                 return;
 
-            SetAlternationIndexes();
             foreach (var item in OrganicScanItems)
             {
                 item.OnInfoUpdated();

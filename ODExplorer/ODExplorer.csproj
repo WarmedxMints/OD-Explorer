@@ -79,6 +79,7 @@
     <None Remove="Resources\UCsmall.png" />
     <None Remove="Resources\UiScale.png" />
     <None Remove="Resources\ValuableBodiesPopOut.png" />
+    <None Remove="Resources\value.png" />
     <None Remove="Resources\zoom.png" />
   </ItemGroup>
   <ItemGroup>

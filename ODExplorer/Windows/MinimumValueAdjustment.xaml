@@ -1,0 +1,69 @@
+﻿<windows:WindowBase x:Class="ODExplorer.Windows.MinimumValueAdjustment"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:local="clr-namespace:ODExplorer.Windows"
+                    xmlns:windows="clr-namespace:ODUtils.Windows;assembly=ODUtils"
+                    xmlns:viewModels="clr-namespace:ODExplorer.ViewModels.ViewVMs"
+                    xmlns:controls="clr-namespace:ODExplorer.Controls"
+                    mc:Ignorable="d"
+                    d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+                    x:Name="Root"
+                    Focusable="True"
+                    Title="Adjust Minimum Value"
+                    WindowStartupLocation="CenterOwner"
+                    FontFamily="{StaticResource Eurostile}"
+                    FontSize="18"
+                    Width="400"
+                    Height="190"
+                    Foreground="{DynamicResource PrimaryControlForeground}"
+                    Background="{DynamicResource PrimaryBackground}">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="30"
+                      GlassFrameThickness="1"
+                      ResizeBorderThickness="10" />
+    </WindowChrome.WindowChrome>
+    <Border BorderThickness="{Binding ElementName=Root, Path=MainWindowBorderThickness}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <windows:TitleBarColourIcon  Grid.Row="0"
+                                         TitlebarForeground="{StaticResource TitlebarForeGround}"
+                                         TitleBarIcon="/Resources/Astronaut.png" />
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Minimum Value"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+
+                <controls:SliderWithValue HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Center"
+                                          Grid.Row="1"
+                                          Minimum="0"
+                                          Maximum="19000000"
+                                          StringFormatting="Millions"
+                                          Value="{Binding MinimumValue}"
+                                          TickFrequency="0.1"
+                                          SmallChange="100000"
+                                          LargeChange="1000000" />
+
+                <Button x:Name="ResetBtn"
+                        Content="Reset"
+                        Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="10"
+                        Width="60"
+                        Height="25"
+                        Command="{Binding ResetMinimumValue}" />
+            </Grid>
+        </Grid>
+    </Border>
+</windows:WindowBase>

@@ -96,9 +96,9 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Visibility="{Binding OrganicScanItems.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}">
+                    <Grid Visibility="{Binding FilteredOrganicScanItems.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}">
                         <DataGrid Style="{DynamicResource BaseDataGridStyle}"
-                                  ItemsSource="{Binding OrganicScanItems}"
+                                  ItemsSource="{Binding FilteredOrganicScanItems}"
                                   x:Name="OrganicGrid"
                                   Margin="20,5,0,10"
                                   BorderThickness="0"

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ODExplorer.Controls
@@ -11,7 +12,8 @@ namespace ODExplorer.Controls
         ZeroDp,
         OneDp,
         TwoDp,
-        ThreeDp
+        ThreeDp,
+        Millions
     }
     public partial class SliderWithValue : UserControl
     {
@@ -120,6 +122,9 @@ namespace ODExplorer.Controls
                     break;
                 case ValueDisplayFormat.ThreeDp:
                     ValueText.Text = $"{e.NewValue:N3}";
+                    break;
+                case ValueDisplayFormat.Millions:
+                    ValueText.Text = e.NewValue.ToString("#,##0,,M", CultureInfo.InvariantCulture);
                     break;
                 default:
                     break;

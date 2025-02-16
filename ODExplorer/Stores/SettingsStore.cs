@@ -45,6 +45,7 @@ namespace ODExplorer.Stores
         public NotificationSettings NotificationSettings { get; set; } = NotificationSettings.GetDefault();
         public NotificationOptions NotificationOptions { get; set; } = NotificationOptions.All;
         public double UiScale { get; set; } = 1;
+        public double MinimumValue { get; set; } = 0;
         public SpanshCSVSettings SpanshCSVSettings { get; set; } = new();
         public NotableNotificationOptions NotableSettings { get; set; } = new();
         public DateTime JournalAgeDateTime
@@ -73,6 +74,7 @@ namespace ODExplorer.Stores
             {
                 SelectedCommanderID = SettingsDTO.SettingsDtoToInt(settings.GetSettingDTO(nameof(SelectedCommanderID)));
                 UiScale = SettingsDTO.SettingsDtoToDouble(settings.GetSettingDTO(nameof(UiScale)), 1);
+                MinimumValue = SettingsDTO.SettingsDtoToDouble(settings.GetSettingDTO(nameof(MinimumValue)), 0);
                 WindowPosition = SettingsDTO.SettingDtoToJson(settings.GetSettingDTO(nameof(WindowPosition)), WindowPosition);
                 CartoHorizontalGridSize = SettingsDTO.SettingDtoToJson(settings.GetSettingDTO(nameof(CartoHorizontalGridSize)), CartoHorizontalGridSize);
                 CartoDetailedGridSize = SettingsDTO.SettingDtoToJson(settings.GetSettingDTO(nameof(CartoDetailedGridSize)), CartoDetailedGridSize);
@@ -105,6 +107,7 @@ namespace ODExplorer.Stores
                 //Just in case someone closes the app while scanning a new directory
                 SettingsDTO.IntToSettingsDTO(nameof(SelectedCommanderID), SelectedCommanderID > 0 ? SelectedCommanderID : 0),
                 SettingsDTO.DoubleToSettingsDTO(nameof(UiScale), UiScale),
+                SettingsDTO.DoubleToSettingsDTO(nameof(MinimumValue), MinimumValue),
                 SettingsDTO.ObjectToJsonStringDto(nameof(WindowPosition), WindowPosition),
                 SettingsDTO.ObjectToJsonStringDto(nameof(CartoHorizontalGridSize), CartoHorizontalGridSize),
                 SettingsDTO.ObjectToJsonStringDto(nameof(CartoDetailedGridSize), CartoDetailedGridSize),
