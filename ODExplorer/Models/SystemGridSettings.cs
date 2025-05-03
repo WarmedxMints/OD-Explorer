@@ -17,6 +17,7 @@ namespace ODExplorer.Models
         public Pressure PressureUnit { get; set; }
         public Distance DistanceUnit { get; set; }
         public int ExoValuableBodyValue { get; set; } = 20_000_000;
+        public int MinExoValue { get; set; } = 0;
         public bool FilterUnconfirmedBios { get; set; } = true;
         public bool ShowBodyIcon { get; set; } = true;
         public bool ShowBodyId { get; set; } = true;
@@ -31,6 +32,7 @@ namespace ODExplorer.Models
                 ValuableBodyValue = 500_000,
                 ValuableBodyDistance = 0,
                 ExoValuableBodyValue = 20_000_000,
+                MinExoValue = 0,
                 IgnoreNonBodies = true,
                 ExcludeStarsFromSorting = true,
                 PressureUnit = Pressure.Pascal,
@@ -55,6 +57,7 @@ namespace ODExplorer.Models
                 && PressureUnit == setting.PressureUnit
                 && DistanceUnit == setting.DistanceUnit
                 && ExoValuableBodyValue == setting.ExoValuableBodyValue
+                && MinExoValue == setting.MinExoValue
                 && FilterUnconfirmedBios == setting.FilterUnconfirmedBios
                 && ShowBodyIcon == setting.ShowBodyIcon
                 && ShowBodyId == setting.ShowBodyId;

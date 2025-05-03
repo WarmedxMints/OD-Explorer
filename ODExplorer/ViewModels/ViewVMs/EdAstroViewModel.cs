@@ -1,12 +1,8 @@
-﻿using ICSharpCode.AvalonEdit.Document;
-using ODExplorer.Stores;
+﻿using ODExplorer.Stores;
 using ODExplorer.ViewModels.ModelVMs;
 using ODUtils.Dialogs.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ODExplorer.ViewModels.ViewVMs
 {

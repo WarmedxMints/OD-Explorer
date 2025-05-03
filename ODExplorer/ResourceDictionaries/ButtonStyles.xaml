@@ -137,6 +137,76 @@
     </Style>
 
     <Style TargetType="{x:Type Button}"
+           x:Key="BodiesColourImageBtn">
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryControlPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource PrimaryBackground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1,1,0,1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource NavigationBarBackground}" />
+                            <Setter Property="BorderThickness"
+                                    Value="1,1,0,1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            MinWidth="{TemplateBinding MinWidth}">
+                        <Grid>
+                            <ContentPresenter x:Name="MyContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" />
+                            <Border Background="{TemplateBinding Background}"
+                                    x:Name="ContentBackground">
+                                <Rectangle Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridCell}}"
+                                           Margin="{TemplateBinding Padding}"
+                                           Width="{Binding ElementName=MyContentPresenter, Path=ActualWidth}"
+                                           Height="{Binding ElementName=MyContentPresenter, Path=ActualHeight}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="None"
+                                                     Visual="{Binding ElementName=MyContentPresenter}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type Button}"
            x:Key="NavigationImageBtn">
         <Setter Property="SnapsToDevicePixels"
                 Value="True" />

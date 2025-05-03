@@ -1,7 +1,6 @@
 ﻿using ODExplorer.Models;
 using ODUtils.Models;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ToastNotifications.Core;

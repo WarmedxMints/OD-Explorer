@@ -172,7 +172,7 @@ namespace ODExplorer.ViewModels.ModelVMs
                 Bodies.AddToCollection(new(body, _settingsStore));
             }
             OnPropertyChanged(nameof(Bodies));
-            OnPropertyChanged(nameof(EstimatedValue)); 
+            OnPropertyChanged(nameof(EstimatedValue));
             OnPropertyChanged(nameof(IsKnownToEDSM));
             OnPropertyChanged(nameof(EdsmPercentage));
         }
@@ -211,10 +211,9 @@ namespace ODExplorer.ViewModels.ModelVMs
             OnPropertyChanged(nameof(GreenSystem));
             OnPropertyChanged(nameof(EstimatedValue));
             return newBody;
-
         }
 
-        internal static StarSystemViewModel BuildSystemForCartoDeteailsView(StarSystem system, SettingsStore settingsStore, NotificationStore notificationStore, DataState dataState)
+        internal static StarSystemViewModel BuildSystemForCartoDetailsView(StarSystem system, SettingsStore settingsStore, NotificationStore notificationStore, DataState dataState)
         {
             var ret = new StarSystemViewModel(system, settingsStore, notificationStore) { DataMode = dataState };
 

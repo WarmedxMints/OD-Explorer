@@ -10,15 +10,27 @@ using ODUtils.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace ODExplorer.ViewModels.ModelVMs
 {
-    public sealed class SystemBodyViewModel(SystemBody systemBody, SettingsStore settingsStore) : OdViewModelBase
+    public sealed class SystemBodyViewModel : OdViewModelBase
     {
-        private SettingsStore SettingsStore => settingsStore;
-        private readonly SystemBody _body = systemBody;
+        public SystemBodyViewModel(SystemBody systemBody, SettingsStore settingsStore)
+        {
+            SettingsStore = settingsStore;
+            _body = systemBody;
+
+            OrganicItems = CollectionViewSource.GetDefaultView(OrganicScanItems);
+            OrganicItems.Filter = CollectionViewSource_Filter;
+        }
+
+        private SettingsStore SettingsStore;
+        private readonly SystemBody _body;
         public SystemBody Body => _body;
         public string GoverningStar => _body.GoverningStar.ToString();
         #region DataGrid Properties
@@ -229,7 +241,7 @@ namespace ODExplorer.ViewModels.ModelVMs
             }
         }
 
-        public bool IsHighValueExo => _body.MinExoValue > settingsStore.SystemGridSetting.ExoValuableBodyValue;
+        public bool IsHighValueExo => _body.MinExoValue > SettingsStore.SystemGridSetting.ExoValuableBodyValue;
         #endregion
 
         #region Shared Properties
@@ -295,10 +307,34 @@ namespace ODExplorer.ViewModels.ModelVMs
         public bool HasMaterials => Materials?.Count > 0;
         private ObservableCollection<OrganicScanItemViewModel> _organicScanItems = [];
         public ObservableCollection<OrganicScanItemViewModel> OrganicScanItems { get => _organicScanItems; set { _organicScanItems = value; OnPropertyChanged(nameof(OrganicScanItems)); } }
+
+        public ICollectionView OrganicItems { get; private set; }
         #endregion
         public bool IsNonBody => _body.IsPlanet == false && _body.IsStar == false;
+        public bool HideItems { get; private set; } = true;
+        public int HiddenCount => OrganicScanItems.Where(x => x.IsHidden)?.Count() ?? 0;
 
         #region Methods
+
+        public void ToggleHiddenBios()
+        {
+            HideItems = !HideItems;
+            SetAlternationIndexes();
+            OrganicItems.Refresh();
+        }
+
+        private bool CollectionViewSource_Filter(object obj)
+        {
+            if (HideItems == false)
+                return true;
+             
+            if (obj is OrganicScanItemViewModel item)
+            {
+                return item.IsHidden == false || item.UnConfirmed && SettingsStore.SystemGridSetting.FilterUnconfirmedBios;
+            }
+            return false;
+        }
+
         internal bool AddOrganicItems()
         {
             if (_body.OrganicScanItems is null || _body.OrganicScanItems.IsEmpty)
@@ -312,6 +348,7 @@ namespace ODExplorer.ViewModels.ModelVMs
 
                 if (known != null)
                 {
+                    known.IsHidden = known.ScanStageEnum < OrganicScanStage.Codex && known.Value < SettingsStore.SystemGridSetting.MinExoValue;
                     known.OnInfoUpdated();
                     continue;
                 }
@@ -321,36 +358,41 @@ namespace ODExplorer.ViewModels.ModelVMs
                 {
                     newOrganic.Variants.Add(new(variant, newOrganic));
                 }
+
+                newOrganic.IsHidden = newOrganic.ScanStageEnum < OrganicScanStage.Codex && newOrganic.Value < SettingsStore.SystemGridSetting.MinExoValue;
                 organicsToAdd.Add(newOrganic);
             }
+
             var biosToAdd = organicsToAdd.OrderBy(x => x.GenusEnglish).ThenBy(x => x.SpeciesEnglish);
 
-            SetAlternationIndexes(settingsStore, biosToAdd);
+            SetAlternationIndexes(SettingsStore, biosToAdd);
             OrganicScanItems.AddRangeToCollection(biosToAdd);
             OnPropertyChanged(nameof(OrganicValues));
             OnPropertyChanged(nameof(OrganicScanItems));
+            OnPropertyChanged(nameof(HiddenCount));
+            OrganicItems.Refresh();
             return true;
         }
 
         public void SetAlternationIndexes()
         {
-            SetAlternationIndexes(settingsStore, OrganicScanItems);
+            SetAlternationIndexes(SettingsStore, OrganicScanItems);
         }
 
-        private static void SetAlternationIndexes(SettingsStore settingsStore, IEnumerable<OrganicScanItemViewModel> biosToAdd)
+        private void SetAlternationIndexes(SettingsStore settingsStore, IEnumerable<OrganicScanItemViewModel> biosToAdd)
         {
             var currentIndex = 1;
             OrganicScanItemViewModel? lastItem = null;
             foreach (var item in biosToAdd)
             {
-                if (item.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios)
+                if (item.IsHidden && HideItems || item.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios)
                 {
                     lastItem = item;
                     continue;
                 }
                 if (lastItem != null && lastItem.GenusCodex == item.GenusCodex)
                 {
-                    if (lastItem.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios)
+                    if (item.IsHidden && HideItems || lastItem.UnConfirmed && settingsStore.SystemGridSetting.FilterUnconfirmedBios)
                     {
                         currentIndex = currentIndex == 0 ? 1 : 0;
                     }
@@ -365,12 +407,23 @@ namespace ODExplorer.ViewModels.ModelVMs
             }
         }
 
+        internal void UpdateOrganicHiddenStates()
+        {
+            foreach (var item in OrganicScanItems)
+            {
+                item.IsHidden = item.ScanStageEnum < OrganicScanStage.Codex && item.Value < SettingsStore.SystemGridSetting.MinExoValue;
+            }
+            SetAlternationIndexes();
+            OnPropertyChanged(nameof(HiddenCount));
+            Application.Current.Dispatcher.Invoke(OrganicItems.Refresh);
+        }
+
         internal void UpdateOrganicInfo()
         {
             if (OrganicScanItems is null || OrganicScanItems.Count == 0)
                 return;
 
-            SetAlternationIndexes();
+            UpdateOrganicHiddenStates();
             foreach (var item in OrganicScanItems)
             {
                 item.OnInfoUpdated();
@@ -378,6 +431,7 @@ namespace ODExplorer.ViewModels.ModelVMs
             OnPropertyChanged(nameof(OrganicValues));
             OnPropertyChanged(nameof(OrganicScanItems));
         }
+
         public string BodyNameLocal()
         {
             if (string.IsNullOrEmpty(SystemName))

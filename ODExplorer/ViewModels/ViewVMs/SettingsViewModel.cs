@@ -6,14 +6,11 @@ using ODUtils.Commands;
 using ODUtils.Database.Interfaces;
 using ODUtils.Dialogs.ViewModels;
 using ODUtils.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace ODExplorer.ViewModels.ViewVMs
@@ -238,6 +235,13 @@ namespace ODExplorer.ViewModels.ViewVMs
             get => settingsStore.SystemGridSetting.DistanceUnit;
             set => settingsStore.SystemGridSetting.DistanceUnit = value;
         }
+
+        public int MinExoValue
+        {
+            get => settingsStore.SystemGridSetting.MinExoValue / 1_000_000;
+            set => settingsStore.SystemGridSetting.MinExoValue = value * 1_000_000;
+        }
+
         #region Commands
         public ICommand OpenPayPal { get; }
         public ICommand ToggleCommanderHidden { get; }
@@ -306,6 +310,9 @@ namespace ODExplorer.ViewModels.ViewVMs
         private void OnOpenPayPal(object? obj)
         {
             ODUtils.Helpers.OperatingSystem.OpenUrl("https://www.paypal.com/donate/?business=UPEJS3PN7H4XJ&no_recurring=0&item_name=Creator+of+OD+Software.+Thank+you+for+your+donation.&currency_code=GBP");
+            //https://www.paypal.com/donate/?business=UPEJS3PN7H4XJ&no_recurring=0&item_name=Creator+of+OD+Software.+Thank+you+for+your+donation.&currency_code=GBP
+            //https://www.paypal.com/donate/?business=UPEJS3PN7H4XJ&;no_recurring=0&;item_name=Creator+of+OD+Software.+Thank+you+for+your+donation.&;currency_code=GBP
+            //https://www.paypal.com/donate/?business=UPEJS3PN7H4XJ&no_recurring=0&item_name=Creator+of+OD+Software.+Thank+you+for+your+donation.&currency_code=GBP
         }
 
         private void OnOpenEdsm(object? obj)
@@ -395,6 +402,11 @@ namespace ODExplorer.ViewModels.ViewVMs
                 ScanningWindowVisibility = Visibility.Collapsed;
                 IsLoaded = true;
             });
+        }
+
+        internal void OnExoMinValueChanged()
+        {
+            mainViewModel.OnExoMinValueChanged();
         }
     }
 }

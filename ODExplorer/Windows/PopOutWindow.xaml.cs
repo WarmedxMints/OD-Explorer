@@ -2,35 +2,77 @@
 using ODExplorer.Models;
 using ODUtils.Windows;
 using System;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace ODExplorer.Windows
 {
+
     /// <summary>
     /// Interaction logic for PopOutWindow.xaml
     /// </summary>
     public partial class PopOutWindow : WindowBase
     {
+        private Rect windowRect = new();
+        private readonly Timer checkForMouseTimer;
+        private readonly Thickness twenty = new(20, 0, 20, 20);
+
         public new Thickness MaximisedThickness = new(5);
         public new Thickness NonMaximisedThickness = new(1);
+        public PopOutBase PopOutBase { get; }
+
         public PopOutWindow(PopOutBase popoutBase)
         {
             PopOutBase = popoutBase;
             PopOutBase.OnPopOutModeReset += PopOutBase_OnPopOutModeReset;
-            InitializeComponent();            
+            checkForMouseTimer = new(500);
+            checkForMouseTimer.Elapsed += OnMouseTimer;
+            Closing += PopOutWindow_Closing;
+            InitializeComponent();
+        }
+
+        private void PopOutWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            checkForMouseTimer.Stop();
+            checkForMouseTimer?.Dispose();
+        }
+
+        private void OnMouseTimer(object? sender, ElapsedEventArgs e)
+        {
+            //Get the mouse position
+            var mousePos = System.Windows.Forms.Control.MousePosition;
+            //Check if the mouse is within the window
+            var containsMouse = windowRect.Contains(mousePos.X, mousePos.Y);
+
+            if (containsMouse == false || PopOutBase.Mode != PopOutMode.Transparent)
+            {
+                return;
+            }
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (Keyboard.IsKeyDown(Key.LeftShift))
+                {
+                    this.SetWindowNormal();
+                    checkForMouseTimer.Stop();
+                    SetNormal();
+                    return;
+                }
+            });
         }
 
         private void PopOutBase_OnPopOutModeReset(object? sender, PopOutMode e)
         {
+            this.SetWindowNormal();
             SetNormal();
         }
 
-        public PopOutBase PopOutBase { get; }
-
         private void PopOut_Loaded(object sender, RoutedEventArgs e)
         {
+            Point screenCoordinates = this.PointToScreen(new Point(0, 0));
+            windowRect = new(screenCoordinates.X, screenCoordinates.Y, this.Width, this.Height);
             Topmost = PopOutBase.AlwaysOnTop;
             MainGrid.Children.Add(PopOutBase);
             if (IsMouseOver is false)
@@ -38,8 +80,6 @@ namespace ODExplorer.Windows
                 ApplyStyles(false);
             }
         }
-
-        private Thickness twenty = new(20, 0, 20, 20);
 
         private void PopOut_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -60,6 +100,8 @@ namespace ODExplorer.Windows
 
         private void PopOut_MouseLeave(object sender, MouseEventArgs e)
         {
+            Point screenCoordinates = this.PointToScreen(new Point(0, 0));
+            windowRect = new(screenCoordinates.X, screenCoordinates.Y, this.Width, this.Height);
             ApplyStyles(false);
             e.Handled = true;
         }
@@ -78,7 +120,17 @@ namespace ODExplorer.Windows
                         MainGrid.Background = FindResource("WindowBackground75%") as SolidColorBrush;
                         TitlePanel.Visibility = PopOutBase.ShowTitle ? Visibility.Visible : Visibility.Collapsed;
                         break;
+                    case PopOutMode.Semitransparent:
+                        transparent = FindResource("SemiTransparent") as SolidColorBrush;
+                        MainGrid.Background = transparent;
+                        TitlePanel.Visibility = PopOutBase.ShowTitle ? Visibility.Visible : Visibility.Collapsed;
+                        break;
                     case PopOutMode.Transparent:
+                        if (mouseEnter == false)
+                        {
+                            this.SetWindowExTransparent();
+                            checkForMouseTimer.Start();
+                        }
                         MainGrid.Background = transparent;
                         TitlePanel.Visibility = PopOutBase.ShowTitle ? Visibility.Visible : Visibility.Collapsed;
                         break;

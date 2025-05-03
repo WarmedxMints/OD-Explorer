@@ -38,7 +38,7 @@
     </UserControl.Resources>
     <GroupBox Header="Unit Settings"
               BorderBrush="{DynamicResource PrimaryControlBorder}"
-              Padding="10"
+              Padding="5"
               BorderThickness="0.5">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -47,9 +47,9 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="10" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <ComboBox ItemsSource="{Binding Source={StaticResource TemperatureUnit}}"

@@ -3,8 +3,6 @@ using ODUtils.Dialogs;
 using ODUtils.Models;
 using System.Threading.Tasks;
 using System.Windows;
-using System.IO;
-using System.Diagnostics;
 
 namespace ODExplorer.Windows
 {

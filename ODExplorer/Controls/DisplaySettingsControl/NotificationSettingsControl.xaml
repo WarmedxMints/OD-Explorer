@@ -155,7 +155,7 @@
                 </Button>
             </StackPanel>
 
-            <TextBlock Text="Duration"
+            <TextBlock Text="Duration (Seconds)"
                        VerticalAlignment="Center"
                        Margin="0,10"
                        Grid.Row="2" />
@@ -179,7 +179,7 @@
                                    Grid.Column="1"
                                    Value="{Binding MaxNotificationCount}" />
 
-            <TextBlock Text="X Offset"
+            <TextBlock Text="X Offset (Pixels)"
                        Margin="0,10"
                        VerticalAlignment="Center"
                        Grid.Row="4" />
@@ -191,7 +191,7 @@
                                    Grid.Column="1"
                                    Value="{Binding XOffset}" />
 
-            <TextBlock Text="Y Offset"
+            <TextBlock Text="Y Offset (Pixels)"
                        Margin="0,10"
                        VerticalAlignment="Center"
                        Grid.Row="5" />

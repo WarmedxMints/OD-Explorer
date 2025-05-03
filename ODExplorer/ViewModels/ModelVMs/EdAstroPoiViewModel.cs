@@ -1,5 +1,4 @@
-﻿using EliteJournalReader;
-using ODExplorer.Models;
+﻿using ODExplorer.Models;
 using ODUtils.Dialogs.ViewModels;
 using ODUtils.Models;
 using ODUtils.Models.EdAstro;

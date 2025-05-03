@@ -207,10 +207,9 @@
                            Foreground="{DynamicResource TitlebarForeGround}" />
             </Grid>
 
-            <Grid x:Name="MainGrid"
+              <Grid x:Name="MainGrid"
                   IsHitTestVisible="True"
                   Margin="20,0"
-                  Background="Transparent"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   Grid.Row="1">

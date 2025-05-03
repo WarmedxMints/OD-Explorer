@@ -51,6 +51,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="5" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0"
@@ -177,6 +179,22 @@
                         VerticalAlignment="Center"
                         Text="When enabled incorrect predicted biological signals will be hidden in the Exo details grid"
                         TextWrapping="WrapWithOverflow" />
+
+            <local:SliderWithValue Grid.Row="11"
+                                   Minimum="0"
+                                   Maximum="19"
+                                   StringFormatting="ExoMillions"
+                                   ValueChanged="SliderWithValue_ValueChanged"
+                                   Value="{Binding MinExoValue}"/>
+
+            <TextBlock  Grid.Row="11"
+                        Grid.Column="2"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        FontSize="14"
+                        VerticalAlignment="Center"
+                        Text="Biological items with a value lower than specified will be hidden from results"
+                        TextWrapping="WrapWithOverflow" />
+
         </Grid>
     </GroupBox>
 </UserControl>
