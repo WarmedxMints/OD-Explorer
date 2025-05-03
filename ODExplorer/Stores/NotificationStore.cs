@@ -1,8 +1,4 @@
 ﻿using EliteJournalReader.Events;
-using Microsoft.EntityFrameworkCore.Migrations;
-using NAudio.Utils;
-using NetTopologySuite.Utilities;
-using Newtonsoft.Json.Linq;
 using ODExplorer.Models;
 using ODExplorer.Notifications;
 using ODUtils.Extensions;
@@ -10,7 +6,6 @@ using ODUtils.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Documents;
 using ToastNotifications;
 using ToastNotifications.Core;
 using ToastNotifications.Lifetime;

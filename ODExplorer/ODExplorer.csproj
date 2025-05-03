@@ -33,6 +33,7 @@
     <None Remove="Resources\Fleetcarrier_Icon.png" />
     <None Remove="Resources\GitHub_Logo_White.png" />
     <None Remove="Resources\GreenArrow.png" />
+    <None Remove="Resources\Hidden.png" />
     <None Remove="Resources\HorizontalCartoLayoutBtn.png" />
     <None Remove="Resources\Map-galaxy-map.png" />
     <None Remove="Resources\monitor.png" />
@@ -128,6 +129,7 @@
     <Resource Include="Resources\Fleetcarrier_Icon.png" />
     <Resource Include="Resources\GitHub_Logo_White.png" />
     <Resource Include="Resources\GreenArrow.png" />
+    <Resource Include="Resources\Hidden.png" />
     <Resource Include="Resources\HorizontalCartoLayoutBtn.png" />
     <Resource Include="Resources\Map-galaxy-map.png" />
     <Resource Include="Resources\monitor.png" />

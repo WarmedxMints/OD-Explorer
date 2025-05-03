@@ -33,8 +33,14 @@ namespace ODExplorer.Windows
                 WindowState = vm.SettingsStore.WindowPosition.State;
                 vm.OnMessageBoxRequested += Vm_OnMessageBoxRequested;
                 vm.AdjustUiScaleEvent += Vm_OnAdjustUiScale;
+                vm.WindowReset += Vm_WindowReset;
             }
             base.WindowBase_Loaded(sender, e);
+        }
+
+        private void Vm_WindowReset(object? sender, EventArgs e)
+        {
+            WindowState = WindowState.Normal;
         }
 
         private void Vm_OnAdjustUiScale(object? sender, EventArgs e)

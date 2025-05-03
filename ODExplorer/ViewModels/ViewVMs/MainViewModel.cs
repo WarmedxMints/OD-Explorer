@@ -238,7 +238,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         public event EventHandler<SystemBodyViewModel>? OnBodyUpdated;
         public event EventHandler<SystemBodyViewModel>? OnBioUpdated;
         public event EventHandler<SystemBodyViewModel?>? OnSelectedBodyUpdated;
-
+        public event EventHandler? WindowReset;
         private void Settings_OnSystemGridSettingsUpdatedEvent(object? sender, EventArgs e)
         {
             if (OrganicSignals.Count != 0)
@@ -359,16 +359,17 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         private void OnResetWindowPos(object? obj)
         {
+            WindowReset?.Invoke(this, EventArgs.Empty);
             _settings.ResetWindowPosition();
         }
 
         private void OnResetPopOutPos(object? obj)
         {
-#if DEBUG
-            if(selectedBody != null) 
-                notificationStore.CheckForNotableNotifications(selectedBody.Body);
-            return;
-#else
+//#if DEBUG
+//            if(selectedBody != null) 
+//                notificationStore.CheckForNotableNotifications(selectedBody.Body);
+//            return;
+//#else
             foreach (var popOut in ActivePopOuts)
             {
                 SettingsStore.ResetWindowPositionActual(popOut.Position, 800, 450);
@@ -378,7 +379,7 @@ namespace ODExplorer.ViewModels.ViewVMs
                 popOut.Mode = PopOutMode.Normal;
                 popOut.InvokeReset();
             }
-#endif
+//#endif
         }
         #endregion
 
@@ -432,13 +433,16 @@ namespace ODExplorer.ViewModels.ViewVMs
                     {
                         foreach (var body in e.SystemBodies)
                         {
-                            var bodyVm = new SystemBodyViewModel(body, _settings);
-                            if (bodyVm.AddOrganicItems())
+                            Application.Current.Dispatcher.Invoke(() =>
                             {
-                                OrganicSignals.AddToCollection(bodyVm);
-                            }
+                                var bodyVm = new SystemBodyViewModel(body, _settings);
+                                if (bodyVm.AddOrganicItems())
+                                {
+                                    OrganicSignals.AddToCollection(bodyVm);
+                                }
 
-                            system.Bodies.AddToCollection(bodyVm);
+                                system.Bodies.AddToCollection(bodyVm);
+                            });
                         }
                     }
 
@@ -566,8 +570,15 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             if (known == null)
             {
-                known = new SystemBodyViewModel(e.Body, _settings);
-                known.AddOrganicItems();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    known = new SystemBodyViewModel(e.Body, _settings);
+                    known.AddOrganicItems();
+
+                    known.UpdateOrganicInfo();
+                    OnBioUpdated?.Invoke(this, known);
+                });
+                return;
             }
 
             known.UpdateOrganicInfo();
@@ -580,7 +591,18 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             if (known == null)
             {
-                known = new SystemBodyViewModel(e, _settings);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    known = new SystemBodyViewModel(e, _settings);
+
+                    if (known.OrganicScanItems.Count == 0)
+                        known.AddOrganicItems();
+
+                    known.UpdateOrganicInfo();
+                    OnBioUpdated?.Invoke(this, known);
+                });
+
+                return;
             }
 
             if (known.OrganicScanItems.Count == 0)
@@ -597,6 +619,17 @@ namespace ODExplorer.ViewModels.ViewVMs
             currentSystem = null;
             OrganicSignals.ClearCollection();
             CurrentSystemUpdated();
+        }
+
+        internal void OnExoMinValueChanged()
+        {
+            if (currentSystem == null)
+                return;
+
+            foreach(var body in currentSystem.Bodies)
+            {
+                body.UpdateOrganicHiddenStates();
+            }
         }
         #endregion
 

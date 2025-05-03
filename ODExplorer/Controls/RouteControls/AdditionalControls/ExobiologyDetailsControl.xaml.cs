@@ -45,5 +45,13 @@ namespace ODExplorer.Controls.CartoDetailsControls
                 }
             }
         }
+
+        private void ToggleHiddenBtnClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if(sender is Button btn && btn.DataContext is SystemBodyViewModel body)
+            {
+                body.ToggleHiddenBios();
+            }
+        }
     }
 }

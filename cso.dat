@@ -312,3 +312,21 @@ V1
 2:allSpecies,uO
 2:specie,KV
 2:CurrentContainerType,yL
+2:SystemBodyViewModel,YJ
+2:settingsStore,NKy
+2:SettingsStore,mK
+2:_body,BA
+2:Body,fA
+2:ScanStage,CP
+2:BodyDescription,O6
+2:get_O6_,C2
+2:case Pressure.Atmosphere:,rUg
+2:atm,dL
+2:case Pressure.Psi:,CH
+2:case Pressure.Pascal:,eLk
+2:AtmosphereDescription,d7
+2:AtmosphereFormula,CI
+2:get_CI_,BX
+2:PopOut_MouseEnter,z1
+2:t,tU
+2:Windows,ZB

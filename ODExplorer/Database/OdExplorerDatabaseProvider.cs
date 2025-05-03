@@ -93,6 +93,18 @@ namespace ODExplorer.Database
 
             return new(known.Id, known.Name, known.JournalDir, known.LastFile, known.IsHidden);
         }
+
+        public HashSet<string> GetAllReadFilenames()
+        {
+            using var context = _contextFactory.CreateDbContext();
+
+            var entries = context.JournalEntries
+                .Select(x => x.Filename)
+                .Distinct()
+                .ToHashSet();
+
+            return entries;
+        }
         #endregion
 
         #region Journal Methods

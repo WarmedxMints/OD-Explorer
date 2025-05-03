@@ -215,7 +215,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         {
             UnsoldSystems.ClearCollection();
 
-            var systemsToAdd = explorationData.GetUnsoldCartoSystems().Select(x => StarSystemViewModel.BuildSystemForCartoDeteailsView(x, settingsStore, notificationStore, DataState.Unsold));
+            var systemsToAdd = explorationData.GetUnsoldCartoSystems().Select(x => StarSystemViewModel.BuildSystemForCartoDetailsView(x, settingsStore, notificationStore, DataState.Unsold));
 
             var selectedSystem = systemsToAdd.FirstOrDefault(x => x.Address == explorationData.CurrentSystem?.Address);
 
@@ -230,7 +230,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         {
             SoldSystems.ClearCollection();
 
-            var systemsToAdd = explorationData.GetSoldCartoSystems().Select(x => StarSystemViewModel.BuildSystemForCartoDeteailsView(x, settingsStore, notificationStore, DataState.Sold));
+            var systemsToAdd = explorationData.GetSoldCartoSystems().Select(x => StarSystemViewModel.BuildSystemForCartoDetailsView(x, settingsStore, notificationStore, DataState.Sold));
 
             SoldSystems.AddRangeToCollection(systemsToAdd);
         }
@@ -239,7 +239,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         {
             LostSystems.ClearCollection();
 
-            var systemsToAdd = explorationData.GetLostCartoSystems().Select(x => StarSystemViewModel.BuildSystemForCartoDeteailsView(x, settingsStore, notificationStore, DataState.Lost));
+            var systemsToAdd = explorationData.GetLostCartoSystems().Select(x => StarSystemViewModel.BuildSystemForCartoDetailsView(x, settingsStore, notificationStore, DataState.Lost));
 
             LostSystems.AddRangeToCollection(systemsToAdd);
         }

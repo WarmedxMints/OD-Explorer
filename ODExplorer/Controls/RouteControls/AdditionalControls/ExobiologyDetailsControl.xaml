@@ -35,6 +35,27 @@
                                     Binding="{Binding Name, Mode=OneWay}"
                                     MinWidth="80"
                                     Width="*" />
+                <DataGridTemplateColumn MinWidth="30">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource BodiesColourImageBtn}"
+                                    ToolTip="Toggle Hidden Bios"
+                                    Height="22"
+                                    Width="22"
+                                    BorderThickness="0"
+                                    Visibility="{Binding HiddenCount, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                    Click="ToggleHiddenBtnClick"
+                                    Grid.Row="1">
+                                <Image Source="/Resources/hidden.png"
+                                       Stretch="Uniform"
+                                       SnapsToDevicePixels="True"
+                                       UseLayoutRounding="True"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn  MinWidth="65">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -96,9 +117,9 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Visibility="{Binding OrganicScanItems.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}">
+                    <Grid Visibility="{Binding OrganicItems.Count, Converter={StaticResource IntToVisibilty}, ConverterParameter=Collapsed}">
                         <DataGrid Style="{DynamicResource BaseDataGridStyle}"
-                                  ItemsSource="{Binding OrganicScanItems}"
+                                  ItemsSource="{Binding OrganicItems}"
                                   x:Name="OrganicGrid"
                                   Margin="20,5,0,10"
                                   BorderThickness="0"

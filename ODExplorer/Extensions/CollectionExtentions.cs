@@ -52,13 +52,13 @@ namespace ODExplorer.Extensions
         /// <param name="collectionToAdd"></param>
         public static void AddRangeToCollection<T>(this ObservableCollection<T> collection, IEnumerable<T> collectionToAdd)
         {
-            if (collectionToAdd == null || !collectionToAdd.Any())
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                return;
-            }
+                if (collectionToAdd == null || !collectionToAdd.Any())
+                {
+                    return;
+                }
 
-            App.Current.Dispatcher.Invoke(() =>
-            {
                 foreach (T item in collectionToAdd)
                 {
                     collection.Add(item);

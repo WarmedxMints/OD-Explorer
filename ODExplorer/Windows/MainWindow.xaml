@@ -14,7 +14,7 @@
                     Focusable="True"
                     Title="{Binding Title}"
                     FontFamily="{StaticResource Eurostile}"
-                    FontSize="18"
+                    FontSize="18"                 
                     Foreground="{DynamicResource PrimaryControlForeground}"
                     Background="{DynamicResource PrimaryBackground}"
                     Top="{Binding SettingsStore.WindowPosition.Top, Mode=TwoWay}"
@@ -83,14 +83,29 @@
                                         ScaleY="{Binding UiScale}" />
                     </Grid.LayoutTransform>
 
-                    <ContentControl Content="{Binding CurrentViewModel}"
+                    <ContentControl Content="{Binding CurrentViewModel, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                                    Opacity="0.1"
                                     Margin="10"
-                                    Grid.Column="1" />
+                                    Grid.Column="1" >
+                        <ContentControl.Style>
+                            <Style TargetType="{x:Type ContentControl}">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                 From="0"
+                                                                 To="1"
+                                                                 Duration="0:0:0.5" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
                 </Grid>
             </Grid>
-
-            
-
             <controls:StatusBarControl Grid.Row="2" />
         </Grid>
     </Border>

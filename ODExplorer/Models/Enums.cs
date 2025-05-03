@@ -118,6 +118,7 @@ namespace ODExplorer.Models
     {
         Normal,
         Opaque,
+        Semitransparent,
         Transparent
     }
 }

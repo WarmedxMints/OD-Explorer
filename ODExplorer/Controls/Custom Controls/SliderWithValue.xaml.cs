@@ -11,16 +11,22 @@ namespace ODExplorer.Controls
         ZeroDp,
         OneDp,
         TwoDp,
-        ThreeDp
+        ThreeDp,
+        ExoMillions
     }
     public partial class SliderWithValue : UserControl
     {
         public SliderWithValue()
         {
             InitializeComponent();
+            this.Loaded += SliderWithValue_Loaded;
+           
         }
 
-
+        private void SliderWithValue_Loaded(object sender, RoutedEventArgs e)
+        {
+            Slider_ValueChanged(this, new(Value, Value));
+        }
 
         public double Minimum
         {
@@ -104,6 +110,18 @@ namespace ODExplorer.Controls
         public static readonly DependencyProperty StringFormattingProperty =
             DependencyProperty.Register("StringFormatting", typeof(ValueDisplayFormat), typeof(SliderWithValue), new PropertyMetadata());
 
+        public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent(
+                name: "ValueChanged",
+                routingStrategy: RoutingStrategy.Direct,
+                handlerType: typeof(RoutedEventHandler),
+                ownerType: typeof(SliderWithValue));
+
+        // Provide CLR accessors for assigning an event handler.
+        public event RoutedEventHandler ValueChanged
+        {
+            add { AddHandler(ValueChangedEvent, value); }
+            remove { RemoveHandler(ValueChangedEvent, value); }
+        }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -121,9 +139,20 @@ namespace ODExplorer.Controls
                 case ValueDisplayFormat.ThreeDp:
                     ValueText.Text = $"{e.NewValue:N3}";
                     break;
+                case ValueDisplayFormat.ExoMillions:
+                    if(e.NewValue <= 0)
+                    {
+                        ValueText.Text = "All";
+                        break;
+                    }
+                    ValueText.Text = $"{e.NewValue} Mil";
+                    break;
                 default:
                     break;
             };
+
+            RoutedEventArgs routedEventArgs = new(routedEvent: ValueChangedEvent);
+            RaiseEvent(routedEventArgs);
         }
     }
 }

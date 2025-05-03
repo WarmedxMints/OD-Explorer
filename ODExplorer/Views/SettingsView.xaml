@@ -60,7 +60,7 @@
                 <controls:UnitOptionsControl Margin="0,2"
                                              Grid.Row="2" />
                 <Grid Grid.Row="4"
-                      VerticalAlignment="Bottom">
+                      VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />

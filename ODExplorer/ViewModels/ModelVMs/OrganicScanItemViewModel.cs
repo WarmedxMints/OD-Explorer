@@ -90,6 +90,7 @@ namespace ODExplorer.ViewModels.ModelVMs
 
         public int AlternationIndex { get; set; }
 
+        public bool IsHidden { get; set; }
         public void OnInfoUpdated()
         {
             OnPropertyChanged(nameof(SystemName));

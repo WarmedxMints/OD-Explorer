@@ -165,7 +165,9 @@
     <Color x:Key="BackgroudLeft">#FF4A1E05</Color>
 
     <SolidColorBrush x:Key="Transparent"
-                     Color="#01FFFFFF" />
+                     Color="Transparent" />
+    <SolidColorBrush x:Key="SemiTransparent"
+                     Color="#02FFFFFF" />
     <SolidColorBrush x:Key="Opaque"
                      Color="#7F323232" />
 

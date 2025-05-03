@@ -165,6 +165,28 @@
                 <DataGridTextColumn Binding="{Binding PlanetClassDescription, Mode=OneWay}"
                                     ElementStyle="{DynamicResource DataGridElementCenter}"
                                     Width="*" />
+                <DataGridTemplateColumn MinWidth="30">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource BodiesColourImageBtn}"
+                                    ToolTip="Toggle Hidden Bios"
+                                    Height="22"
+                                    Width="22"
+                                    BorderThickness="0"
+                                    Visibility="{Binding HiddenCount, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
+                                    Foreground="{DynamicResource PrimaryControlForeground}"
+                                    Click="ToggleHiddenBtnClick"
+                                    Grid.Row="1">
+                                <Image Source="/Resources/hidden.png"
+                                       Stretch="Uniform"
+                                       SnapsToDevicePixels="True"
+                                       UseLayoutRounding="True"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding OrganicValues, Mode=OneWay}"
                                     MinWidth="150"
                                     Header="Body Value"

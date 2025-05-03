@@ -1,12 +1,6 @@
 ﻿using EliteJournalReader.Events;
 using ODUtils.Dialogs.ViewModels;
 using ODUtils.EliteDangerousHelpers;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ODExplorer.ViewModels.ModelVMs
 {

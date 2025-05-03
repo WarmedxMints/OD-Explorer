@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using ODExplorer.ViewModels.ViewVMs;
+using System.Windows.Controls;
 
 namespace ODExplorer.Controls
 {
@@ -10,6 +11,14 @@ namespace ODExplorer.Controls
         public SystemGridSortingControl()
         {
             InitializeComponent();
+        }
+
+        private void SliderWithValue_ValueChanged(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if(DataContext is SettingsViewModel model)
+            {
+                model.OnExoMinValueChanged();
+            }
         }
     }
 }
