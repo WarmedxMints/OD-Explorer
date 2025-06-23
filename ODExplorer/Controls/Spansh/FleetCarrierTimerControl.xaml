@@ -37,7 +37,7 @@
                   HorizontalAlignment="Right"
                   Grid.Column="2" />
 
-        <TextBlock Text="Time Reamining"
+        <TextBlock Text="Time Remaining"
                    FontSize="22"
                    Grid.Row="1" />
 
