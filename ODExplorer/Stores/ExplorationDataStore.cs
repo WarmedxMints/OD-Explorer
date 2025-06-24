@@ -593,16 +593,27 @@ namespace ODExplorer.Stores
 
                                 if (knownBio is not null && knownBio.Count() > 1)
                                 {
+                                    bool found = false;
                                     foreach (var bio in knownBio)
                                     {
                                         if (string.Equals(bio.SpeciesCodex, scanOrganic.Species, StringComparison.OrdinalIgnoreCase))
                                         {
                                             if (bio.UpdateFromScan(scanOrganic, longitude, latitude))
                                                 TriggerBioUpdatedIfLive(bio);
+                                            found = true;
                                             continue;
                                         }
                                         bio.ScanStage = OrganicScanStage.Prediction;
                                         OnBioDataUpdated?.Invoke(this, bio);
+                                    }
+                                    //Must be something not predicted
+                                    if(found == false)
+                                    {
+                                        var newBody_Bio = new OrganicScanItem(scanOrganic, body, longitude, latitude);
+                                        body.OrganicScanItems.Add(newBody_Bio);
+                                        if (_organicData.Contains(body) == false)
+                                            _organicData.Add(body);
+                                        TriggerBioUpdatedIfLive(newBody_Bio);
                                     }
                                     body.UpdateBioMinMaxValue();
                                     break;

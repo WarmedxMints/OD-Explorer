@@ -24,7 +24,7 @@ namespace ODExplorer.Windows
             // Change the extended window style to include WS_EX_TRANSPARENT
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+            _ = SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
         }
 
         public static void SetWindowNormal(this Window window)
@@ -33,7 +33,7 @@ namespace ODExplorer.Windows
             IntPtr hwnd = new WindowInteropHelper(window).Handle;
 
             int nExStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, (nExStyle & ~WS_EX_TRANSPARENT));
+            _ = SetWindowLong(hwnd, GWL_EXSTYLE, (nExStyle & ~WS_EX_TRANSPARENT));
         }
     }
 }

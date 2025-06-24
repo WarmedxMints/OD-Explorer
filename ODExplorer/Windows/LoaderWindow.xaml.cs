@@ -1,6 +1,8 @@
 ﻿using ODExplorer.ViewModels.ViewVMs;
 using ODUtils.Dialogs;
 using ODUtils.Models;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
