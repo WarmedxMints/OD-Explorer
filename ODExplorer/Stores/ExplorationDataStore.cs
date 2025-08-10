@@ -107,6 +107,7 @@ namespace ODExplorer.Stores
         [
             JournalTypeEnum.Location,
             JournalTypeEnum.FSDJump,
+            JournalTypeEnum.CarrierJump,
             JournalTypeEnum.FSSDiscoveryScan,
             JournalTypeEnum.FSSAllBodiesFound,
             JournalTypeEnum.FSSBodySignals,
@@ -210,6 +211,20 @@ namespace ODExplorer.Stores
                                 var body = currentSys.SystemBodies.FirstOrDefault(x => x.BodyID == locationEvt.BodyID);
 
                                 body ??= new SystemBody(locationEvt, currentSys);
+
+                                UpdateCurrentBody(body);
+                            }
+                        }
+                        break;
+                    case CarrierJumpEvent.CarrierJumpEventArgs carrierJump:
+                        {
+                            var currentSys = UpdateCurrentSystem(new(carrierJump));
+
+                            if (carrierJump.BodyType == BodyType.Planet)
+                            {
+                                var body = currentSys.SystemBodies.FirstOrDefault(x => x.BodyID == carrierJump.BodyID);
+
+                                body ??= new SystemBody(carrierJump, currentSys);
 
                                 UpdateCurrentBody(body);
                             }
