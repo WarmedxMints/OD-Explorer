@@ -2,6 +2,7 @@
 using ODExplorer.Stores;
 using ODUtils.Commands;
 using ODUtils.Dialogs.ViewModels;
+using ODUtils.Models;
 using System.Windows.Input;
 using ToastNotifications.Position;
 
@@ -80,7 +81,11 @@ namespace ODExplorer.ViewModels.ViewVMs
                 };
             }
         }
-
+        public CodexEntryHistory CodexEntryHistory
+        {
+            get => settingsStore.CodexEntryHistory;
+            set => settingsStore.CodexEntryHistory = value;
+        }
         public NotificationSettings ClonedSettings { get; set; }
 
         public NotificationOptions NotifyOptions
