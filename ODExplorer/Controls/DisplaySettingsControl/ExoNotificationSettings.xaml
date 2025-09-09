@@ -6,10 +6,21 @@
              xmlns:local="clr-namespace:ODExplorer.Controls"
              xmlns:viewvms="clr-namespace:ODExplorer.ViewModels.ViewVMs"
              xmlns:models="clr-namespace:ODExplorer.Models"
+             xmlns:uModels="clr-namespace:ODUtils.Models;assembly=ODUtils"
+             xmlns:System="clr-namespace:System;assembly=netstandard"
              d:DataContext="{d:DesignInstance Type=viewvms:DisplaySettingsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="CodexEntry"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="uModels:CodexEntryHistory"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
     <GroupBox Header="Exobiology Notifications"
               BorderBrush="{DynamicResource PrimaryBorder}"
               Margin="5"
@@ -24,28 +35,24 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="10" />
+                <RowDefinition Height="25" />
                 <RowDefinition Height="30" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
             </Grid.RowDefinitions>
-            <CheckBox Style="{DynamicResource CheckBoxStyle}"
-                      IsThreeState="False"
-                      Grid.Column="0"
-                      HorizontalAlignment="Left"
-                      Margin="10,0"
-                      VerticalAlignment="Center"
-                      IsChecked="{Binding NotifyOptions, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:NotificationOptions.NewBioScanned}}"
-                      Content="Bio Scanned" />
+            <StackPanel Orientation="Horizontal"
+                        Grid.ColumnSpan="6">
+                <CheckBox Style="{DynamicResource CheckBoxStyle}"
+                          IsThreeState="False"
+                          Grid.Column="0"
+                          HorizontalAlignment="Left"
+                          Margin="10,0"
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding NotifyOptions, Converter={StaticResource EnumFlagConverter}, ConverterParameter={x:Static models:NotificationOptions.NewBioScanned}}"
+                          Content="Bio Scanned" />
 
-            <Grid Grid.Column="2"
-                  Grid.ColumnSpan="6">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <CheckBox Style="{DynamicResource CheckBoxStyle}"
                           IsThreeState="False"
                           Grid.Column="0"
@@ -72,7 +79,7 @@
                           Margin="10,0"
                           VerticalAlignment="Center"
                           Content="Possible New Species Entry" />
-            </Grid>
+            </StackPanel>
 
             <CheckBox Style="{DynamicResource CheckBoxStyle}"
                       IsThreeState="False"
@@ -181,6 +188,18 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
+
+            <TextBlock Grid.Row="5"
+                       Margin="10,0"
+                       VerticalAlignment="Center"
+                       Text="New Codex Notifications" />
+            <ComboBox Grid.Row="5"
+                      Grid.Column="2"
+                      Width="100"
+                      Margin="5,0"
+                      HorizontalAlignment="Left"
+                      SelectedItem="{Binding CodexEntryHistory}"
+                      ItemsSource="{Binding Source={StaticResource CodexEntry}}" />
         </Grid>
     </GroupBox>
 </UserControl>

@@ -33,6 +33,7 @@ namespace ODExplorer.Stores
         public CartoDetailsViewState CartoDetailsViewState { get; set; } = CartoDetailsViewState.Unsold;
         public GalacticRegions ExoCheckListRegion { get; set; } = GalacticRegions.Unknown;
         public ActiveViewModel ActiveView { get; set; } = ActiveViewModel.Carto;
+        public CodexEntryHistory CodexEntryHistory { get; set; } = CodexEntryHistory.Regional;
         public GridSize CartoHorizontalGridSize { get; set; } = new() { GridLengths = [new(1, GridUnitType.Star), new(23, GridUnitType.Pixel), new(1, GridUnitType.Star)] };
         public GridSize CartoDetailedGridSize { get; set; } = new()
         {
@@ -90,6 +91,7 @@ namespace ODExplorer.Stores
                 ExoCheckListRegion = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(ExoCheckListRegion)), ExoCheckListRegion);
                 ActiveView = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(ActiveView)), ActiveView);
                 NotificationOptions = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(NotificationOptions)), NotificationOptions);
+                CodexEntryHistory = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(CodexEntryHistory)), CodexEntryHistory);
             }
 
             if (WindowPosition.IsZero)
@@ -122,6 +124,7 @@ namespace ODExplorer.Stores
                 SettingsDTO.EnumToSettingsDto(nameof(ExoCheckListRegion), ExoCheckListRegion),
                 SettingsDTO.EnumToSettingsDto(nameof(ActiveView), ActiveView),
                 SettingsDTO.EnumToSettingsDto(nameof(NotificationOptions), NotificationOptions),
+                SettingsDTO.EnumToSettingsDto(nameof(CodexEntryHistory), CodexEntryHistory),
             };
 
             databaseProvider.AddSettings(settings);

@@ -15,6 +15,7 @@ namespace ODExplorer.Windows
     /// </summary>
     public partial class PopOutWindow : WindowBase
     {
+        private bool closing = false;
         private Rect windowRect = new();
         private readonly Timer checkForMouseTimer;
         private readonly Thickness twenty = new(20, 0, 20, 20);
@@ -35,6 +36,7 @@ namespace ODExplorer.Windows
 
         private void PopOutWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
+            closing = true;
             checkForMouseTimer.Stop();
             checkForMouseTimer?.Dispose();
         }
@@ -100,9 +102,12 @@ namespace ODExplorer.Windows
 
         private void PopOut_MouseLeave(object sender, MouseEventArgs e)
         {
-            Point screenCoordinates = this.PointToScreen(new Point(0, 0));
-            windowRect = new(screenCoordinates.X, screenCoordinates.Y, this.Width, this.Height);
-            ApplyStyles(false);
+            if (!closing)
+            {
+                Point screenCoordinates = this.PointToScreen(new Point(0, 0));
+                windowRect = new(screenCoordinates.X, screenCoordinates.Y, this.Width, this.Height);
+                ApplyStyles(false);
+            }
             e.Handled = true;
         }
 

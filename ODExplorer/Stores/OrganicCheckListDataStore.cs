@@ -14,10 +14,11 @@ namespace ODExplorer.Stores
 {
     public sealed class OrganicCheckListDataStore : IProcessJournalLogs
     {
-        public OrganicCheckListDataStore(JournalParserStore parserStore, ExoData exoData)
+        public OrganicCheckListDataStore(JournalParserStore parserStore, ExoData exoData, SettingsStore settings)
         {
             this.parserStore = parserStore;
             this.exoData = exoData;
+            this.settings = settings;
             this.exoData.Initialise();
             this.parserStore.OnParserStoreLive += ParserStore_OnParserStoreLive;
             parserStore.RegisterParser(this);
@@ -30,6 +31,8 @@ namespace ODExplorer.Stores
         private readonly Dictionary<GalacticRegions, List<string>> speciesEntries = [];
         private readonly JournalParserStore parserStore;
         private readonly ExoData exoData;
+        private readonly SettingsStore settings;
+
         //The day before odyssey release
         private readonly DateTime historicAge = new(2021, 05, 18);
         private GalacticRegions currentRegion;
@@ -218,17 +221,30 @@ namespace ODExplorer.Stores
 
         public bool IsNewCodex(string codexValue)
         {
-            if (codexEntries.TryGetValue(currentRegion, out List<string>? value))
+            switch (settings.CodexEntryHistory)
             {
-                var known = value.FirstOrDefault(x => x == codexValue);
+                case CodexEntryHistory.Global:
+                    var knownGlobal = codexEntries.Values.FirstOrDefault(x => x.Contains(codexValue));
 
-                if (known == null)
-                {
+                    if (knownGlobal == null)
+                    {
+                        return true;
+                    }
+                    return false;
+                default:
+                case CodexEntryHistory.Regional:
+                    if (codexEntries.TryGetValue(currentRegion, out List<string>? value))
+                    {
+                        var known = value.FirstOrDefault(x => x == codexValue);
+
+                        if (known == null)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
                     return true;
-                }
-                return false;
-            }
-            return true;
+            }           
         }
 
         private void AddSpecies(string species)
@@ -279,17 +295,17 @@ namespace ODExplorer.Stores
 
                             if (codex.Category != "$Codex_Category_Biology;")
                                 break;
-                            
+
                             if (string.IsNullOrEmpty(codex.Name))
                                 break;
 
-                            AddCodex(codex.Name);                            
+                            AddCodex(codex.Name);
 
                             var bioNames = ExoData.GetNames(codex.Name);
 
                             if (bioNames == null)
                                 break;
-                                                   
+
                             if (OrganicScanItems.TryGetValue(bioNames.GenusCodex, out var items))
                             {
                                 var item = items.FirstOrDefault(x => x.SpeciesCodex == bioNames.SpeciesCodex);
@@ -303,13 +319,13 @@ namespace ODExplorer.Stores
                                 {
                                     var knownVariant = variants.FirstOrDefault(x => x.VaritantCodex == codex.Name);
 
-                                    if(knownVariant == null)
+                                    if (knownVariant == null)
                                     {
                                         knownVariant = new(codex.Name, codex.Name_Localised, currentRegion, OrganicScanState.Discovered);
                                         variants.Add(knownVariant);
                                     }
 
-                                    if(knownVariant.State < OrganicScanState.Discovered)
+                                    if (knownVariant.State < OrganicScanState.Discovered)
                                         knownVariant.State = OrganicScanState.Discovered;
 
                                     if (parserStore.IsLive)
