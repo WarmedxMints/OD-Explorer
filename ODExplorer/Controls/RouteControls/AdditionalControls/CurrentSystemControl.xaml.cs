@@ -49,14 +49,15 @@ namespace ODExplorer.Controls
                 DataGrid.Columns[5].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceTemp));
                 DataGrid.Columns[6].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfacePressure));
                 DataGrid.Columns[7].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.WasDiscovered));
-                DataGrid.Columns[8].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Unmapped));
-                DataGrid.Columns[9].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Terraformable));
-                DataGrid.Columns[10].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.HasRings));
-                DataGrid.Columns[11].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
+                DataGrid.Columns[8].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Foorfall));
+                DataGrid.Columns[9].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Unmapped));
+                DataGrid.Columns[10].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.Terraformable));
+                DataGrid.Columns[11].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.HasRings));
                 DataGrid.Columns[12].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
-                DataGrid.Columns[13].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
+                DataGrid.Columns[13].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.GeoSignals));
                 DataGrid.Columns[14].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
-                DataGrid.Columns[15].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceGravity));                
+                DataGrid.Columns[15].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.BioSignals));
+                DataGrid.Columns[16].Visibility = BoolToVis(GridSettings.InfoDisplayOptions.HasFlag(BodyInfoIconDisplay.SurfaceGravity));                
             }
         }
 

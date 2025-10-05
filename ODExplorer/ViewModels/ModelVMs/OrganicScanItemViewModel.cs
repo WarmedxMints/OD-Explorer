@@ -40,6 +40,7 @@ namespace ODExplorer.ViewModels.ModelVMs
         public string SystemName => Item.Body.Owner.Name;
         public string BodyName => Item.Body.BodyName;
         public string ScanStage => Item.ScanStage.GetEnumDescription();
+        public bool WasLogged => Item.WasLogged;
         public OrganicScanStage ScanStageEnum
         {
             get
@@ -112,6 +113,7 @@ namespace ODExplorer.ViewModels.ModelVMs
             OnPropertyChanged(nameof(Variants));
             OnPropertyChanged(nameof(AlternationIndex));
             OnPropertyChanged(nameof(NewSpecies));
+            OnPropertyChanged(nameof(WasLogged));
 
             foreach (var variant in Variants)
             {

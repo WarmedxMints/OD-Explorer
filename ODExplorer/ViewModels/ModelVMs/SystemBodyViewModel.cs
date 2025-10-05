@@ -266,6 +266,15 @@ namespace ODExplorer.ViewModels.ModelVMs
                 return _body.WasMapped;
             }
         }
+        public bool WasFootFalled
+        {
+            get
+            {
+                if (IsStar || IsNonBody || IsEdsmVb || LandableBool == false || Body.ScanDate <= PatchDates.Type11PatchDate)
+                    return true;
+                return _body.WasFootfalled;
+            }
+        }
         public bool WasDiscovered => (IsNonBody || IsEdsmVb) || _body.WasDiscovered;
         #endregion
 
@@ -313,7 +322,6 @@ namespace ODExplorer.ViewModels.ModelVMs
         public bool IsNonBody => _body.IsPlanet == false && _body.IsStar == false;
         public bool HideItems { get; private set; } = true;
         public int HiddenCount => OrganicScanItems.Where(x => x.IsHidden)?.Count() ?? 0;
-
         #region Methods
 
         public void ToggleHiddenBios()
@@ -486,6 +494,7 @@ namespace ODExplorer.ViewModels.ModelVMs
             OnPropertyChanged(nameof(IsHighValueExo));
             OnPropertyChanged(nameof(DistanceFromArrival));
             OnPropertyChanged(nameof(BodyID));
+            OnPropertyChanged(nameof(WasFootFalled));
         }
         #endregion
     }

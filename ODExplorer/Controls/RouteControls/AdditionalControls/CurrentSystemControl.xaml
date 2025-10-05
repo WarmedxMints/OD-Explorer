@@ -308,6 +308,23 @@
                                         <Rectangle Style="{DynamicResource Rectangle Style}"
                                                    Height="18"
                                                    Width="18"
+                                                   Visibility="{Binding WasFootFalled, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Inverted}"
+                                                   Margin="2,0,2,0">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/Resources/SystemGridIcons/footfall.png" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--9-->
+                            <DataGridTemplateColumn Width="25"
+                                                    CellStyle="{DynamicResource BodyGridNonGridline}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Style="{DynamicResource Rectangle Style}"
+                                                   Height="18"
+                                                   Width="18"
                                                    Visibility="{Binding WasMapped, Converter={StaticResource InvertableBoolToVis}, ConverterParameter=Inverted}"
                                                    Margin="2,0,2,0">
                                             <Rectangle.OpacityMask>
@@ -317,7 +334,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--9-->
+                            <!--10-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -334,7 +351,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--10-->
+                            <!--11-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -350,7 +367,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--11-->
+                            <!--12-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -366,13 +383,13 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--12-->
+                            <!--13-->
                             <DataGridTextColumn Binding="{Binding GeologicalSignalsString}"
                                                 Width="25"
                                                 FontSize="18"
                                                 Visibility="{Binding Path=GeologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
                                                 CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
-                            <!--13-->
+                            <!--14-->
                             <DataGridTemplateColumn Width="25"
                                                     CellStyle="{DynamicResource BodyGridNonGridline}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -388,12 +405,12 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--14-->
+                            <!--15-->
                             <DataGridTextColumn Binding="{Binding BiologicalSignalsString}"
                                                 FontSize="18"
                                                 Visibility="{Binding Path=BiologicalSignals, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
                                                 CellStyle="{DynamicResource BodyGridInfoCellCenter}" />
-                            <!--15-->
+                            <!--16-->
                             <DataGridTemplateColumn Width="56"
                                                     CellStyle="{DynamicResource BodyGridInfoCellCenter}">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -409,7 +426,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--16-->
+                            <!--17-->
                             <DataGridTextColumn Width="SizeToCells"
                                                 MinWidth="90"
                                                 Header="DISTANCE"
@@ -417,7 +434,7 @@
                                                 CellStyle="{DynamicResource BodyCellDoubleMargin}"
                                                 Binding="{Binding DistanceFromArrivalLs}"
                                                 ElementStyle="{DynamicResource DataGridElementRightMargin}" />
-                            <!--17-->
+                            <!--18-->
                             <DataGridTextColumn Header="VALUE"
                                                 Width="SizeToCells"
                                                 MinWidth="90"

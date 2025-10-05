@@ -103,7 +103,8 @@ namespace ODExplorer.Models
         Terraformable = 1 << 7,
         HasRings = 1 << 8,
         SurfaceGravity = 1 << 9,
-        All = ~(-1 << 10)
+        Foorfall = 1 << 10,
+        All = ~(-1 << 11)
     }
 
     public enum Jumponium

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Printing;
 using System.Threading.Tasks;
 
 namespace ODExplorer.Stores
@@ -170,7 +171,7 @@ namespace ODExplorer.Stores
             parserStore.UnregisterParser(this);
         }
 
-        public JournalHistoryArgs GetEventsToParse(DateTime defaultAge) => new([JournalTypeEnum.CarrierStats, JournalTypeEnum.CarrierJumpRequest, JournalTypeEnum.CarrierJumpCancelled], defaultAge, this, ParseHistoryStream);
+        public JournalHistoryArgs GetEventsToParse(DateTime defaultAge) => new([JournalTypeEnum.CarrierStats, JournalTypeEnum.CarrierJumpRequest, JournalTypeEnum.CarrierLocation, JournalTypeEnum.CarrierJumpCancelled], defaultAge, this, ParseHistoryStream);
 
         public void ParseHistory(IEnumerable<JournalEntry> journalEntries, int currentCmdrId) { }
 
@@ -180,11 +181,22 @@ namespace ODExplorer.Stores
             return Task.CompletedTask;
         }
 
+        private bool CheckCarrierType(string type, DateTime date)
+        {
+            if (date <= PatchDates.SquadCarrierPatchDate)
+                return false;
+
+            return string.Equals(type, "FleetCarrier", StringComparison.OrdinalIgnoreCase) == false;
+        }
+
         public void ParseJournalEvent(JournalEntry evt)
         {
             switch (evt.EventData)
             {
                 case CarrierStatsEvent.CarrierStatsEventArgs carrierStats:
+                    if (CheckCarrierType(carrierStats.CarrierType, carrierStats.Timestamp))
+                        break;
+
                     if (string.IsNullOrEmpty(carrierStats.Name) == false)
                     {
                         carrierName = carrierStats.Name;
@@ -193,6 +205,8 @@ namespace ODExplorer.Stores
                     carrierName = carrierStats.Callsign;
                     break;
                 case CarrierJumpRequestEvent.CarrierJumpRequestEventArgs carrierJumpRequest:
+                    if (CheckCarrierType(carrierJumpRequest.CarrierType, carrierJumpRequest.Timestamp))
+                        break;
                     var timespan = (carrierJumpRequest.DepartureTime - DateTime.UtcNow) + TimeSpan.FromMinutes(5);
 
                     if (timespan > TimeSpan.Zero)
@@ -201,7 +215,14 @@ namespace ODExplorer.Stores
                     }
                     break;
                 case CarrierJumpCancelledEvent.CarrierJumpCancelledEventArgs carrierJumpCancelled:
+                    if (CheckCarrierType(carrierJumpCancelled.CarrierType, carrierJumpCancelled.Timestamp))
+                        break;
                     StopFleetCarrierTimer();
+                    break;
+                case CarrierLocationEvent.CarrierLocationEventArgs carrierLocation:
+                    if (CheckCarrierType(carrierLocation.CarrierType, carrierLocation.Timestamp))
+                        break;
+                    OnCurrentSystemChanged(carrierLocation.StarSystem);
                     break;
                 case FSDJumpEvent.FSDJumpEventArgs fsdJump:
                     OnCurrentSystemChanged(fsdJump.StarSystem);
