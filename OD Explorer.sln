@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODExplorer", "ODExplorer\OD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODUtils", "D:\ODrepos\ODUtils\ODUtils.csproj", "{0217DA76-E774-4381-A34A-787BDA192BFB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EliteJournalReader", "F:\GitHub\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj", "{F57F7292-A232-4C32-A1C3-C7FBF13CF925}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODUtilsTests", "D:\ODrepos\ODUtilsTests\ODUtilsTests.csproj", "{BE3C47C9-97A1-4119-9710-5E938F8CC54E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EliteJournalReader", "F:\GitHub\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj", "{199FD349-94BA-0D3B-0F4B-9882697BFED1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +35,6 @@ Global
 		{0217DA76-E774-4381-A34A-787BDA192BFB}.Portable|Any CPU.Build.0 = Debug|Any CPU
 		{0217DA76-E774-4381-A34A-787BDA192BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0217DA76-E774-4381-A34A-787BDA192BFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Install|Any CPU.ActiveCfg = Install|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Install|Any CPU.Build.0 = Install|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Portable|Any CPU.ActiveCfg = Portable|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Portable|Any CPU.Build.0 = Portable|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F57F7292-A232-4C32-A1C3-C7FBF13CF925}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE3C47C9-97A1-4119-9710-5E938F8CC54E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE3C47C9-97A1-4119-9710-5E938F8CC54E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE3C47C9-97A1-4119-9710-5E938F8CC54E}.Install|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,6 +42,14 @@ Global
 		{BE3C47C9-97A1-4119-9710-5E938F8CC54E}.Portable|Any CPU.Build.0 = Debug|Any CPU
 		{BE3C47C9-97A1-4119-9710-5E938F8CC54E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE3C47C9-97A1-4119-9710-5E938F8CC54E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Install|Any CPU.ActiveCfg = Install|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Install|Any CPU.Build.0 = Install|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Portable|Any CPU.ActiveCfg = Portable|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Portable|Any CPU.Build.0 = Portable|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

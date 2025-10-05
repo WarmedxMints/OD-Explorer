@@ -67,6 +67,7 @@
     <None Remove="Resources\SystemGridIcons\cooling-tower.png" />
     <None Remove="Resources\SystemGridIcons\DNA.png" />
     <None Remove="Resources\SystemGridIcons\earth.png" />
+    <None Remove="Resources\SystemGridIcons\footfall.png" />
     <None Remove="Resources\SystemGridIcons\jupiter.png" />
     <None Remove="Resources\SystemGridIcons\language.png" />
     <None Remove="Resources\SystemGridIcons\moon-landing.png" />
@@ -163,6 +164,7 @@
     <Resource Include="Resources\SystemGridIcons\cooling-tower.png" />
     <Resource Include="Resources\SystemGridIcons\DNA.png" />
     <Resource Include="Resources\SystemGridIcons\earth.png" />
+    <Resource Include="Resources\SystemGridIcons\footfall.png" />
     <Resource Include="Resources\SystemGridIcons\jupiter.png" />
     <Resource Include="Resources\SystemGridIcons\language.png" />
     <Resource Include="Resources\SystemGridIcons\moon-landing.png" />
