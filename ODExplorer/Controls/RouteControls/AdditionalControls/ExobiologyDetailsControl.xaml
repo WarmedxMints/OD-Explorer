@@ -23,6 +23,7 @@
                   BorderThickness="0"
                   IsReadOnly="True"
                   IsHitTestVisible="True"
+                  EnableRowVirtualization="True"
                   RowStyle="{DynamicResource ExoBioBodyRowStyle}"
                   PreviewMouseWheel="DataGrid_PreviewMouseWheel"
                   HorizontalScrollBarVisibility="Disabled"
@@ -44,14 +45,30 @@
                                     Width="22"
                                     BorderThickness="0"
                                     Visibility="{Binding HiddenCount, Converter={StaticResource IntToVisibilty}, ConverterParameter=Hidden}"
-                                    Click="ToggleHiddenBtnClick"
+                                    Command="{Binding ToggleHidden}"
                                     Grid.Row="1">
-                                <Image Source="/Resources/hidden.png"
-                                       Stretch="Uniform"
+                                <Image Stretch="Uniform"
                                        SnapsToDevicePixels="True"
                                        UseLayoutRounding="True"
                                        HorizontalAlignment="Center"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center">
+                                    <Image.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HideItems}"
+                                                             Value="False">
+                                                    <Setter Property="Source"
+                                                            Value="/Resources/Hidden.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HideItems}"
+                                                             Value="True">
+                                                    <Setter Property="Source"
+                                                            Value="/Resources/UnHidden.png" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -125,6 +142,7 @@
                                   BorderThickness="0"
                                   IsHitTestVisible="True"
                                   IsReadOnly="True"
+                                  EnableRowVirtualization="True"
                                   PreviewMouseWheel="DataGrid_PreviewMouseWheel"
                                   VerticalScrollBarVisibility="Disabled"
                                   HorizontalScrollBarVisibility="Disabled"

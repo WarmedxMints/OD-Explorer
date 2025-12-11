@@ -19,12 +19,18 @@ namespace ODExplorer.ViewModels.ViewVMs
 {
     public sealed class OrganicViewModel : OdViewModelBase
     {
-        public OrganicViewModel(OrganicCheckListDataStore organicCheckListDataStore, SettingsStore settingsStore, JournalParserStore parserStore, ExplorationDataStore explorationDataStore, ExoData exoData)
+        public OrganicViewModel(OrganicCheckListDataStore organicCheckListDataStore,
+                                SettingsStore settingsStore,
+                                JournalParserStore parserStore,
+                                ExplorationDataStore explorationDataStore,
+                                ExoData exoData,
+                                NotificationStore notificationStore)
         {
             this.checkListDataStore = organicCheckListDataStore;
             this.settingsStore = settingsStore;
             this.parserStore = parserStore;
             this.explorationDataStore = explorationDataStore;
+            this.notificationStore = notificationStore;
 
             checkListDataStore.OnOrganicScanDetailsUpdated += CheckListDataStore_OnOrganicScanDetailsUpdated;
             checkListDataStore.OnSpeciesUpdated += CheckListDataStore_OnSpeciesUpdated;
@@ -36,6 +42,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             SwitchToUnSoldList = new RelayCommand(OnSwitchToUnsoldList, (_) => CurrentState != ExoBiologyViewState.UnSoldList);
             SwitchToSoldList = new RelayCommand(OnSwitchToSoldList, (_) => CurrentState != ExoBiologyViewState.Sold);
             SwitchToLostList = new RelayCommand(OnSwitchToLostList, (_) => CurrentState != ExoBiologyViewState.Lost);
+            CopyToClipboard = new RelayCommand<string>(OnCopyToClipboard);
 
             SelectedRegionText = $"{SelectedRegion.GetEnumDescription()} Selected";
             SelectedRegionList = [SelectedRegion];
@@ -59,7 +66,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         private readonly SettingsStore settingsStore;
         private readonly JournalParserStore parserStore;
         private readonly ExplorationDataStore explorationDataStore;
-
+        private readonly NotificationStore notificationStore;
         private ObservableCollection<OrganicScanItemViewModel> unSold = [];
         public ObservableCollection<OrganicScanItemViewModel> Unsold
         {
@@ -183,6 +190,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         public ICommand SwitchToUnSoldList { get; }
         public ICommand SwitchToSoldList { get; }
         public ICommand SwitchToLostList { get; }
+        public ICommand CopyToClipboard { get; }
 
         private void OnSwitchToUnsoldList(object? obj)
         {
@@ -465,6 +473,16 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             Lost.AddRangeToCollection(modelList.OrderBy(x => x.EnglishName, StringComparer.OrdinalIgnoreCase).ThenBy(x => x.BodyName, StringComparer.OrdinalIgnoreCase));
             OnPropertyChanged(nameof(Lost));
+        }
+
+        private void OnCopyToClipboard(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }
+
+            notificationStore.CopyToClipBoard(value);
         }
     }
 }

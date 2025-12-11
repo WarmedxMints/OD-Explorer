@@ -4,6 +4,7 @@ using ODExplorer.Controls;
 using ODExplorer.Extensions;
 using ODExplorer.Models;
 using ODExplorer.Stores;
+using ODUtils.Commands;
 using ODUtils.Dialogs.ViewModels;
 using ODUtils.Extensions;
 using ODUtils.Models;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace ODExplorer.ViewModels.ModelVMs
 {
@@ -27,6 +29,7 @@ namespace ODExplorer.ViewModels.ModelVMs
 
             OrganicItems = CollectionViewSource.GetDefaultView(OrganicScanItems);
             OrganicItems.Filter = CollectionViewSource_Filter;
+            ToggleHidden = new RelayCommand(OnToggleHidden);
         }
 
         private SettingsStore SettingsStore;
@@ -322,13 +325,21 @@ namespace ODExplorer.ViewModels.ModelVMs
         public bool IsNonBody => _body.IsPlanet == false && _body.IsStar == false;
         public bool HideItems { get; private set; } = true;
         public int HiddenCount => OrganicScanItems.Where(x => x.IsHidden)?.Count() ?? 0;
+
+        public ICommand ToggleHidden { get; }
         #region Methods
+
+        private void OnToggleHidden(object? obj)
+        {
+            ToggleHiddenBios();
+        }
 
         public void ToggleHiddenBios()
         {
             HideItems = !HideItems;
             SetAlternationIndexes();
             OrganicItems.Refresh();
+            OnPropertyChanged(nameof(HideItems));
         }
 
         private bool CollectionViewSource_Filter(object obj)

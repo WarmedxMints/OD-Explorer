@@ -52,6 +52,7 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         public ICommand OpenEDSM { get; }
         public ICommand OpenSpansh { get; }
+        public ICommand CopyToClipboard { get; }
         public ICommand AddToIgnoreList { get; }
         public ICommand SwitchToUnsold { get; }
         public ICommand SwitchToSold { get; }
@@ -89,6 +90,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             SwitchToIgnored = new RelayCommand(OnSwitchToIgnored, (_) => CurrentState != CartoDetailsViewState.Ignored);
             ToggleRestoreCommand = new RelayCommand<IgnoredSystemsViewModel>(OnToggleRestore);
             SaveRestoreCommand = new RelayCommand(OnSaveIgnoredSystems, (_) => IgnoredSystems.Any(x => x.Restore));
+            CopyToClipboard = new RelayCommand<string>(OnCopyToClipboard);
 
             explorationData.OnBodyUpdated += ExplorationData_OnBodyUpdated;
             explorationData.OnCartoDataSold += ExplorationData_OnCartoDataSold;
@@ -142,6 +144,15 @@ namespace ODExplorer.ViewModels.ViewVMs
             CurrentState = CartoDetailsViewState.Unsold;
         }
 
+        private void OnCopyToClipboard(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }
+
+            notificationStore.CopyToClipBoard(value);
+        }
         private void OnSaveIgnoredSystems(object? obj)
         {
             var systemsToSave = IgnoredSystems.Where(x => x.Restore);

@@ -12,6 +12,7 @@ using ODUtils.ViewModelNavigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -65,8 +66,6 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             Title = $"OD Explorer v{App.AppVersion}";
 
-            currentSystem = null;
-            OrganicSignals.ClearCollection();
             //If the store is already live then no commanders where found
             if (_journalParserStore.IsLive)
             {
@@ -431,10 +430,11 @@ namespace ODExplorer.ViewModels.ViewVMs
 
                     if (e.SystemBodies != null && e.SystemBodies.Count > 0)
                     {
-                        foreach (var body in e.SystemBodies)
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            Application.Current.Dispatcher.Invoke(() =>
+                            foreach (var body in e.SystemBodies)
                             {
+
                                 var bodyVm = new SystemBodyViewModel(body, _settings);
                                 if (bodyVm.AddOrganicItems())
                                 {
@@ -442,8 +442,8 @@ namespace ODExplorer.ViewModels.ViewVMs
                                 }
 
                                 system.Bodies.AddToCollection(bodyVm);
-                            });
-                        }
+                            }
+                        });
                     }
 
                     currentSystem = system;

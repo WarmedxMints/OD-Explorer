@@ -40,18 +40,19 @@ namespace ODExplorer.Controls.CartoDetailsControls
             {
                 if (e.AddedItems.Count > 0)
                 {
-                    grid.Items.Refresh();
+                    //grid.Items.Refresh();
                     grid.ScrollIntoView(e.AddedItems[0]);
                 }
             }
         }
 
-        private void ToggleHiddenBtnClick(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if(sender is Button btn && btn.DataContext is SystemBodyViewModel body)
-            {
-                body.ToggleHiddenBios();
-            }
-        }
+        //Replaced with a command
+        //private void ToggleHiddenBtnClick(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //    if(sender is Button btn && btn.DataContext is SystemBodyViewModel body)
+        //    {
+        //        body.ToggleHiddenBios();
+        //    }
+        //}
     }
 }

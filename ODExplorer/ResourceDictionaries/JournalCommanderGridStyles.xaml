@@ -401,4 +401,146 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="NoSelectCell"
+           TargetType="{x:Type DataGridCell}">
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Name="border"
+                            BorderThickness="0"
+                            Padding="0"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Left"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryBackground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryBackground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="NoSelectCellCenter"
+           TargetType="{x:Type DataGridCell}">
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Name="border"
+                            BorderThickness="0"
+                            Padding="0"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryBackground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryBackground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="NoSelectCellRight"
+           TargetType="{x:Type DataGridCell}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border Name="border"
+                            BorderThickness="0"
+                            Padding="0"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Right"
+                                              VerticalAlignment="Center"
+                                              Name="content" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryBackground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryBackground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

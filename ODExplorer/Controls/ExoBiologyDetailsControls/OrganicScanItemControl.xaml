@@ -81,7 +81,7 @@
             <Setter Property="IsHitTestVisible"
                     Value="False" />
             <Setter Property="Background"
-                    Value="Transparent" />
+                    Value="{DynamicResource PrimaryBackground}" />
             <Setter Property="Foreground"
                     Value="{DynamicResource PrimaryControlForeground}" />
             <Setter Property="BorderBrush"
@@ -89,6 +89,34 @@
             <Setter Property="FocusVisualStyle"
                     Value="{x:Null}" />
         </Style>
+
+        <Style x:Key="NonSelectRow"
+               TargetType="{x:Type DataGridRow}">
+            <Setter Property="BorderThickness"
+                    Value="0" />
+            <Setter Property="IsHitTestVisible"
+                    Value="True" />
+            <Setter Property="Background"
+                    Value="{DynamicResource PrimaryBackground}" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource PrimaryControlForeground}" />
+            <Setter Property="BorderBrush"
+                    Value="Transparent" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected"
+                         Value="True">
+                    <Setter Property="Background"
+                            Value="{DynamicResource PrimaryBackground}" />
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource PrimaryControlForeground}" />
+                    <Setter Property="BorderBrush"
+                            Value="Transparent" />
+                    <Setter Property="BorderThickness"
+                            Value="0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>        
+    
     </UserControl.Resources>
     <Grid Margin="10"
           x:Name="Grid">
@@ -99,39 +127,51 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid ItemsSource="{Binding ElementName=Root, Path=OrganicDetails}"
-                  RowStyle="{DynamicResource NonHitTestVisileRow}"
+                  RowStyle="{DynamicResource NonSelectRow}"
                   HeadersVisibility="Column"
                   IsReadOnly="True"
                   GridLinesVisibility="All"
                   CanUserAddRows="False"
-                  Foreground="{DynamicResource PrimaryControlForeground}"
-                  Background="Transparent"
                   BorderThickness="0"
+                  Background="Transparent"
                   Style="{StaticResource BaseDataGridStyle}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding GenusEnglish}"
-                                    CellStyle="{DynamicResource DarkerCellLeft}"
+                                    CellStyle="{DynamicResource NoSelectCell}"
                                     MinWidth="120"
                                     Header="Genus" />
                 <DataGridTextColumn Binding="{Binding SpeciesEnglish}"
-                                    CellStyle="{DynamicResource DarkerCellLeft}"
+                                    CellStyle="{DynamicResource NoSelectCell}"
                                     Width="SizeToCells"
                                     MinWidth="120"
                                     Header="Species" />
                 <DataGridTextColumn Binding="{Binding Colour}"
-                                    CellStyle="{DynamicResource DarkerCellLeft}"
+                                    CellStyle="{DynamicResource NoSelectCell}"
                                     MinWidth="120"
                                     Header="Colour" />
                 <DataGridTextColumn Binding="{Binding BodyName}"
-                                    CellStyle="{DynamicResource DarkerCellLeft}"
+                                    CellStyle="{DynamicResource NoSelectCell}"
                                     Header="Body" />
+                <DataGridTemplateColumn CellStyle="{DynamicResource NoSelectCellCenter}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button FontFamily="Segoe MDL2 Assets"
+                                    Content="&#xF0E3;"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Command="{Binding ElementName=Root, Path=DataContext.CopyToClipboard}"
+                                    CommandParameter="{Binding SystemName}"
+                                    BorderThickness="0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding ValueString}"
-                                    CellStyle="{DynamicResource CmdrSelectionCellRight}"
+                                    CellStyle="{DynamicResource NoSelectCellRight}"
                                     HeaderStyle="{DynamicResource DataGridHeaderCenter}"
                                     MinWidth="120"
                                     Header="Value" />
                 <DataGridTextColumn Binding="{Binding BonusString}"
-                                    CellStyle="{DynamicResource CmdrSelectionCellRight}"
+                                    CellStyle="{DynamicResource NoSelectCellRight}"
                                     HeaderStyle="{DynamicResource DataGridHeaderCenter}"
                                     MinWidth="120"
                                     Width="SizeToCells"
@@ -209,6 +249,7 @@
                         BorderBrush="Black">
                     <TextBlock Text="{Binding ElementName=Root, Path=TotalValue}"
                                HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
                                Margin="0,0,3,0" />
                 </Border>
                 <Border Width="{Binding ElementName=Bonus,Path=ActualWidth}"
@@ -216,6 +257,7 @@
                         BorderBrush="Black">
                     <TextBlock Text="{Binding ElementName=Root, Path=TotalBonus}"
                                HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
                                Margin="0,0,3,0" />
                 </Border>
             </StackPanel>

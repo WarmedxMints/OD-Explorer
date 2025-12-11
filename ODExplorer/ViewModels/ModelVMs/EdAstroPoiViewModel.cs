@@ -25,7 +25,9 @@ namespace ODExplorer.ViewModels.ModelVMs
         public EDAstroType Type2 => poi.Type;
         public string Summary => poi.Summary;
         public Uri PioUrl => poi.PoiUrl;
-        public string MarkDown => poi.MarkDown;
+        public string MarkDown => poi.MarkDown.Contains("(/poiphotos") ? 
+            poi.MarkDown.Replace("(/poiphotos", "(https://edastro.com/poiphotos") 
+            : poi.MarkDown;
         public double DistanceFromCommander { get; private set; } 
 
         internal void UpdateDistance(Position position)

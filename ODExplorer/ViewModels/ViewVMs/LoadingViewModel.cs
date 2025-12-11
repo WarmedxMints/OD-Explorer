@@ -1,15 +1,17 @@
 ﻿using ODExplorer.Stores;
 using ODUtils.Commands;
 using ODUtils.Dialogs.ViewModels;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ODExplorer.ViewModels.ViewVMs
 {
     public sealed class LoadingViewModel : OdViewModelBase
     {
-        public LoadingViewModel(JournalParserStore journalParseStore, SettingsStore settingsStore)
+        public LoadingViewModel(JournalParserStore journalParseStore, SettingsStore settingsStore, NavigationViewModel navigationView)
         {
             journalStore = journalParseStore;
+            this.navigationView = navigationView;
             journalStore.OnJournalStoreStatusChange += JournalStore_OnStatusChange;
 
             OpenPayPal = new RelayCommand(OnOpenPayPal);
@@ -19,6 +21,7 @@ namespace ODExplorer.ViewModels.ViewVMs
         }
 
         private readonly JournalParserStore journalStore;
+        private readonly NavigationViewModel navigationView;
 
         public ICommand OpenPayPal { get; }
         public ICommand OpenGitHub { get; }
@@ -51,6 +54,17 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         private void JournalStore_OnStatusChange(object? sender, string? e)
         {
+            if (string.Equals(e, "No Commanders Found"))
+            {
+                StatusText = "No Commanders Found\nPlease Select a Directory to scan\n\nOpening Settings Panel...";
+                _ = Task.Factory.StartNew(async () =>
+                {
+                    await Task.Delay(5000);
+                    navigationView.SettingsViewCommand.Execute(null);
+                });
+                return;
+            }
+
             StatusText = e ?? string.Empty;
         }
     }

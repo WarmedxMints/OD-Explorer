@@ -79,6 +79,7 @@
     <None Remove="Resources\UC.png" />
     <None Remove="Resources\UCsmall.png" />
     <None Remove="Resources\UiScale.png" />
+    <None Remove="Resources\UnHidden.png" />
     <None Remove="Resources\ValuableBodiesPopOut.png" />
     <None Remove="Resources\zoom.png" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <Resource Include="Resources\UC.png" />
     <Resource Include="Resources\UCsmall.png" />
     <Resource Include="Resources\UiScale.png" />
+    <Resource Include="Resources\UnHidden.png" />
     <Resource Include="Resources\ValuableBodiesPopOut.png" />
     <Resource Include="Resources\zoom.png" />
   </ItemGroup>

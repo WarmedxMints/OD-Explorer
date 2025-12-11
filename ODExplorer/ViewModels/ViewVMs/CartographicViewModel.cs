@@ -5,6 +5,7 @@ using ODExplorer.ViewModels.ModelVMs;
 using ODUtils.Commands;
 using ODUtils.Dialogs.ViewModels;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;

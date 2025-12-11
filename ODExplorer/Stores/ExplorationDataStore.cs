@@ -740,7 +740,8 @@ namespace ODExplorer.Stores
                                         region,
                                         timeStamp,
                                         distance,
-                                        body.BiologicalSignals);
+                                        body.BiologicalSignals,
+                                        CurrentSystem?.Address ?? 0);
 
             var predictions = exoData.GetPredictions(planet);
 
