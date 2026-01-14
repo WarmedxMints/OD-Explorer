@@ -7,6 +7,7 @@
                               xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
                               PreviewMouseDoubleClick="NotificationDisplayPart_PreviewMouseDoubleClick"
                               mc:Ignorable="d"
+                              Focusable="False"
                               Foreground="{DynamicResource NotificationForeground}"
                               FontFamily="{StaticResource Eurostile}"
                               FontSize="{Binding Options.FontSize}"

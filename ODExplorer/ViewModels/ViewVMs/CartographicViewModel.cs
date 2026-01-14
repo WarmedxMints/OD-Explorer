@@ -30,8 +30,12 @@ namespace ODExplorer.ViewModels.ViewVMs
             this.mainView.OnRouteUpdated += MainView_OnRouteUpdated;
             this.mainView.OnBodyUpdated += MainView_OnBodyUpdated;
             this.mainView.OnBioUpdated += MainView_OnBioUpdated;
+           
             this.mainView.OnSelectedBodyUpdated += MainView_OnSelectedBodyUpdated;
             this.explorationData.OnFSDJump += ExplorationData_OnFSDJump;
+            explorationData.OnCartoDataSold += ExplorationData_OnCartoValueChanged;
+            explorationData.OnCartoDataLost += ExplorationData_OnCartoValueChanged;
+            explorationData.OnBioDataSold += ExplorationData_OnBioDataSold;
 
             SwitchView = new RelayCommand<CartoViewState>(OnSwitchView, (viewState) => CurrentState != viewState);
             OpenValuableBodiesPopOut = new RelayCommand(OnOpenValuableBodiesPopOut);
@@ -128,7 +132,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             }
         }
 
-        public string CartoValue => explorationData.GetUnsoldCartoSystems().Sum(x => x.CommanderValue).ToString("N0");
+        public string CartoValue => explorationData.GetUnsoldCartoValueString();
         public string ExoValue => explorationData.GetUnsoldExoValueString();
         public bool FilterUnconfirmedBios => settingsStore.SystemGridSetting.FilterUnconfirmedBios;
         public SystemGridSettings CurrentSystemGridSettings => settingsStore.SystemGridSetting;
@@ -284,6 +288,16 @@ namespace ODExplorer.ViewModels.ViewVMs
             HyperSpaceText = $"JUMPING TO {e.ToUpperInvariant()}";
             InHyperSpace = true;
             RefreshBodiesView();
+        }
+
+        private void ExplorationData_OnBioDataSold(object? sender, System.EventArgs e)
+        {
+            OnPropertyChanged(nameof(ExoValue));
+        }
+
+        private void ExplorationData_OnCartoValueChanged(object? sender, System.EventArgs e)
+        {
+            OnPropertyChanged(nameof(CartoValue));
         }
     }
 }

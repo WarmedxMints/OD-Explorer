@@ -99,6 +99,7 @@ namespace ODExplorer.Stores
         public event EventHandler<string>? OnFSDJump;
         public event EventHandler? OnBioDataSold;
         public event EventHandler? OnBioDataLost;
+        public event EventHandler? OnExoMinValueChanged;
         #endregion
 
         #region IprocessJournalLogs Implementation
@@ -845,35 +846,39 @@ namespace ODExplorer.Stores
         #region Data Value Methods
         public List<StarSystem> GetUnsoldCartoSystems()
         {
-            var systems = _cartoData.Values.ToList();
-
-            var ret = systems.Where(x => _ignoredSystems.ContainsKey(x.Address) == false)
-                             .Where(x => x.UnsoldCount > 0)
+            var systems = _cartoData.Values.Where(x => x.UnsoldCount > 0 && _ignoredSystems.ContainsKey(x.Address) == false)
                              .OrderBy(x => x.Name)
                              .ToList();
-            return ret;
+            return systems;
         }
 
         public List<StarSystem> GetSoldCartoSystems()
         {
-            var systems = _cartoData.Values.ToList();
-
-            var ret = systems.Where(x => _ignoredSystems.ContainsKey(x.Address) == false)
-                             .Where(x => x.SoldCount > 0)
+            var systems = _cartoData.Values.Where(x => x.SoldCount > 0 && _ignoredSystems.ContainsKey(x.Address) == false)
                              .OrderBy(x => x.Name)
                              .ToList();
-            return ret;
+            return systems;
         }
 
         public List<StarSystem> GetLostCartoSystems()
         {
-            var systems = _cartoData.Values.ToList();
-
-            var ret = systems.Where(x => _ignoredSystems.ContainsKey(x.Address) == false)
+            var systems = _cartoData.Values.Where(x => _ignoredSystems.ContainsKey(x.Address) == false)
                              .Where(x => x.LostCount > 0)
                              .OrderBy(x => x.Name)
                              .ToList();
-            return ret;
+            return systems;
+        }
+
+        internal string GetUnsoldCartoValueString()
+        {
+            var systems = _cartoData.Values.Where(x => x.UnsoldCount > 0 && x.HasRevelantBodies(settingsStore.IgnoredCartoDate) && _ignoredSystems.ContainsKey(x.Address) == false);
+
+            long value = systems.Sum(x =>
+            {
+                return x.SystemBodies.Where(x => x.ScanDate > settingsStore.IgnoredCartoDate).Sum(x => x.UnsoldCommanderValue);
+            });
+            
+            return value.ToString("N0");
         }
 
         internal string GetUnsoldExoValueString()
@@ -885,7 +890,7 @@ namespace ODExplorer.Stores
                 if (Body.OrganicScanItems is null)
                     continue;
 
-                value += Body.OrganicScanItems.Where(x => x.ScanStage == OrganicScanStage.Analyse && x.DataState == DataState.Unsold).Sum(x => x.TotalValue);
+                value += Body.OrganicScanItems.Where(x => x.ScanTime > settingsStore.IgnoredExoDate && x.ScanStage == OrganicScanStage.Analyse && x.DataState == DataState.Unsold).Sum(x => x.TotalValue);
             }
 
             return value.ToString("N0");

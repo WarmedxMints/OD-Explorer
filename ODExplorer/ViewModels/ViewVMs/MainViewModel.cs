@@ -12,7 +12,6 @@ using ODUtils.ViewModelNavigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -21,6 +20,12 @@ namespace ODExplorer.ViewModels.ViewVMs
 {
     public sealed class MainViewModel : OdViewModelBase
     {
+        public event EventHandler<bool>? MinimiseToTrayChanged
+        {
+            add { SettingsStore.MinimiseToTrayChaned += value; }
+            remove { SettingsStore.MinimiseToTrayChaned -= value; }
+        }
+
         #region Constructor
         public MainViewModel(OdNavigationStore navigationStore,
                             NavigationViewModel navigationViewModel,
@@ -43,6 +48,9 @@ namespace ODExplorer.ViewModels.ViewVMs
             this.databaseProvider = databaseProvider;
 
             _settings.OnSystemGridSettingsUpdatedEvent += Settings_OnSystemGridSettingsUpdatedEvent;
+            _settings.MinExoValueChanged += OnExoMinValueChanged;
+            _navigationViewModel.MessagoBoxRequested += InvokeMessageBox;
+
             _navigationStore.CurrentViewModelChanged += OnNavigationStore_CurrentViewModelChanged;
             _journalParserStore.OnParserStoreLive += OnJournalParserStore_OnParserStoreLive;
             _journalParserStore.OnCommandersUpdated += OnCommandersUpdated;
@@ -69,7 +77,8 @@ namespace ODExplorer.ViewModels.ViewVMs
             //If the store is already live then no commanders where found
             if (_journalParserStore.IsLive)
             {
-                UiEnabled = true;
+                UiEnabled = true;                
+                return;
             }
 
             OnCurrentSystemUpdated(null, explorationData.CurrentSystem);
@@ -250,7 +259,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             OnPropertyChanged(nameof(FilterUnconfirmedBios));
         }
 
-        public void InvokeMessageBox(MessageBoxEventArgsAsync e)
+        public void InvokeMessageBox(object? sender, MessageBoxEventArgsAsync e)
         {
             OnMessageBoxRequested?.Invoke(this, e);
         }
@@ -364,11 +373,11 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         private void OnResetPopOutPos(object? obj)
         {
-//#if DEBUG
-//            if(selectedBody != null) 
-//                notificationStore.CheckForNotableNotifications(selectedBody.Body);
-//            return;
-//#else
+            //#if DEBUG
+            //            if(selectedBody != null) 
+            //                notificationStore.CheckForNotableNotifications(selectedBody.Body);
+            //            return;
+            //#else
             foreach (var popOut in ActivePopOuts)
             {
                 SettingsStore.ResetWindowPositionActual(popOut.Position, 800, 450);
@@ -378,7 +387,7 @@ namespace ODExplorer.ViewModels.ViewVMs
                 popOut.Mode = PopOutMode.Normal;
                 popOut.InvokeReset();
             }
-//#endif
+            //#endif
         }
         #endregion
 
@@ -391,7 +400,8 @@ namespace ODExplorer.ViewModels.ViewVMs
                 foreach (var journalCommander in _journalParserStore.JournalCommanders)
                 {
                     JournalCommanders.Add(new JournalCommaderViewModel(journalCommander));
-                };
+                }
+                ;
 
                 OnPropertyChanged(nameof(JournalCommanders));
 
@@ -621,12 +631,12 @@ namespace ODExplorer.ViewModels.ViewVMs
             CurrentSystemUpdated();
         }
 
-        internal void OnExoMinValueChanged()
+        internal void OnExoMinValueChanged(object? sender, EventArgs e)
         {
             if (currentSystem == null)
                 return;
 
-            foreach(var body in currentSystem.Bodies)
+            foreach (var body in currentSystem.Bodies)
             {
                 body.UpdateOrganicHiddenStates();
             }

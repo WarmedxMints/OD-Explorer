@@ -265,17 +265,30 @@ namespace ODExplorer.Stores
 
         public bool IsNewSpecies(string codexValue)
         {
-            if (speciesEntries.TryGetValue(currentRegion, out List<string>? value))
+            switch (settings.CodexEntryHistory)
             {
-                var known = value.FirstOrDefault(x => x == codexValue);
+                case CodexEntryHistory.Global:
+                    var knownGlobal = speciesEntries.Values.FirstOrDefault(x => x.Contains(codexValue));
 
-                if (known == null)
-                {
+                    if (knownGlobal == null)
+                    {
+                        return true;
+                    }
+                    return false;
+                default:
+                case CodexEntryHistory.Regional:
+                    if (speciesEntries.TryGetValue(currentRegion, out List<string>? value))
+                    {
+                        var known = value.FirstOrDefault(x => x == codexValue);
+
+                        if (known == null)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
                     return true;
-                }
-                return false;
-            }
-            return true;
+            }            
         }
 
         public void ParseJournalEvent(JournalEntry e)

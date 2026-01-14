@@ -2,6 +2,7 @@
 using ODUtils.Dialogs;
 using ODUtils.Windows;
 using System;
+using System.Drawing;
 using System.Windows;
 
 namespace ODExplorer.Windows
@@ -11,11 +12,28 @@ namespace ODExplorer.Windows
     /// </summary>
     public partial class MainWindow : WindowBase
     {
+        private Icon _trayIcon;
         public MainWindow(MainViewModel viewModel)
         {
             DataContext = viewModel;
             InitializeComponent();
             Closing += MainWindow_Closing;
+            viewModel.MinimiseToTrayChanged += ViewModel_MinimiseToTrayChanged;
+            _trayIcon = new Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/ODExplorer;component/astronaut.ico")).Stream);
+            if (viewModel.SettingsStore.MinimiseToTray)
+                ODUtils.Helpers.MinimizeToTray.Enable(this, _trayIcon);
+        }
+
+        private void ViewModel_MinimiseToTrayChanged(object? sender, bool e)
+        {
+            if (e)
+            {
+
+                ODUtils.Helpers.MinimizeToTray.Enable(this, _trayIcon);
+                return;
+            }
+
+            ODUtils.Helpers.MinimizeToTray.Disable(this);
         }
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)

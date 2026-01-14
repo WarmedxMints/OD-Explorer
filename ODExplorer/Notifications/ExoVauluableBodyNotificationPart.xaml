@@ -6,6 +6,7 @@
                               xmlns:local="clr-namespace:ODExplorer.Notifications"
                               xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
                               PreviewMouseDoubleClick="NotificationDisplayPart_PreviewMouseDoubleClick"
+                              Focusable="False"
                               Foreground="{DynamicResource NotificationForeground}"
                               FontFamily="{StaticResource Eurostile}"
                               FontSize="{Binding Options.FontSize}"

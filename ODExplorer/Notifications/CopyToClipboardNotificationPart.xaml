@@ -5,6 +5,7 @@
                               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                               xmlns:local="clr-namespace:ODExplorer.Notifications"
                               mc:Ignorable="d"
+                              Focusable="False"
                               xmlns:core="clr-namespace:ToastNotifications.Core;assembly=ToastNotifications"
                               PreviewMouseDoubleClick="NotificationDisplayPart_PreviewMouseDoubleClick"
                               Foreground="{DynamicResource NotificationForeground}"

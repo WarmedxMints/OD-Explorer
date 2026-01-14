@@ -13,6 +13,7 @@
                     x:Name="Root"
                     Focusable="True"
                     Title="{Binding Title}"
+                    Icon="/astronaut.ico"
                     FontFamily="{StaticResource Eurostile}"
                     FontSize="18"                 
                     Foreground="{DynamicResource PrimaryControlForeground}"

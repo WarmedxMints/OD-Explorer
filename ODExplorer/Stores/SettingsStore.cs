@@ -15,6 +15,9 @@ namespace ODExplorer.Stores
 {
     public sealed class SettingsStore
     {
+        public event EventHandler<bool>? MinimiseToTrayChaned;
+        public event EventHandler? MinExoValueChanged;
+
         public SettingsStore(IOdToolsDatabaseProvider odToolsDatabaseProvider)
         {
             databaseProvider = odToolsDatabaseProvider;
@@ -64,7 +67,9 @@ namespace ODExplorer.Stores
             }
         }
         public Dictionary<int, List<PopOutParams>> PopOutParams { get; set; } = [];
-
+        public DateTime IgnoredCartoDate { get; set; } = DateTime.MinValue;
+        public DateTime IgnoredExoDate { get; set; } = DateTime.MinValue;
+        public bool MinimiseToTray { get; set; }
         #region Persistance
         public void LoadSettings()
         {
@@ -92,6 +97,9 @@ namespace ODExplorer.Stores
                 ActiveView = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(ActiveView)), ActiveView);
                 NotificationOptions = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(NotificationOptions)), NotificationOptions);
                 CodexEntryHistory = SettingsDTO.SettingDtoToEnum(settings.GetSettingDTO(nameof(CodexEntryHistory)), CodexEntryHistory);
+                IgnoredCartoDate = SettingsDTO.SettingDtoToJson(settings.GetSettingDTO(nameof(IgnoredCartoDate)), DateTime.MinValue);
+                IgnoredExoDate = SettingsDTO.SettingDtoToJson(settings.GetSettingDTO(nameof(IgnoredExoDate)), DateTime.MinValue);
+                MinimiseToTray = SettingsDTO.SettingsDtoToBool(settings.GetSettingDTO(nameof(MinimiseToTray)), false);
             }
 
             if (WindowPosition.IsZero)
@@ -125,6 +133,9 @@ namespace ODExplorer.Stores
                 SettingsDTO.EnumToSettingsDto(nameof(ActiveView), ActiveView),
                 SettingsDTO.EnumToSettingsDto(nameof(NotificationOptions), NotificationOptions),
                 SettingsDTO.EnumToSettingsDto(nameof(CodexEntryHistory), CodexEntryHistory),
+                SettingsDTO.ObjectToJsonStringDto(nameof(IgnoredCartoDate), IgnoredCartoDate),
+                SettingsDTO.ObjectToJsonStringDto(nameof(IgnoredExoDate), IgnoredExoDate),
+                SettingsDTO.BoolToSettingsDTO(nameof(MinimiseToTray), MinimiseToTray)
             };
 
             databaseProvider.AddSettings(settings);
@@ -247,5 +258,16 @@ namespace ODExplorer.Stores
             OnSystemGridSettingsUpdatedEvent?.Invoke(this, EventArgs.Empty);
         }
         #endregion
+
+        public void SetMinimiseToTray(bool value)
+        {
+            MinimiseToTray = value;
+            MinimiseToTrayChaned?.Invoke(this, value);
+        }
+
+        internal void OnExoMinValueChanged()
+        {
+            MinExoValueChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

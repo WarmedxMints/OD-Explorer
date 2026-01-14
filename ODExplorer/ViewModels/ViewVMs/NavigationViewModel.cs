@@ -1,4 +1,6 @@
-﻿using ODUtils.ViewModelNavigation;
+﻿using ODExplorer.Models;
+using ODUtils.ViewModelNavigation;
+using System;
 using System.Windows.Input;
 
 namespace ODExplorer.ViewModels.ViewVMs
@@ -20,5 +22,11 @@ namespace ODExplorer.ViewModels.ViewVMs
         public ICommand CartoDetailsViewCommand { get; } = new OdNavigateCommand<CartoDetailsViewModel>(cartoDetailsView);
         public ICommand SpanshViewCommand { get; } = new OdNavigateCommand<SpanshViewModel>(spanshView);
         public ICommand EdAstroViewCommand { get; } = new OdNavigateCommand<EdAstroViewModel>(edAstroView);
+
+        public event EventHandler<MessageBoxEventArgsAsync>? MessagoBoxRequested;
+        internal void InvokeMessageBox(MessageBoxEventArgsAsync args)
+        {
+            MessagoBoxRequested?.Invoke(this, args);
+        }
     }
 }

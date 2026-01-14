@@ -10,8 +10,8 @@
              mc:Ignorable="d"
              FontSize="18"
              d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
-             d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignHeight="1080"
+             d:DesignWidth="1920">
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto">
         <Grid Margin="0">
@@ -36,6 +36,24 @@
 
                 <controls:CommanderSettingsControl Grid.ColumnSpan="2" />
 
+                <GroupBox Grid.Row="2"
+                          Grid.ColumnSpan="2"
+                          Header="Application Options"
+                          BorderBrush="{DynamicResource PrimaryControlBorder}"
+                          BorderThickness="0.5"
+                          Padding="10"
+                          Margin="0 0 0 7">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Content="Minimise to tray"
+                                  FontSize="16"
+                                  HorizontalAlignment="Left"
+                                  Margin="10,0"
+                                  VerticalAlignment="Center"
+                                  IsChecked="{Binding MinimiseToTray}"
+                                  Foreground="{DynamicResource PrimaryForeground}"
+                                  Style="{DynamicResource CheckBoxStyle}" />
+                    </StackPanel>
+                </GroupBox>
                 <controls:LinksControl Grid.Row="4"
                                        Grid.ColumnSpan="2" />
             </Grid>

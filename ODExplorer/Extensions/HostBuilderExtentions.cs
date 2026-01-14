@@ -118,8 +118,7 @@ namespace ODExplorer.Extensions
             return SettingsViewModel.CreateViewModel(services.GetRequiredService<SettingsStore>(),
                 services.GetRequiredService<IOdToolsDatabaseProvider>(),
                 services.GetRequiredService<NavigationViewModel>(),
-                services.GetRequiredService<JournalParserStore>(),
-                services.GetRequiredService<MainViewModel>());
+                services.GetRequiredService<JournalParserStore>());
         }
 
         public static IHostBuilder AddHttpClients(this IHostBuilder hostBuilder)

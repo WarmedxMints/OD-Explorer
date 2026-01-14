@@ -6,6 +6,7 @@ using ODExplorer.ViewModels.ModelVMs;
 using ODUtils.APis;
 using ODUtils.Commands;
 using ODUtils.Database.Interfaces;
+using ODUtils.Dialogs;
 using ODUtils.Dialogs.ViewModels;
 using ODUtils.Models;
 using System;
@@ -60,6 +61,8 @@ namespace ODExplorer.ViewModels.ViewVMs
         public ICommand SwitchToIgnored { get; }
         public ICommand ToggleRestoreCommand { get; }
         public ICommand SaveRestoreCommand { get; }
+        public ICommand ResetCartoValue { get; }
+        public ICommand ResetExoValue { get; }
 
         public CartoDetailsViewState CurrentState
         {
@@ -91,6 +94,8 @@ namespace ODExplorer.ViewModels.ViewVMs
             ToggleRestoreCommand = new RelayCommand<IgnoredSystemsViewModel>(OnToggleRestore);
             SaveRestoreCommand = new RelayCommand(OnSaveIgnoredSystems, (_) => IgnoredSystems.Any(x => x.Restore));
             CopyToClipboard = new RelayCommand<string>(OnCopyToClipboard);
+            ResetCartoValue = new RelayCommand(OnResetCartoValue);
+            ResetExoValue = new RelayCommand(OnResetExoValue);
 
             explorationData.OnBodyUpdated += ExplorationData_OnBodyUpdated;
             explorationData.OnCartoDataSold += ExplorationData_OnCartoDataSold;
@@ -222,6 +227,34 @@ namespace ODExplorer.ViewModels.ViewVMs
             ODUtils.Helpers.OperatingSystem.OpenUrl(model.EdsmUrl);
         }
 
+        private void OnResetExoValue(object? obj)
+        {
+            var mb = ODMessageBox.Show(null, "Reset Exo Value?", "Reset : Resets Exo Value to 0\nRestore : Restores Exo Value", System.Windows.MessageBoxButton.YesNoCancel, "Reset", "Restore");
+            switch (mb)
+            {
+                case System.Windows.MessageBoxResult.Yes:
+                    settingsStore.IgnoredExoDate = DateTime.UtcNow;
+                    break;
+                case System.Windows.MessageBoxResult.No:
+                    settingsStore.IgnoredExoDate = DateTime.MinValue;
+                    break;
+            }
+        }
+
+        private void OnResetCartoValue(object? obj)
+        {
+            var mb = ODMessageBox.Show(null, "Reset Carto Value?", "Reset : Resets Carto Value to 0\nRestore : Restores Carto Value", System.Windows.MessageBoxButton.YesNoCancel, "Reset", "Restore");
+
+            switch (mb)
+            {
+                case System.Windows.MessageBoxResult.Yes:
+                    settingsStore.IgnoredCartoDate = DateTime.UtcNow;
+                    break;
+                case System.Windows.MessageBoxResult.No:
+                    settingsStore.IgnoredCartoDate = DateTime.MinValue;
+                    break;
+            }
+        }
         private void BuildUnsoldSystems()
         {
             UnsoldSystems.ClearCollection();

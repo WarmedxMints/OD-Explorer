@@ -20,14 +20,12 @@ namespace ODExplorer.ViewModels.ViewVMs
         public SettingsViewModel(SettingsStore settingsStore,
                          IOdToolsDatabaseProvider databaseProvider,
                          NavigationViewModel navigationView,
-                         JournalParserStore parserStore,
-                         MainViewModel mainViewModel)
+                         JournalParserStore parserStore)
         {
             this.settingsStore = settingsStore;
             this.databaseProvider = databaseProvider;
             this.navigationView = navigationView;
             this.parserStore = parserStore;
-            this.mainViewModel = mainViewModel;
 
             OpenPayPal = new RelayCommand(OnOpenPayPal);
             OpenEdsm = new RelayCommand(OnOpenEdsm);
@@ -48,10 +46,9 @@ namespace ODExplorer.ViewModels.ViewVMs
             SettingsStore settingsStore,
             IOdToolsDatabaseProvider databaseProvider,
             NavigationViewModel navigationView,
-            JournalParserStore parserStore,
-            MainViewModel mainViewModel)
+            JournalParserStore parserStore)
         {
-            var vm = new SettingsViewModel(settingsStore, databaseProvider, navigationView, parserStore, mainViewModel);
+            var vm = new SettingsViewModel(settingsStore, databaseProvider, navigationView, parserStore);
             _ = vm.Initialise();
             return vm;
         }
@@ -60,7 +57,6 @@ namespace ODExplorer.ViewModels.ViewVMs
         private readonly IOdToolsDatabaseProvider databaseProvider;
         private readonly NavigationViewModel navigationView;
         private readonly JournalParserStore parserStore;
-        private readonly MainViewModel mainViewModel;
 
         private readonly SystemGridSettings SystemGridSettingsClone;
 
@@ -242,6 +238,15 @@ namespace ODExplorer.ViewModels.ViewVMs
             set => settingsStore.SystemGridSetting.MinExoValue = value * 1_000_000;
         }
 
+        public bool MinimiseToTray
+        {
+            get => settingsStore.MinimiseToTray;
+            set
+            {
+                settingsStore.SetMinimiseToTray(value);
+                OnPropertyChanged();
+            }
+        }
         #region Commands
         public ICommand OpenPayPal { get; }
         public ICommand ToggleCommanderHidden { get; }
@@ -354,7 +359,7 @@ namespace ODExplorer.ViewModels.ViewVMs
                                                MessageBoxButton.YesNo,
                                                ResetDatabaseActual);
 
-            mainViewModel.InvokeMessageBox(args);
+            navigationView.InvokeMessageBox(args);
         }
 
         private async Task ResetDatabaseActual()
@@ -406,7 +411,7 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         internal void OnExoMinValueChanged()
         {
-            mainViewModel.OnExoMinValueChanged();
+            settingsStore.OnExoMinValueChanged();
         }
     }
 }

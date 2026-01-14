@@ -1,23 +1,24 @@
 ﻿<UserControl x:Class="ODExplorer.Controls.CartodataSystemList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ODExplorer.Controls"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              x:Name="Root"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450"
+             d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition  />
-            <ColumnDefinition Width="20"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="20" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
+
         <GroupBox Header="Systems"
                   Margin="5"
                   Padding="5"
@@ -109,7 +110,7 @@
                 </Grid>
             </Grid>
         </GroupBox>
-        
+
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -126,14 +127,14 @@
                             Height="30"
                             Margin="5"
                             Command="{Binding OpenEDSM}"
-                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}"/>
+                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}" />
 
                     <Button Content="Spansh"
                             Width="80"
                             Height="30"
                             Margin="5"
                             Command="{Binding OpenSpansh}"
-                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}"/>
+                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}" />
 
                     <Button FontFamily="Segoe MDL2 Assets"
                             Content="&#xF0E3;"
@@ -152,23 +153,33 @@
                       Padding="5"
                       BorderBrush="{DynamicResource PrimaryControlBorder}"
                       BorderThickness="0.5">
-                <Button ToolTip="ED will sometimes fire a scan event without giving you carto data which will generate erroneous systems in the above list&#x0a;&#x0a;You can add the selected system to the ignore list so they aren't included"
-                        Width="Auto"
-                        HorizontalAlignment="Center"
-                        Height="30"
-                        Margin="10,5"
-                        Command="{Binding AddToIgnoreList}"
-                        CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}">
-                    <TextBlock Text="{Binding ElementName=Root, Path=IgnoreSystemText}"
-                               Margin="10,0" />
-                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <Button ToolTip="ED will sometimes fire a scan event without giving you carto data which will generate erroneous systems in the above list&#x0a;&#x0a;You can add the selected system to the ignore list so they aren't included"
+                            Width="Auto"
+                            HorizontalAlignment="Center"
+                            Height="30"
+                            Margin="10,5"
+                            Command="{Binding AddToIgnoreList}"
+                            CommandParameter="{Binding ElementName=Root, Path=SelectedSystem}">
+                        <TextBlock Text="{Binding ElementName=Root, Path=IgnoreSystemText}"
+                                   Margin="10,0" />
+
+                    </Button>
+                    <Button Content="Reset Carto Value"
+                            Height="30"
+                            Margin="10,5"
+                            Command="{Binding ResetCartoValue}"/>
+                    <Button Content="Reset Exo Value"
+                            Height="30"
+                            Margin="10,5"
+                            Command="{Binding ResetExoValue}"/>
+                </StackPanel>
             </GroupBox>
         </Grid>
 
         <Grid Grid.Column="2"
               Grid.RowSpan="2"
-              HorizontalAlignment="Stretch"
-              >
+              HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
@@ -178,7 +189,7 @@
                       BorderThickness="0.5"
                       Margin="5"
                       Padding="5">
-                <DataGrid SelectedItem="{Binding ElementName=Root, Path=SelectedBody}"    
+                <DataGrid SelectedItem="{Binding ElementName=Root, Path=SelectedBody}"
                           x:Name="BodiesGrid"
                           Grid.Column="2"
                           SelectionMode="Single"
@@ -287,7 +298,7 @@
                                    Grid.Row="0" />
                     </Grid>
                     <local:BodyInfoControl Grid.Row="1"
-                                           DataContext="{Binding ElementName=Root, Path=SelectedBody}"/>
+                                           DataContext="{Binding ElementName=Root, Path=SelectedBody}" />
                 </Grid>
             </GroupBox>
         </Grid>

@@ -18,6 +18,7 @@
     <DefineConstants>$(DefineConstants);INSTALL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="astronaut.ico" />
     <None Remove="Resources\Basic.png" />
     <None Remove="Resources\ClassicCartoViewBtn.png" />
     <None Remove="Resources\Clipboard.png" />
@@ -84,6 +85,7 @@
     <None Remove="Resources\zoom.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="astronaut.ico" />
     <Resource Include="Resources\edastro.png" />
     <Resource Include="Resources\explorerElite.png" />
   </ItemGroup>
