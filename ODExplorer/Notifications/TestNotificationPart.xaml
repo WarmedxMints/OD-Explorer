@@ -60,11 +60,11 @@
                        Margin="{Binding TextMargin}"
                        VerticalAlignment="Center" />
 
-            <TextBlock Text="Click to open GitHub page"
+            <!--<TextBlock Text="Click to open GitHub page"
                        Grid.Column="1"
                        Grid.Row="2"
                        Margin="{Binding TextMargin}"
-                       Grid.ColumnSpan="2" />
+                       Grid.ColumnSpan="2" />-->
 
             <TextBlock Text="See you in the black"
                        Grid.Column="1"

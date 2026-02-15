@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODUtilsTests", "D:\ODrepos\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EliteJournalReader", "F:\GitHub\EliteJournalReader\EliteJournalReader\EliteJournalReader.csproj", "{199FD349-94BA-0D3B-0F4B-9882697BFED1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToastNotifications", "D:\ODrepos\ToastNotifications\Src\ToastNotifications\ToastNotifications.csproj", "{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,14 @@ Global
 		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Portable|Any CPU.Build.0 = Portable|Any CPU
 		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{199FD349-94BA-0D3B-0F4B-9882697BFED1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Install|Any CPU.ActiveCfg = Install|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Install|Any CPU.Build.0 = Install|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Portable|Any CPU.ActiveCfg = Debug|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Portable|Any CPU.Build.0 = Debug|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3500BC5E-5BD8-B8BA-DE67-B835E49FCAB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
