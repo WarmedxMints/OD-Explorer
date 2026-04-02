@@ -427,7 +427,7 @@ namespace ODExplorer.ViewModels.ModelVMs
         }
 
         internal void UpdateOrganicHiddenStates()
-        {
+        {           
             foreach (var item in OrganicScanItems)
             {
                 item.IsHidden = item.ScanStageEnum < OrganicScanStage.Codex && item.Value < SettingsStore.SystemGridSetting.MinExoValue;
@@ -441,6 +441,16 @@ namespace ODExplorer.ViewModels.ModelVMs
         {
             if (OrganicScanItems is null || OrganicScanItems.Count == 0)
                 return;
+
+            if (_body.DssScanned == true)
+            {
+                var toRemove = OrganicScanItems.Where(x => x.GenusEnglish == "Not Predicted").ToList();
+
+                foreach (var item in toRemove)
+                {
+                    OrganicScanItems.RemoveFromCollection(item);
+                }
+            }
 
             UpdateOrganicHiddenStates();
             foreach (var item in OrganicScanItems)

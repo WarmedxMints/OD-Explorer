@@ -1,4 +1,5 @@
 ﻿using EliteJournalReader;
+using ODExplorer.Extensions;
 using ODExplorer.Models;
 using ODExplorer.Stores;
 using ODUtils.Dialogs.ViewModels;
@@ -7,6 +8,7 @@ using ODUtils.Extensions;
 using ODUtils.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace ODExplorer.ViewModels.ModelVMs
 {
@@ -83,17 +85,36 @@ namespace ODExplorer.ViewModels.ModelVMs
         public OrganicInfoViewModel? Info => Item.Info is null ? null : new(Item.Info);
         public bool UnConfirmed => Item.ScanStage == OrganicScanStage.Prediction && Item.BodyDssScanned;
         public bool NewSpecies => Item.IsNewSpecies;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         public string ColonyRange => SettingsStore.Instance?.SystemGridSetting.DistanceUnit switch
         {
-            Distance.Miles => Item.Info is null ? string.Empty : $"{Item.Info.ColonyRange * 3.280839895:N0} ft",
-            _ => Item.Info is null ? string.Empty : $"{Item.Info.ColonyRange:N0} m",
+            Distance.Miles => CheckInfo() is null ? string.Empty : $"{Item.Info.ColonyRange * 3.280839895:N0} ft",
+            _ => CheckInfo() is null ? string.Empty : $"{Item.Info.ColonyRange:N0} m",
         };
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
+        private OrganicInfo? CheckInfo()
+        {
+            if (Item.Info is null || SpeciesEnglish == string.Empty)
+                return null;
+
+            return Item.Info;
+        }
         public int AlternationIndex { get; set; }
 
         public bool IsHidden { get; set; }
         public void OnInfoUpdated()
         {
+            if (Variants.Count == 0)
+            {
+                
+                    var newOrganic = new OrganicScanItemViewModel(item);
+
+                    foreach (var variant in item.Variants)
+                    {
+                        Variants.AddToCollection(new(variant, newOrganic));
+                    }
+            }
             OnPropertyChanged(nameof(SystemName));
             OnPropertyChanged(nameof(ColonyRange));
             OnPropertyChanged(nameof(EstimatedValue));
@@ -114,6 +135,7 @@ namespace ODExplorer.ViewModels.ModelVMs
             OnPropertyChanged(nameof(AlternationIndex));
             OnPropertyChanged(nameof(NewSpecies));
             OnPropertyChanged(nameof(WasLogged));
+            OnPropertyChanged(nameof(Colour));
 
             foreach (var variant in Variants)
             {

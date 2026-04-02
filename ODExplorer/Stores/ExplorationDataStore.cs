@@ -374,7 +374,6 @@ namespace ODExplorer.Stores
                                         _organicData.Add(body);
                                     }
                                     TriggerBodyBiosUpdatedIfLive(body);
-                                    break;
                                 }
                                 TriggerBodyEventIfLive(body);
                                 break;
@@ -562,6 +561,15 @@ namespace ODExplorer.Stores
                                     TriggerBioUpdatedIfLive(knownBio, true);
                                     break;
                                 }
+
+                                knownBio = body.OrganicScanItems.FirstOrDefault(x => x.GenusLocalised == "Not Predicted");
+                                if (knownBio is not null)
+                                {
+                                    knownBio.UpdateFromCodex(codexEntry);
+                                    TriggerBioUpdatedIfLive(knownBio, true);
+                                    break;
+                                }
+
                                 knownBio = new(codexEntry, body);
                                 body.OrganicScanItems.Add(knownBio);
                                 if (_organicData.Contains(body) == false)
@@ -639,6 +647,13 @@ namespace ODExplorer.Stores
                                     var bio = knownBio.First();
                                     if (bio.UpdateFromScan(scanOrganic, longitude, latitude))
                                         TriggerBioUpdatedIfLive(bio);
+                                    break;
+                                }
+                                var notPredicted = body.OrganicScanItems.FirstOrDefault(x => x.GenusLocalised == "Not Predicted");
+                                if (notPredicted is not null)
+                                {
+                                    notPredicted.UpdateFromScan(scanOrganic, longitude, latitude);
+                                    TriggerBioUpdatedIfLive(notPredicted, true);
                                     break;
                                 }
                                 var newBodyBio = new OrganicScanItem(scanOrganic, body, longitude, latitude);
@@ -719,7 +734,7 @@ namespace ODExplorer.Stores
 
             if (stars.Count == 0)
             {
-                stars = body.Owner.SystemBodies.Where(x => x.IsStar).Select(x => x.StarType).ToList();
+                stars = [.. body.Owner.SystemBodies.Where(x => x.IsStar).Select(x => x.StarType)];
             }
 
             var parentStars = body.GetParentStars();
@@ -808,6 +823,14 @@ namespace ODExplorer.Stores
                         continue;
                     }
                     body.OrganicScanItems.Add(new(pred, body));
+                }
+            }
+
+            if (predictions.Values.Count < body.BiologicalSignals)
+            {
+                for (int i = predictions.Values.Count; i < body.BiologicalSignals; i++)
+                {
+                    body.OrganicScanItems?.Add(new(body, timeStamp));
                 }
             }
             body.UpdateBioMinMaxValue();

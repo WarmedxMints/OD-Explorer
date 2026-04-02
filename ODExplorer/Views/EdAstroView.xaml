@@ -63,6 +63,19 @@
                       HeadersVisibility="Column"
                       x:Name="PoiGrid">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn CellStyle="{DynamicResource CmdrSelectionCellCenter}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Margin="5,0"
+                                        Height="20"
+                                        Width="20"
+                                        BorderThickness="0"
+                                        Click="CopyToClipboard"
+                                        FontFamily="Segoe MDL2 Assets"
+                                        Content="&#xE77F;" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Name"
                                         CellStyle="{DynamicResource CmdrSelectionCellLeft}"
                                         Binding="{Binding Name}" />

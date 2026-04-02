@@ -9,10 +9,12 @@ namespace ODExplorer.ViewModels.ViewVMs
     public sealed class EdAstroViewModel : OdViewModelBase
     {
         private readonly ExplorationDataStore explorationDataStore;
+        private readonly NotificationStore notificationStore;
 
-        public EdAstroViewModel(ExplorationDataStore explorationDataStore)
+        public EdAstroViewModel(ExplorationDataStore explorationDataStore, NotificationStore notificationStore)
         {
             this.explorationDataStore = explorationDataStore;
+            this.notificationStore = notificationStore;
             this.explorationDataStore.OnCurrentSystemUpdated += ExplorationDataStore_OnCurrentSystemUpdated;
             PopulatePois();
         }
@@ -73,6 +75,13 @@ namespace ODExplorer.ViewModels.ViewVMs
 
             pointsOfInterest.Sort((x, y) => x.DistanceFromCommander.CompareTo(y.DistanceFromCommander));
             OnPropertyChanged(nameof(PointsOfInterest));
+        }
+
+        public void CopyToClipboard(EdAstroPoiViewModel poi)
+        {
+            if (poi == null) return;
+
+            notificationStore.CopyToClipBoard(poi.GalMapName);
         }
     }
 }
