@@ -21,16 +21,22 @@ namespace ODExplorer.ViewModels.ViewVMs
         private readonly SpanshCsvStore csvStore;
         private readonly SettingsStore settingsStore;
         private readonly NotificationStore notificationStore;
+        private readonly SpanshRouteProgressStore progressStore;
         private ExplorationTargetViewModel? currentTarget;
         private ExplorationTargetViewModel? nextTarget;
 
-        public SpanshViewModel(SpanshCsvStore csvStore, SettingsStore settingsStore, NotificationStore notificationStore)
+        public SpanshViewModel(SpanshCsvStore csvStore,
+                               SettingsStore settingsStore,
+                               NotificationStore notificationStore,
+                               SpanshRouteProgressStore progressStore)
         {
             this.csvStore = csvStore;
             this.settingsStore = settingsStore;
             this.notificationStore = notificationStore;
+            this.progressStore = progressStore;
             this.csvStore.OnCurrentTargetChanged += OnCurrentTargetChanged;
             this.csvStore.OnCurrentContainerChanged += CsvStore_OnCurrentContainerChanged;
+            this.progressStore.OnProgressChanged += ProgressStore_OnProgressChanged;
 
             var currentContainer = this.csvStore.GetCurrentContainer(this.settingsStore.SpanshCSVSettings[this.settingsStore.SelectedCommanderID]);
             CsvStore_OnCurrentContainerChanged(null, currentContainer);
@@ -63,6 +69,11 @@ namespace ODExplorer.ViewModels.ViewVMs
 
         public override void Dispose()
         {
+            csvStore.OnCurrentTargetChanged -= OnCurrentTargetChanged;
+            csvStore.OnCurrentContainerChanged -= CsvStore_OnCurrentContainerChanged;
+            csvStore.OnCarrierTimerRunning -= CsvStore_OnCarrierTimerRunning;
+            csvStore.OnCarrierTimeTick -= CsvStore_OnCarrierTimeTick;
+            progressStore.OnProgressChanged -= ProgressStore_OnProgressChanged;
             base.Dispose();
         }
 
@@ -78,8 +89,15 @@ namespace ODExplorer.ViewModels.ViewVMs
                 settingsStore.SpanshCSVSettings[settingsStore.SelectedCommanderID] = value;
                 CsvStore_OnCurrentContainerChanged(null, csvStore.GetCurrentContainer(value));
                 OnPropertyChanged(nameof(CurrentType));
+                OnPropertyChanged(nameof(ShowProgressLegend));
             }
         }
+
+        /// <summary>
+        /// Only the route types with bodies to scan and data to sell are colour coded against the commander's
+        /// own history, so the legend is hidden for the jump routes.
+        /// </summary>
+        public bool ShowProgressLegend => CurrentType is CsvType.Exobiology or CsvType.RoadToRiches or CsvType.WorldTypeRoute;
         public int RemainingCount => Targets.Count > 0 ? Targets.Count - CurrentIndex - 1 : 0;
         public bool CarrierTimerRunning => csvStore.CarrierTimerRunning;
         private string carrierTimerString = "00:00";
@@ -170,9 +188,30 @@ namespace ODExplorer.ViewModels.ViewVMs
                 return;
             }
 
-            Targets.AddRangeToCollection(csvStore.CurrentContainer?.Targets.Select(x => new ExplorationTargetViewModel(x)) ?? []);
+            var csvType = CurrentType;
+
+            Targets.AddRangeToCollection(csvStore.CurrentContainer?.Targets.Select(x => new ExplorationTargetViewModel(x, csvType, progressStore)) ?? []);
             OnPropertyChanged(nameof(Targets));
             OnCurrentTargetChanged(null, csvStore.CurrentTarget);
+        }
+
+        private void ProgressStore_OnProgressChanged(object? sender, string? e)
+        {
+            Application.Current.Dispatcher.Invoke(() => RefreshProgress(e));
+        }
+
+        private void RefreshProgress(string? systemName)
+        {
+            //Selling and dying are not tied to a single system, so refresh everything in that case.
+            var refreshAll = string.IsNullOrEmpty(systemName);
+
+            foreach (var target in Targets.ToList())
+            {
+                if (refreshAll || string.Equals(target.SystemName, systemName, StringComparison.OrdinalIgnoreCase))
+                {
+                    target.RefreshProgress();
+                }
+            }
         }
 
         private void SelectNextTarget(object? obj)
@@ -202,6 +241,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             if (csv)
             {
                 OnPropertyChanged(nameof(CurrentType));
+                OnPropertyChanged(nameof(ShowProgressLegend));
                 return;
             }
 
@@ -215,6 +255,7 @@ namespace ODExplorer.ViewModels.ViewVMs
             if (csv)
             {
                 OnPropertyChanged(nameof(CurrentType));
+                OnPropertyChanged(nameof(ShowProgressLegend));
                 return;
             }
 

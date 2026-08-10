@@ -21,7 +21,8 @@
                 <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/GroupBoxStyles.xaml" />
                 <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/OtherControlStyles.xaml" />             
                 <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/NotificationStyles.xaml" />          
-                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/PopOutStyles.xaml" />          
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/PopOutStyles.xaml" />
+                <ResourceDictionary Source="/ODExplorer;component/ResourceDictionaries/SpanshGridStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <mdplug:MdXamlPlugins x:Key="MdXamlPlugins">
                 <mdhtml:HtmlPluginSetup />

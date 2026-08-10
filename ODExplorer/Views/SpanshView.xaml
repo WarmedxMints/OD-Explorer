@@ -11,44 +11,6 @@
              d:DataContext="{d:DesignInstance Type={x:Type viewModels:SpanshViewModel}}"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    <UserControl.Resources>
-        <Style TargetType="{x:Type DataGridRow}"
-               x:Key="CsvRowStyle">
-            <Setter Property="BorderThickness"
-                    Value="0" />
-            <Setter Property="IsHitTestVisible"
-                    Value="False" />
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="Foreground"
-                    Value="{DynamicResource PrimaryControlForeground}" />
-            <Setter Property="BorderBrush"
-                    Value="Transparent" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver"
-                         Value="True">
-                    <Setter Property="Background"
-                            Value="Transparent" />
-                    <Setter Property="BorderBrush"
-                            Value="Transparent" />
-                    <Setter Property="BorderThickness"
-                            Value="0" />
-                </Trigger>
-                <Trigger Property="IsSelected"
-                         Value="True">
-                    <Setter Property="Background"
-                            Value="Transparent" />
-                    <Setter Property="Foreground"
-                            Value="Black" />
-                    <Setter Property="BorderBrush"
-                            Value="Transparent" />
-                    <Setter Property="BorderThickness"
-                            Value="0" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
@@ -163,8 +125,34 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                    
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                    <!--#region Progress Legend-->
+                    <StackPanel Orientation="Horizontal"
+                                Grid.ColumnSpan="2"
+                                Margin="0,0,0,5"
+                                Visibility="{Binding ShowProgressLegend, Converter={StaticResource BoolToVis}}">
+                        <Border Style="{DynamicResource SpanshProgressLegendSwatch}"
+                                Margin="0,0,5,0"
+                                Background="{DynamicResource SpanshProgressPartialBackground}" />
+                        <TextBlock Text="Started"
+                                   VerticalAlignment="Center" />
+                        <Border Style="{DynamicResource SpanshProgressLegendSwatch}"
+                                Background="{DynamicResource BioAnalysed}" />
+                        <TextBlock Text="Gathered"
+                                   VerticalAlignment="Center" />
+                        <Border Style="{DynamicResource SpanshProgressLegendSwatch}"
+                                Background="{DynamicResource BioSold}" />
+                        <TextBlock Text="Sold"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <!--#endregion-->
+
                     <DataGrid Style="{DynamicResource BaseDataGridStyle}"
+                              Grid.Row="1"
                               HeadersVisibility="Column"
                               Background="Transparent"
                               BorderThickness="0"
@@ -175,12 +163,14 @@
                               SelectionChanged="DataGrid_SelectionChanged"
                               AlternatingRowBackground="{DynamicResource NavigationBarBackground}"
                               AlternationCount="1"
-                              RowStyle="{DynamicResource CsvRowStyle}"
-                              CellStyle="{DynamicResource CmdrSelectionCellLeft}"
+                              RowStyle="{DynamicResource SpanshCsvRowStyle}"
+                              CellStyle="{DynamicResource SpanshCsvCellLeft}"
                               ItemsSource="{Binding Targets}"
                               SelectedItem="{Binding CurrentTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                         <DataGrid.Columns>
+                            <!--Star sized so the progress fill on the cell spans the whole row.-->
                             <DataGridTextColumn Header="System"
+                                                Width="*"
                                                 Binding="{Binding SystemName}" />
                         </DataGrid.Columns>
                     </DataGrid>

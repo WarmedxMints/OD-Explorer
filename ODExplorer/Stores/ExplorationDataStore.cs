@@ -892,6 +892,21 @@ namespace ODExplorer.Stores
             return systems;
         }
 
+        public Dictionary<string, StarSystem> GetCartoSystemsByName()
+        {
+            Dictionary<string, StarSystem> systems = new(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var system in _cartoData.Values)
+            {
+                if (string.IsNullOrEmpty(system.Name))
+                    continue;
+
+                systems.TryAdd(system.Name, system);
+            }
+
+            return systems;
+        }
+
         internal string GetUnsoldCartoValueString()
         {
             var systems = _cartoData.Values.Where(x => x.UnsoldCount > 0 && x.HasRevelantBodies(settingsStore.IgnoredCartoDate) && _ignoredSystems.ContainsKey(x.Address) == false);

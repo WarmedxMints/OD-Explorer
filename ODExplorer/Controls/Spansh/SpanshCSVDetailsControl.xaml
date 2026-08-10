@@ -104,7 +104,8 @@
                       HorizontalAlignment="Left"
                       Background="Transparent"
                       BorderThickness="0"
-                      RowStyle="{DynamicResource CsvRowStyle}"
+                      RowStyle="{DynamicResource SpanshCsvRowStyle}"
+                      CellStyle="{DynamicResource SpanshCsvCell}"
                       Style="{DynamicResource BaseDataGridStyle}"
                       ItemsSource="{Binding CurrentTarget.BodiesInfo}">
                 <DataGrid.Columns>
@@ -194,7 +195,8 @@
                       IsHitTestVisible="True"
                       Background="Transparent"
                       BorderThickness="0"
-                      RowStyle="{DynamicResource CsvRowStyle}"
+                      RowStyle="{DynamicResource SpanshCsvRowStyle}"
+                      CellStyle="{DynamicResource SpanshCsvCell}"
                       Style="{DynamicResource BaseDataGridStyle}"
                       ItemsSource="{Binding CurrentTarget.BodiesInfo}">
                 <DataGrid.Columns>
@@ -350,7 +352,8 @@
                       HorizontalAlignment="Left"
                       Background="Transparent"
                       BorderThickness="0"
-                      RowStyle="{DynamicResource CsvRowStyle}"
+                      RowStyle="{DynamicResource SpanshCsvRowStyle}"
+                      CellStyle="{DynamicResource SpanshCsvCell}"
                       Style="{DynamicResource BaseDataGridStyle}"
                       ItemsSource="{Binding CurrentTarget.BodiesInfo}">
                 <DataGrid.Columns>

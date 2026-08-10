@@ -122,4 +122,15 @@ namespace ODExplorer.Models
         Semitransparent,
         Transparent
     }
+
+    public enum SpanshProgressState
+    {
+        None = 0,
+        [Description("Scanned")]
+        Scanned,
+        [Description("Data Gathered")]
+        Gathered,
+        [Description("Data Sold")]
+        Sold
+    }
 }
