@@ -73,6 +73,7 @@ namespace ODExplorer.Extensions
                 services.AddSingleton<OrganicCheckListDataStore>();
                 services.AddSingleton<NotificationStore>();
                 services.AddSingleton<SpanshCsvStore>();
+                services.AddSingleton<SpanshRouteProgressStore>();
             });
 
             return hostBuilder;

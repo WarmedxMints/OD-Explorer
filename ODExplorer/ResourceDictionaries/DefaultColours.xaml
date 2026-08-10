@@ -87,7 +87,14 @@
                      Color="#FF1FA41F" />
     <SolidColorBrush x:Key="BioAnalysed"
                      Color="#FF5DA6E0" />
-    
+
+    <SolidColorBrush x:Key="SpanshProgressPartialBackground"
+                     Color="#FF2F5D7C" />
+    <SolidColorBrush x:Key="SpanshProgressPartialForeGround"
+                     Color="WhiteSmoke" />
+    <SolidColorBrush x:Key="SpanshProgressOnColourForeGround"
+                     Color="#FF141414" />
+
     <SolidColorBrush x:Key="LowGravity"
                      Color="#FF37BD37" />
     <SolidColorBrush x:Key="MedGravity"
